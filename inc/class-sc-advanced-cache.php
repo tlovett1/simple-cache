@@ -56,21 +56,26 @@ class SC_Advanced_Cache {
 
 		$config = SC_Config::factory()->get();
 
-		$cache_file = 'file-based-page-cache.php';
+		$file_string = '';
 
-		if ( ! empty( $config['enable_in_memory_object_caching'] ) ) {
-			$cache_file = 'batcache.php';
+		if ( ! empty( $config['enable_page_caching'] ) ) {
+			$cache_file = 'file-based-page-cache.php';
+
+			if ( ! empty( $config['enable_in_memory_object_caching'] ) ) {
+				$cache_file = 'batcache.php';
+			}
+
+			$file_string = '<?php ' .
+				PHP_EOL . "defined( 'ABSPATH' ) || exit;" .
+				PHP_EOL . "define( 'SC_ADVANCED_CACHE', true );" .
+				PHP_EOL . "if ( is_admin() ) { return; }" .
+				PHP_EOL . "if ( ! @file_exists( WP_CONTENT_DIR . '/sc-config/config-' . \$_SERVER['HTTP_HOST'] . '.php' ) ) { return; }" .
+				PHP_EOL . "global \$sc_config;" .
+				PHP_EOL . "\$sc_config = include( WP_CONTENT_DIR . '/sc-config/config-' . \$_SERVER['HTTP_HOST'] . '.php' );" .
+				PHP_EOL . "if ( empty( \$sc_config ) || empty( \$sc_config['enable_page_caching'] ) ) { return; }" .
+				PHP_EOL . "require_once( '" . untrailingslashit( plugin_dir_path( __FILE__ ) ) . "/dropins/" . $cache_file . "' ); " . PHP_EOL;
+
 		}
-
-		$file_string = '<?php ' .
-			PHP_EOL . "defined( 'ABSPATH' ) || exit;" .
-			PHP_EOL . "define( 'SC_ADVANCED_CACHE', true );" .
-			PHP_EOL . "if ( is_admin() ) { return; }" .
-			PHP_EOL . "if ( ! @file_exists( WP_CONTENT_DIR . '/sc-config/config-' . \$_SERVER['HTTP_HOST'] . '.php' ) ) { return; }" .
-			PHP_EOL . "global \$sc_config;" .
-			PHP_EOL . "\$sc_config = include( WP_CONTENT_DIR . '/sc-config/config-' . \$_SERVER['HTTP_HOST'] . '.php' );" .
-			PHP_EOL . "if ( empty( \$sc_config ) || empty( \$sc_config['enable_page_caching'] ) ) { return; }" .
-			PHP_EOL . "require_once( '" . untrailingslashit( plugin_dir_path( __FILE__ ) ) . "/dropins/" . $cache_file . "' ); " . PHP_EOL;
 
 		if ( ! $wp_filesystem->put_contents( $file, $file_string, FS_CHMOD_FILE ) ) {
 			return false;

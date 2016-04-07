@@ -124,15 +124,12 @@ class SC_Settings {
 			SC_Config::factory()->write( $clean_config );
 
 			SC_Advanced_Cache::factory()->write();
+			SC_Object_Cache::factory()->write();
 
 			if ( $clean_config['enable_page_caching'] ) {
 				SC_Advanced_Cache::factory()->toggle_caching( true );
 			} else {
 				SC_Advanced_Cache::factory()->toggle_caching( false );
-			}
-
-			if ( ! empty( $clean_config['enable_in_memory_object_caching'] ) ) {
-				SC_Object_Cache::factory()->write();
 			}
 
 			wp_redirect( $_REQUEST['wp_http_referer'] );
