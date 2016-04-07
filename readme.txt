@@ -34,6 +34,9 @@ For full documentation, questions, feature requests, and support concerning the 
 
 == Changelog ==
 
+= 1.0.1 =
+* Boolval bug fixed
+
 = 1.0 =
 * Plugin released
 

@@ -11,21 +11,32 @@ class SC_Config {
 	public $defaults = array(
 		'enable_page_caching'             => array(
 			'default'   => false,
-			'sanitizer' => 'boolval',
+			'sanitizer' => array( $this, 'boolval' ),
 		),
 		'advanced_mode'                   => array(
 			'default'   => false,
-			'sanitizer' => 'boolval',
+			'sanitizer' => array( $this, 'boolval' ),
 		),
 		'enable_in_memory_object_caching' => array(
 			'default'   => false,
-			'sanitizer' => 'boolval',
+			'sanitizer' => array( $this, 'boolval' ),
 		),
 		'in_memory_cache'                 => array(
 			'default'   => 'memcached',
 			'sanitizer' => 'sanitize_text_field',
 		),
 	);
+
+	/**
+	 * Make sure we support old PHP with boolval
+	 *
+	 * @param  string $value
+	 * @since  1.0
+	 * @return boolean
+	 */
+	public function boolval( $value ) {
+		return (bool) $value;
+	}
 
 	/**
 	 * Return defaults
