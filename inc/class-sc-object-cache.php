@@ -40,6 +40,24 @@ class SC_Object_Cache {
 	}
 
 	/**
+	 * Empty file for clean up
+	 *
+	 * @since  1.0
+	 * @return bool
+	 */
+	public function clean_up() {
+		global $wp_filesystem;
+
+		$file = untrailingslashit( WP_CONTENT_DIR )  . '/object-cache.php';
+
+		if ( ! $wp_filesystem->put_contents( $file, '', FS_CHMOD_FILE ) ) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
 	 * Write object-cache.php
 	 *
 	 * @since  1.0

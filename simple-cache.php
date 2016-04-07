@@ -55,3 +55,19 @@ function sc_filter_plugin_action_links( $plugin_actions, $plugin_file ) {
 	return array_merge( $new_actions, $plugin_actions );
 }
 add_filter( 'plugin_action_links', 'sc_filter_plugin_action_links', 10, 2 );
+
+/**
+ * Clean up necessary files
+ *
+ * @since  1.0
+ */
+function sc_clean_up() {
+	WP_Filesystem();
+
+	SC_Advanced_Cache::factory()->clean_up();
+	SC_Advanced_Cache::factory()->toggle_caching( false );
+	SC_Object_Cache::factory()->clean_up();
+}
+register_deactivation_hook( __FILE__, 'sc_clean_up' );
+
+
