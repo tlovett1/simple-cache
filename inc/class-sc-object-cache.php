@@ -20,7 +20,7 @@ class SC_Object_Cache {
 	public function print_notice() {
 		$config = SC_Config::factory()->get();
 
-		if ( empty( $config['enable_in_memory_object_caching'] ) ) {
+		if ( empty( $config['enable_in_memory_object_caching'] ) || empty( $config['advanced_mode'] ) ) {
 			return;
 		}
 
@@ -31,11 +31,7 @@ class SC_Object_Cache {
 		?>
 		<div class="error">
 			<p>
-				<?php if ( empty( $config['advanced_mode'] ) ) : ?>
-					<?php esc_html_e( 'Woops! An important file that Simple Cache uses was edited or deleted.' ); ?>
-				<?php else : ?>
-					<?php esc_html_e( 'Woops! object-cache.php was edited or deleted. Simple Cache is not able to utilize object caching.' ); ?>
-				<?php endif; ?>
+				<?php esc_html_e( 'Woops! object-cache.php was edited or deleted. Simple Cache is not able to utilize object caching.' ); ?>
 
 				<a href="options.php?wp_http_referer=<?php echo esc_url( wp_unslash( $_SERVER['REQUEST_URI'] ) ); ?>&amp;action=sc_update&amp;sc_settings_nonce=<?php echo wp_create_nonce( 'sc_update_settings' ); ?>" class="button button-primary" style="margin-left: 5px;"><?php esc_html_e( "Fix", 'simple-cache' ); ?></a>
 			</p>
