@@ -120,7 +120,14 @@ class SC_Advanced_Cache {
 			return false;
 		}
 
-		$config_file = explode( PHP_EOL, $wp_filesystem->get_contents( $config_path ) );
+		$config_file_string = $wp_filesystem->get_contents( $config_path );
+
+		// Config file is empty. Maybe couldn't read it?
+		if ( empty( $config_file_string ) ) {
+			return false;
+		}
+
+		$config_file = explode( PHP_EOL, $config_file_string );
 		$line_key = false;
 
 		foreach ( $config_file as $key => $line ) {
