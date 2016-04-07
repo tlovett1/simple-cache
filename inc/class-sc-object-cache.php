@@ -58,7 +58,7 @@ class SC_Object_Cache {
 
 		$file_string = '';
 
-		if ( ! empty( $config['enable_in_memory_object_caching'] ) ) {
+		if ( ! empty( $config['enable_in_memory_object_caching'] ) && ! empty( $config['advanced_mode'] ) ) {
 			$cache_file = 'memcached-object-cache.php';
 
 			if ( 'redis' === $config['in_memory_cache'] ) {
