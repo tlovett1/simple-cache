@@ -3,6 +3,8 @@ defined( 'ABSPATH' ) || exit;
 
 class SC_Settings {
 
+	//public $request_creds = false;
+
 	public function __construct() { }
 
 	/**
@@ -12,8 +14,8 @@ class SC_Settings {
 	 */
 	public function setup() {
 		add_action( 'admin_menu', array( $this, 'action_admin_menu' ) );
-		add_action( 'admin_action_sc_update', array( $this, 'admin_action_sc_update' ) );
-		add_action( 'admin_action_sc_purge_cache', array( $this, 'admin_action_sc_purge_cache' ) );
+		add_action( 'load-settings_page_simple-cache', array( $this, 'update' ) );
+		add_action( 'load-settings_page_simple-cache', array( $this, 'purge_cache' ) );
 		add_action( 'admin_notices', array( $this, 'setup_notice' ) );
 		add_action( 'admin_enqueue_scripts' , array( $this, 'action_admin_enqueue_scripts_styles' ) );
     }
@@ -76,7 +78,7 @@ class SC_Settings {
 	 *
 	 * @since  1.0
 	 */
-	public function admin_action_sc_purge_cache() {
+	public function purge_cache() {
 		if ( ! empty( $_REQUEST['action'] ) && 'sc_purge_cache' === $_REQUEST['action'] ) {
 			if ( ! current_user_can ( 'manage_options' ) || empty( $_REQUEST['sc_cache_nonce'] ) || ! wp_verify_nonce( $_REQUEST['sc_cache_nonce'], 'sc_purge_cache' ) ) {
 				wp_die( 'Cheatin, eh?' );
@@ -88,8 +90,10 @@ class SC_Settings {
 				wp_cache_flush();
 			}
 
-			wp_redirect( $_REQUEST['wp_http_referer'] );
-			exit;
+			if ( ! empty( $_REQUEST['wp_http_referer'] ) ) {
+				wp_redirect( $_REQUEST['wp_http_referer'] );
+				exit;
+			}
 		}
 	}
 
@@ -98,12 +102,18 @@ class SC_Settings {
 	 *
 	 * @since 1.0
 	 */
-	public function admin_action_sc_update() {
+	public function update() {
 		if ( ! empty( $_REQUEST['action'] ) && 'sc_update' === $_REQUEST['action'] ) {
 
 			if ( ! current_user_can( 'manage_options' ) || empty( $_REQUEST['sc_settings_nonce'] ) || ! wp_verify_nonce( $_REQUEST['sc_settings_nonce'], 'sc_update_settings' ) ) {
 				wp_die( esc_html__( 'Cheatin, eh?', 'simple-cache' ) );
 			}
+
+			ob_start();
+			if ( ! SC_Config::factory()->verify_access() ) {
+				return;
+			}
+			ob_get_clean();
 
 			$defaults = SC_Config::factory()->defaults;
 			$current_config = SC_Config::factory()->get();
@@ -132,8 +142,10 @@ class SC_Settings {
 				SC_Advanced_Cache::factory()->toggle_caching( false );
 			}
 
-			wp_redirect( $_REQUEST['wp_http_referer'] );
-			exit;
+			if ( ! empty( $_REQUEST['wp_http_referer'] ) ) {
+				wp_redirect( $_REQUEST['wp_http_referer'] );
+				exit;
+			}
 		}
 	}
 
@@ -163,7 +175,7 @@ class SC_Settings {
 	 * @since 1.0
 	 */
 	public function screen_options() {
-		if ( ! SC_Config::factory()->verify_access() ) {
+		if ( ! empty( $_REQUEST['action'] ) && ! SC_Config::factory()->verify_access() ) {
 			return;
 		}
 
@@ -173,7 +185,7 @@ class SC_Settings {
 		<div class="wrap">
 			<h1><?php esc_html_e( 'Simple Cache Settings', 'simple-cache' ); ?></h1>
 
-			<form action="options.php" method="post">
+			<form action="" method="post">
 				<?php wp_nonce_field( 'sc_update_settings', 'sc_settings_nonce' ); ?>
 				<input type="hidden" name="action" value="sc_update">
 				<input type="hidden" name="wp_http_referer" value="<?php echo esc_attr( wp_unslash( $_SERVER['REQUEST_URI'] ) ); ?>'" />

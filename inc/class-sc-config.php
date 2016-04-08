@@ -105,9 +105,14 @@ class SC_Config {
 	 * @return bool
 	 */
 	public function verify_access() {
-		$creds = request_filesystem_credentials( site_url() . '/wp-admin/', '', false, false, array() );
+		$creds = request_filesystem_credentials( admin_url('options-general.php?page=simple-cache') );
 
-		if ( ! $creds || ! WP_Filesystem( $creds ) ) {
+		if ( false === $creds ) {
+			return false;
+		}
+
+		if ( ! WP_Filesystem( $creds ) ) {
+			request_filesystem_credentials( admin_url('options-general.php?page=simple-cache') );
 			return false;
 		}
 
