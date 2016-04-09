@@ -99,27 +99,6 @@ class SC_Config {
 	}
 
 	/**
-	 * Verify we have access to the file system
-	 *
-	 * @since  1.0
-	 * @return bool
-	 */
-	public function verify_access() {
-		$creds = request_filesystem_credentials( admin_url('options-general.php?page=simple-cache') );
-
-		if ( false === $creds ) {
-			return false;
-		}
-
-		if ( ! WP_Filesystem( $creds ) ) {
-			request_filesystem_credentials( admin_url('options-general.php?page=simple-cache') );
-			return false;
-		}
-
-		return true;
-	}
-
-	/**
 	 * Return an instance of the current class, create one if it doesn't exist
 	 *
 	 * @since 1.0

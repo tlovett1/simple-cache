@@ -109,11 +109,15 @@ class SC_Settings {
 				wp_die( esc_html__( 'Cheatin, eh?', 'simple-cache' ) );
 			}
 
-			ob_start();
-			if ( ! SC_Config::factory()->verify_access() ) {
-				return;
+			$creds = $this->request_filesystem_credentials( admin_url('options-general.php?page=simple-cache'), '', false, false, false, false );
+
+			if ( false === $creds ) {
+				return false;
 			}
-			ob_get_clean();
+
+			if ( ! WP_Filesystem( $creds ) ) {
+				return false;
+			}
 
 			$defaults = SC_Config::factory()->defaults;
 			$current_config = SC_Config::factory()->get();
@@ -170,13 +174,224 @@ class SC_Settings {
 	}
 
 	/**
+	 * :'( Unfortunately have to rewrite this method
+	 *
+	 * @param  string  $form_post
+	 * @param  string  $type
+	 * @param  boolean $error
+	 * @param  boolean $context
+	 * @param  boolean $allow_relaxed_file_ownership
+	 * @param  boolean $print_form
+	 * @since  1.0
+	 * @return boolean
+	 */
+	function request_filesystem_credentials( $form_post, $type = '', $error = false, $context = false, $allow_relaxed_file_ownership = false, $print_form = true ) {
+		global $pagenow;
+
+		$req_cred = apply_filters( 'request_filesystem_credentials', '', $form_post, $type, $error, $context, null, $allow_relaxed_file_ownership );
+		if ( '' !== $req_cred )
+			return $req_cred;
+
+		if ( empty($type) ) {
+			$type = get_filesystem_method( array(), $context, $allow_relaxed_file_ownership );
+		}
+
+		if ( 'direct' == $type )
+			return true;
+
+		$credentials = get_option('ftp_credentials', array( 'hostname' => '', 'username' => ''));
+
+		// If defined, set it to that, Else, If POST'd, set it to that, If not, Set it to whatever it previously was(saved details in option)
+		$credentials['hostname'] = defined('FTP_HOST') ? FTP_HOST : (!empty($_POST['hostname']) ? wp_unslash( $_POST['hostname'] ) : $credentials['hostname']);
+		$credentials['username'] = defined('FTP_USER') ? FTP_USER : (!empty($_POST['username']) ? wp_unslash( $_POST['username'] ) : $credentials['username']);
+		$credentials['password'] = defined('FTP_PASS') ? FTP_PASS : (!empty($_POST['password']) ? wp_unslash( $_POST['password'] ) : '');
+
+		// Check to see if we are setting the public/private keys for ssh
+		$credentials['public_key'] = defined('FTP_PUBKEY') ? FTP_PUBKEY : (!empty($_POST['public_key']) ? wp_unslash( $_POST['public_key'] ) : '');
+		$credentials['private_key'] = defined('FTP_PRIKEY') ? FTP_PRIKEY : (!empty($_POST['private_key']) ? wp_unslash( $_POST['private_key'] ) : '');
+
+		// Sanitize the hostname, Some people might pass in odd-data:
+		$credentials['hostname'] = preg_replace('|\w+://|', '', $credentials['hostname']); //Strip any schemes off
+
+		if ( strpos($credentials['hostname'], ':') ) {
+			list( $credentials['hostname'], $credentials['port'] ) = explode(':', $credentials['hostname'], 2);
+			if ( ! is_numeric($credentials['port']) )
+				unset($credentials['port']);
+		} else {
+			unset($credentials['port']);
+		}
+
+		if ( ( defined( 'FTP_SSH' ) && FTP_SSH ) || ( defined( 'FS_METHOD' ) && 'ssh2' == FS_METHOD ) ) {
+			$credentials['connection_type'] = 'ssh';
+		} elseif ( ( defined( 'FTP_SSL' ) && FTP_SSL ) && 'ftpext' == $type ) { //Only the FTP Extension understands SSL
+			$credentials['connection_type'] = 'ftps';
+		} elseif ( ! empty( $_POST['connection_type'] ) ) {
+			$credentials['connection_type'] = wp_unslash( $_POST['connection_type'] );
+		} elseif ( ! isset( $credentials['connection_type'] ) ) { //All else fails (And it's not defaulted to something else saved), Default to FTP
+			$credentials['connection_type'] = 'ftp';
+		}
+
+		if ( ! $error &&
+				(
+					( !empty($credentials['password']) && !empty($credentials['username']) && !empty($credentials['hostname']) ) ||
+					( 'ssh' == $credentials['connection_type'] && !empty($credentials['public_key']) && !empty($credentials['private_key']) )
+				) ) {
+			$stored_credentials = $credentials;
+			if ( !empty($stored_credentials['port']) ) //save port as part of hostname to simplify above code.
+				$stored_credentials['hostname'] .= ':' . $stored_credentials['port'];
+
+			unset($stored_credentials['password'], $stored_credentials['port'], $stored_credentials['private_key'], $stored_credentials['public_key']);
+			if ( ! wp_installing() ) {
+				update_option( 'ftp_credentials', $stored_credentials );
+			}
+			return $credentials;
+		}
+
+		if ( ! $print_form ) {
+			return false;
+		}
+
+		$hostname = isset( $credentials['hostname'] ) ? $credentials['hostname'] : '';
+		$username = isset( $credentials['username'] ) ? $credentials['username'] : '';
+		$public_key = isset( $credentials['public_key'] ) ? $credentials['public_key'] : '';
+		$private_key = isset( $credentials['private_key'] ) ? $credentials['private_key'] : '';
+		$port = isset( $credentials['port'] ) ? $credentials['port'] : '';
+		$connection_type = isset( $credentials['connection_type'] ) ? $credentials['connection_type'] : '';
+
+		if ( $error ) {
+			$error_string = __('<strong>ERROR:</strong> There was an error connecting to the server, Please verify the settings are correct.');
+			if ( is_wp_error($error) )
+				$error_string = esc_html( $error->get_error_message() );
+			echo '<div id="message" class="error"><p>' . $error_string . '</p></div>';
+		}
+
+		$types = array();
+		if ( extension_loaded('ftp') || extension_loaded('sockets') || function_exists('fsockopen') )
+			$types[ 'ftp' ] = __('FTP');
+		if ( extension_loaded('ftp') ) //Only this supports FTPS
+			$types[ 'ftps' ] = __('FTPS (SSL)');
+		if ( extension_loaded('ssh2') && function_exists('stream_get_contents') )
+			$types[ 'ssh' ] = __('SSH2');
+
+		$types = apply_filters( 'fs_ftp_connection_types', $types, $credentials, $type, $error, $context );
+
+	?>
+	<script type="text/javascript">
+	<!--
+	jQuery(function($){
+		jQuery("#ssh").click(function () {
+			jQuery("#ssh_keys").show();
+		});
+		jQuery("#ftp, #ftps").click(function () {
+			jQuery("#ssh_keys").hide();
+		});
+		jQuery('#request-filesystem-credentials-form input[value=""]:first').focus();
+	});
+	-->
+	</script>
+	<form action="<?php echo esc_url( $form_post ) ?>" method="post">
+	<div id="request-filesystem-credentials-form" class="request-filesystem-credentials-form">
+	<?php
+	// Print a H1 heading in the FTP credentials modal dialog, default is a H2.
+	$heading_tag = 'h2';
+	if ( 'plugins.php' === $pagenow || 'plugin-install.php' === $pagenow ) {
+		$heading_tag = 'h1';
+	}
+	echo "<$heading_tag id='request-filesystem-credentials-title'>" . __( 'Connection Information' ) . "</$heading_tag>";
+	?>
+	<p id="request-filesystem-credentials-desc"><?php
+		$label_user = __('Username');
+		$label_pass = __('Password');
+		_e('To perform the requested action, WordPress needs to access your web server.');
+		echo ' ';
+		if ( ( isset( $types['ftp'] ) || isset( $types['ftps'] ) ) ) {
+			if ( isset( $types['ssh'] ) ) {
+				_e('Please enter your FTP or SSH credentials to proceed.');
+				$label_user = __('FTP/SSH Username');
+				$label_pass = __('FTP/SSH Password');
+			} else {
+				_e('Please enter your FTP credentials to proceed.');
+				$label_user = __('FTP Username');
+				$label_pass = __('FTP Password');
+			}
+			echo ' ';
+		}
+		_e('If you do not remember your credentials, you should contact your web host.');
+	?></p>
+	<label for="hostname">
+		<span class="field-title"><?php _e( 'Hostname' ) ?></span>
+		<input name="hostname" type="text" id="hostname" aria-describedby="request-filesystem-credentials-desc" class="code" placeholder="<?php esc_attr_e( 'example: www.wordpress.org' ) ?>" value="<?php echo esc_attr($hostname); if ( !empty($port) ) echo ":$port"; ?>"<?php disabled( defined('FTP_HOST') ); ?> />
+	</label>
+	<div class="ftp-username">
+		<label for="username">
+			<span class="field-title"><?php echo $label_user; ?></span>
+			<input name="username" type="text" id="username" value="<?php echo esc_attr($username) ?>"<?php disabled( defined('FTP_USER') ); ?> />
+		</label>
+	</div>
+	<div class="ftp-password">
+		<label for="password">
+			<span class="field-title"><?php echo $label_pass; ?></span>
+			<input name="password" type="password" id="password" value="<?php if ( defined('FTP_PASS') ) echo '*****'; ?>"<?php disabled( defined('FTP_PASS') ); ?> />
+			<em><?php if ( ! defined('FTP_PASS') ) _e( 'This password will not be stored on the server.' ); ?></em>
+		</label>
+	</div>
+	<?php if ( isset($types['ssh']) ) : ?>
+	<fieldset>
+	<legend><?php _e( 'Authentication Keys' ); ?></legend>
+	<label for="public_key">
+		<span class="field-title"><?php _e('Public Key:') ?></span>
+		<input name="public_key" type="text" id="public_key" aria-describedby="auth-keys-desc" value="<?php echo esc_attr($public_key) ?>"<?php disabled( defined('FTP_PUBKEY') ); ?> />
+	</label>
+	<label for="private_key">
+		<span class="field-title"><?php _e('Private Key:') ?></span>
+		<input name="private_key" type="text" id="private_key" value="<?php echo esc_attr($private_key) ?>"<?php disabled( defined('FTP_PRIKEY') ); ?> />
+	</label>
+	</fieldset>
+	<span id="auth-keys-desc"><?php _e('Enter the location on the server where the public and private keys are located. If a passphrase is needed, enter that in the password field above.') ?></span>
+	<?php endif; ?>
+	<fieldset>
+	<legend><?php _e( 'Connection Type' ); ?></legend>
+	<?php
+		$disabled = disabled( (defined('FTP_SSL') && FTP_SSL) || (defined('FTP_SSH') && FTP_SSH), true, false );
+		foreach ( $types as $name => $text ) : ?>
+		<label for="<?php echo esc_attr($name) ?>">
+			<input type="radio" name="connection_type" id="<?php echo esc_attr($name) ?>" value="<?php echo esc_attr($name) ?>"<?php checked($name, $connection_type); echo $disabled; ?> />
+			<?php echo $text ?>
+		</label>
+		<?php endforeach; ?>
+	</fieldset>
+	<input name="action" value="<?php echo esc_attr( $_REQUEST['action'] ); ?>" type="hidden">
+	<input name="sc_settings_nonce" value="<?php echo esc_attr( $_REQUEST['sc_settings_nonce'] ); ?>" type="hidden">
+	<input name="wp_http_referer" value="<?php echo esc_attr( $_REQUEST['wp_http_referer'] ); ?>" type="hidden">
+	<?php foreach ( $_REQUEST['sc_simple_cache'] as $key => $value ) : ?>
+		<input name="sc_simple_cache[<?php echo esc_attr( $key ); ?>]" value="<?php echo esc_attr( $value ); ?>" type="hidden">
+	<?php endforeach; ?>
+		<p class="request-filesystem-credentials-action-buttons">
+			<button class="button cancel-button" data-js-action="close" type="button"><?php _e( 'Cancel' ); ?></button>
+			<?php submit_button( __( 'Proceed' ), 'button', 'upgrade', false ); ?>
+		</p>
+	</div>
+	</form>
+	<?php
+		return false;
+	}
+
+	/**
 	 * Output settings
 	 *
 	 * @since 1.0
 	 */
 	public function screen_options() {
-		if ( ! empty( $_REQUEST['action'] ) && ! SC_Config::factory()->verify_access() ) {
-			return;
+		if ( ! empty( $_REQUEST['action'] ) ) {
+			$creds = $this->request_filesystem_credentials( admin_url('options-general.php?page=simple-cache'), '', false, false, false, true );
+
+			if ( false === $creds ) {
+				return false;
+			}
+
+			if ( ! WP_Filesystem( $creds ) ) {
+				return false;
+			}
 		}
 
 		$config = SC_Config::factory()->get();
