@@ -4,8 +4,6 @@ defined( 'ABSPATH' ) || exit;
 class SC_Settings
 {
 
-	//public $request_creds = false;
-
 	public function __construct() {
 
 	}
