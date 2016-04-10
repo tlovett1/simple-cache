@@ -364,7 +364,7 @@ class WP_Object_Cache
 		'set' => 'purple',
 		'add' => 'blue',
 		'delete' => 'red',
-		);,
+		);
 
 		$cmd = substr( $line, 0, strpos( $line, ' ' ) );
 
