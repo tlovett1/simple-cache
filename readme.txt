@@ -36,6 +36,7 @@ For full documentation, questions, feature requests, and support concerning the 
 
 = 1.0.3 =
 * Fix error messaging around non-writeable file system
+* Fix redis
 
 = 1.0.2 =
 * Properly clean up files
