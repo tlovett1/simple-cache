@@ -1,23 +1,32 @@
 <?php
 defined( 'ABSPATH' ) || exit;
 
-class SC_Object_Cache {
+class SC_Object_Cache
+{
 
 	/**
 	 * Setup hooks/filters
 	 *
-	 * @since  1.0
+	 * @since 1.0
 	 */
 	public function setup() {
+
 		add_action( 'admin_notices', array( $this, 'print_notice' ) );
 	}
 
 	/**
 	 * Print out a warning if object-cache.php is messed up
 	 *
-	 * @since  1.0
+	 * @since 1.0
 	 */
 	public function print_notice() {
+
+		$cant_write = get_option( 'sc_cant_write', false );
+
+		if ( ! $cant_write ) {
+			return;
+		}
+
 		$config = SC_Config::factory()->get();
 
 		if ( empty( $config['enable_in_memory_object_caching'] ) || empty( $config['advanced_mode'] ) ) {
@@ -29,13 +38,13 @@ class SC_Object_Cache {
 		}
 
 		?>
-		<div class="error">
-			<p>
-				<?php esc_html_e( 'Woops! object-cache.php was edited or deleted. Simple Cache is not able to utilize object caching.' ); ?>
+	 <div class="error">
+	  <p>
+		<?php esc_html_e( 'Woops! object-cache.php was edited or deleted. Simple Cache is not able to utilize object caching.' ); ?>
 
-				<a href="options.php?wp_http_referer=<?php echo esc_url( wp_unslash( $_SERVER['REQUEST_URI'] ) ); ?>&amp;action=sc_update&amp;sc_settings_nonce=<?php echo wp_create_nonce( 'sc_update_settings' ); ?>" class="button button-primary" style="margin-left: 5px;"><?php esc_html_e( "Fix", 'simple-cache' ); ?></a>
-			</p>
-		</div>
+				<a href="options-general.php?page=simple-cache&amp;wp_http_referer=<?php echo esc_url( wp_unslash( $_SERVER['REQUEST_URI'] ) ); ?>&amp;action=sc_update&amp;sc_settings_nonce=<?php echo wp_create_nonce( 'sc_update_settings' ); ?>" class="button button-primary" style="margin-left: 5px;"><?php esc_html_e( 'Fix', 'simple-cache' ); ?></a>
+	  </p>
+	 </div>
 		<?php
 	}
 
@@ -46,6 +55,7 @@ class SC_Object_Cache {
 	 * @return bool
 	 */
 	public function clean_up() {
+
 		global $wp_filesystem;
 
 		$file = untrailingslashit( WP_CONTENT_DIR )  . '/object-cache.php';
@@ -64,6 +74,7 @@ class SC_Object_Cache {
 	 * @return bool
 	 */
 	public function write() {
+
 		global $wp_filesystem;
 
 		$file = untrailingslashit( WP_CONTENT_DIR )  . '/object-cache.php';
@@ -80,14 +91,14 @@ class SC_Object_Cache {
 			}
 
 			$file_string = '<?php ' .
-				PHP_EOL . "defined( 'ABSPATH' ) || exit;" .
-				PHP_EOL . "define( 'SC_OBJECT_CACHE', true );" .
-				PHP_EOL . "if ( is_admin() ) { return; }" .
-				PHP_EOL . "if ( ! @file_exists( WP_CONTENT_DIR . '/sc-config/config-' . \$_SERVER['HTTP_HOST'] . '.php' ) ) { return; }" .
-				PHP_EOL . "global \$sc_config;" .
-				PHP_EOL . "\$sc_config = include( WP_CONTENT_DIR . '/sc-config/config-' . \$_SERVER['HTTP_HOST'] . '.php' );" .
-				PHP_EOL . "if ( empty( \$sc_config ) || empty( \$sc_config['enable_in_memory_object_caching'] ) ) { return; }" .
-				PHP_EOL . "if ( @file_exists( '" . untrailingslashit( plugin_dir_path( __FILE__ ) ) . "/dropins/" . $cache_file . "' ) ) { require_once( '" . untrailingslashit( plugin_dir_path( __FILE__ ) ) . "/dropins/" . $cache_file . "' ); }" . PHP_EOL;
+			PHP_EOL . "defined( 'ABSPATH' ) || exit;" .
+			PHP_EOL . "define( 'SC_OBJECT_CACHE', true );" .
+			PHP_EOL . 'if ( is_admin() ) { return; }' .
+			PHP_EOL . "if ( ! @file_exists( WP_CONTENT_DIR . '/sc-config/config-' . \$_SERVER['HTTP_HOST'] . '.php' ) ) { return; }" .
+			PHP_EOL . 'global \$sc_config;' .
+			PHP_EOL . "\$sc_config = include( WP_CONTENT_DIR . '/sc-config/config-' . \$_SERVER['HTTP_HOST'] . '.php' );" .
+			PHP_EOL . "if ( empty( \$sc_config ) || empty( \$sc_config['enable_in_memory_object_caching'] ) ) { return; }" .
+			PHP_EOL . "if ( @file_exists( '" . untrailingslashit( plugin_dir_path( __FILE__ ) ) . '/dropins/' . $cache_file . "' ) ) { require_once( '" . untrailingslashit( plugin_dir_path( __FILE__ ) ) . '/dropins/' . $cache_file . "' ); }" . PHP_EOL;
 
 		}
 
@@ -101,10 +112,11 @@ class SC_Object_Cache {
 	/**
 	 * Return an instance of the current class, create one if it doesn't exist
 	 *
-	 * @since 1.0
+	 * @since  1.0
 	 * @return object
 	 */
 	public static function factory() {
+
 		static $instance;
 
 		if ( ! $instance ) {

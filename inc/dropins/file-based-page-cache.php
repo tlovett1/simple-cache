@@ -8,7 +8,7 @@ if ( strpos( $_SERVER['REQUEST_URI'], 'robots.txt' ) !== false || strpos( $_SERV
 
 // Don't cache non-GET requests
 if ( ! isset( $_SERVER['REQUEST_METHOD'] ) || $_SERVER['REQUEST_METHOD'] !== 'GET' ) {
- 	return;
+	return;
 }
 
 // Don't cache disallowed extensions
@@ -22,7 +22,7 @@ if ( ! empty( $_COOKIE ) ) {
 
 	foreach ( $_COOKIE as $key => $value ) {
 		foreach ( $wp_cookies as $cookie ) {
-			if ( strpos( $key, $cookie) !== false ) {
+			if ( strpos( $key, $cookie ) !== false ) {
 				// Logged in!
 				return;
 			}
@@ -42,6 +42,7 @@ ob_start( 'sc_cache' );
  * @return string
  */
 function sc_cache( $buffer ) {
+
 	if ( strlen( $buffer ) < 255 ) {
 		return $buffer;
 	}
@@ -51,8 +52,8 @@ function sc_cache( $buffer ) {
 		return $buffer;
 	}
 
-	require_once( ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php' );
-	require_once( ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php' );
+	include_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php';
+	include_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php';
 
 	$filesystem = new WP_Filesystem_Direct( new StdClass() );
 
@@ -102,7 +103,6 @@ function sc_cache( $buffer ) {
 
 	header( 'Last-Modified: ' . gmdate( 'D, d M Y H:i:s' ) . ' GMT' );
 
-
 	return $buffer;
 }
 
@@ -113,6 +113,7 @@ function sc_cache( $buffer ) {
  * @return string
  */
 function sc_get_url_path() {
+
 	$host = ( isset( $_SERVER['HTTP_HOST'] ) ) ? $_SERVER['HTTP_HOST'] : '';
 
 	return rtrim( $host, '/' ) . $_SERVER['REQUEST_URI'];
@@ -121,9 +122,10 @@ function sc_get_url_path() {
 /**
  * Optionally serve cache and exit
  *
- * @since  1.0
+ * @since 1.0
  */
 function sc_serve_cache() {
+
 	$path = rtrim( WP_CONTENT_DIR . '/' ) . '/cache/simple-cache/' . sc_get_url_path() . '/index.html';
 
 	if ( @file_exists( $path ) && @is_readable( $path ) ) {

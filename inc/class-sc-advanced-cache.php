@@ -1,23 +1,32 @@
 <?php
 defined( 'ABSPATH' ) || exit;
 
-class SC_Advanced_Cache {
+class SC_Advanced_Cache
+{
 
 	/**
 	 * Setup hooks/filters
 	 *
-	 * @since  1.0
+	 * @since 1.0
 	 */
 	public function setup() {
+
 		add_action( 'admin_notices', array( $this, 'print_notice' ) );
 	}
 
 	/**
 	 * Print out a warning if WP_CACHE is off when it should be on or if advanced-cache.php is messed up
 	 *
-	 * @since  1.0
+	 * @since 1.0
 	 */
 	public function print_notice() {
+
+		$cant_write = get_option( 'sc_cant_write', false );
+
+		if ( $cant_write ) {
+			return;
+		}
+
 		$config = SC_Config::factory()->get();
 
 		if ( empty( $config['enable_page_caching'] ) ) {
@@ -29,17 +38,17 @@ class SC_Advanced_Cache {
 		}
 
 		?>
-		<div class="error">
-			<p>
-				<?php if ( empty( $config['advanced_mode'] ) ) : ?>
-					<?php esc_html_e( 'Woops! Caching was turned off in wp-config.php, or an important file that Simple Cache uses was edited or deleted.' ); ?>
+	 <div class="error">
+	  <p>
+		<?php if ( empty( $config['advanced_mode'] ) ) : ?>
+		<?php esc_html_e( 'Woops! Caching was turned off in wp-config.php, or an important file that Simple Cache uses was edited or deleted.' ); ?>
 				<?php else : ?>
-					<?php esc_html_e( 'Woops! Caching was turned off in wp-config.php, or advanced-cache.php was edited or deleted.' ); ?>
+		<?php esc_html_e( 'Woops! Caching was turned off in wp-config.php, or advanced-cache.php was edited or deleted.' ); ?>
 				<?php endif; ?>
 
-				<a href="options.php?wp_http_referer=<?php echo esc_url( wp_unslash( $_SERVER['REQUEST_URI'] ) ); ?>&amp;action=sc_update&amp;sc_settings_nonce=<?php echo wp_create_nonce( 'sc_update_settings' ); ?>" class="button button-primary" style="margin-left: 5px;"><?php esc_html_e( "Fix", 'simple-cache' ); ?></a>
-			</p>
-		</div>
+				<a href="options-general.php?page=simple-cache&amp;wp_http_referer=<?php echo esc_url( wp_unslash( $_SERVER['REQUEST_URI'] ) ); ?>&amp;action=sc_update&amp;sc_settings_nonce=<?php echo wp_create_nonce( 'sc_update_settings' ); ?>" class="button button-primary" style="margin-left: 5px;"><?php esc_html_e( 'Fix', 'simple-cache' ); ?></a>
+	  </p>
+	 </div>
 		<?php
 	}
 
@@ -50,6 +59,7 @@ class SC_Advanced_Cache {
 	 * @return bool
 	 */
 	public function clean_up() {
+
 		global $wp_filesystem;
 
 		$file = untrailingslashit( WP_CONTENT_DIR )  . '/advanced-cache.php';
@@ -68,6 +78,7 @@ class SC_Advanced_Cache {
 	 * @return bool
 	 */
 	public function write() {
+
 		global $wp_filesystem;
 
 		$file = untrailingslashit( WP_CONTENT_DIR )  . '/advanced-cache.php';
@@ -84,14 +95,14 @@ class SC_Advanced_Cache {
 			}
 
 			$file_string = '<?php ' .
-				PHP_EOL . "defined( 'ABSPATH' ) || exit;" .
-				PHP_EOL . "define( 'SC_ADVANCED_CACHE', true );" .
-				PHP_EOL . "if ( is_admin() ) { return; }" .
-				PHP_EOL . "if ( ! @file_exists( WP_CONTENT_DIR . '/sc-config/config-' . \$_SERVER['HTTP_HOST'] . '.php' ) ) { return; }" .
-				PHP_EOL . "global \$sc_config;" .
-				PHP_EOL . "\$sc_config = include( WP_CONTENT_DIR . '/sc-config/config-' . \$_SERVER['HTTP_HOST'] . '.php' );" .
-				PHP_EOL . "if ( empty( \$sc_config ) || empty( \$sc_config['enable_page_caching'] ) ) { return; }" .
-				PHP_EOL . "if ( @file_exists( '" . untrailingslashit( plugin_dir_path( __FILE__ ) ) . "/dropins/" . $cache_file . "' ) ) { include_once( '" . untrailingslashit( plugin_dir_path( __FILE__ ) ) . "/dropins/" . $cache_file . "' ); }" . PHP_EOL;
+			PHP_EOL . "defined( 'ABSPATH' ) || exit;" .
+			PHP_EOL . "define( 'SC_ADVANCED_CACHE', true );" .
+			PHP_EOL . 'if ( is_admin() ) { return; }' .
+			PHP_EOL . "if ( ! @file_exists( WP_CONTENT_DIR . '/sc-config/config-' . \$_SERVER['HTTP_HOST'] . '.php' ) ) { return; }" .
+			PHP_EOL . 'global \$sc_config;' .
+			PHP_EOL . "\$sc_config = include( WP_CONTENT_DIR . '/sc-config/config-' . \$_SERVER['HTTP_HOST'] . '.php' );" .
+			PHP_EOL . "if ( empty( \$sc_config ) || empty( \$sc_config['enable_page_caching'] ) ) { return; }" .
+			PHP_EOL . "if ( @file_exists( '" . untrailingslashit( plugin_dir_path( __FILE__ ) ) . '/dropins/' . $cache_file . "' ) ) { include_once( '" . untrailingslashit( plugin_dir_path( __FILE__ ) ) . '/dropins/' . $cache_file . "' ); }" . PHP_EOL;
 
 		}
 
@@ -110,6 +121,7 @@ class SC_Advanced_Cache {
 	 * @return boolean
 	 */
 	public function toggle_caching( $status ) {
+
 		global $wp_filesystem;
 
 		if ( defined( 'WP_CACHE' ) && WP_CACHE === $status ) {
@@ -159,7 +171,7 @@ class SC_Advanced_Cache {
 		}
 
 		if ( $line_key !== false ) {
-			unset( $config_file[$line_key] );
+			unset( $config_file[ $line_key ] );
 		}
 
 		$status_string = ( $status ) ? 'true' : 'false';
@@ -177,10 +189,11 @@ class SC_Advanced_Cache {
 	/**
 	 * Return an instance of the current class, create one if it doesn't exist
 	 *
-	 * @since 1.0
+	 * @since  1.0
 	 * @return object
 	 */
 	public static function factory() {
+
 		static $instance;
 
 		if ( ! $instance ) {

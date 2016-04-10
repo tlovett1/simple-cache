@@ -4,7 +4,7 @@
  * Plugin URI: http://taylorlovett.com
  * Description: A simple caching plugin that just works.
  * Author: Taylor Lovett
- * Version: 1.0.2
+ * Version: 1.0.3
  * Text Domain: simple-cache
  * Domain Path: /languages
  * Author URI: http://taylorlovett.com
@@ -12,13 +12,13 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'SC_VERSION', '1.0.2' );
+define( 'SC_VERSION', '1.0.3' );
 
-require_once( dirname( __FILE__ ) . '/inc/class-sc-settings.php' );
-require_once( dirname( __FILE__ ) . '/inc/class-sc-config.php' );
-require_once( dirname( __FILE__ ) . '/inc/class-sc-advanced-cache.php' );
-require_once( dirname( __FILE__ ) . '/inc/class-sc-object-cache.php' );
-require_once( dirname( __FILE__ ) . '/inc/class-sc-cron.php' );
+require_once dirname( __FILE__ ) . '/inc/class-sc-settings.php';
+require_once dirname( __FILE__ ) . '/inc/class-sc-config.php';
+require_once dirname( __FILE__ ) . '/inc/class-sc-advanced-cache.php';
+require_once dirname( __FILE__ ) . '/inc/class-sc-object-cache.php';
+require_once dirname( __FILE__ ) . '/inc/class-sc-cron.php';
 
 SC_Settings::factory();
 SC_Advanced_Cache::factory();
@@ -32,6 +32,7 @@ SC_Cron::factory();
  * @since 1.0
  */
 function sc_load_textdomain() {
+
 	load_plugin_textdomain( 'simple-cache', false, dirname( plugin_basename( __FILE__ ) ) . '/languages/' );
 }
 add_action( 'plugins_loaded', 'sc_load_textdomain' );
@@ -40,12 +41,13 @@ add_action( 'plugins_loaded', 'sc_load_textdomain' );
 /**
  * Add settings link to plugin actions
  *
- * @param array  $plugin_actions
- * @param string $plugin_file
- * @since 1.0
+ * @param  array  $plugin_actions
+ * @param  string $plugin_file
+ * @since  1.0
  * @return array
  */
 function sc_filter_plugin_action_links( $plugin_actions, $plugin_file ) {
+
 	$new_actions = array();
 
 	if ( basename( dirname( __FILE__ ) ) . '/simple-cache.php' === $plugin_file ) {
@@ -59,9 +61,10 @@ add_filter( 'plugin_action_links', 'sc_filter_plugin_action_links', 10, 2 );
 /**
  * Clean up necessary files
  *
- * @since  1.0
+ * @since 1.0
  */
 function sc_clean_up() {
+
 	WP_Filesystem();
 
 	SC_Advanced_Cache::factory()->clean_up();

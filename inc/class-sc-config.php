@@ -1,7 +1,8 @@
 <?php
 defined( 'ABSPATH' ) || exit;
 
-class SC_Config {
+class SC_Config
+{
 
 	/**
 	 * Setup object
@@ -12,23 +13,24 @@ class SC_Config {
 
 
 	public function __construct() {
+
 		$this->defaults = array(
-			'enable_page_caching'             => array(
-				'default'   => false,
-				'sanitizer' => array( $this, 'boolval' ),
-			),
-			'advanced_mode'                   => array(
-				'default'   => false,
-				'sanitizer' => array( $this, 'boolval' ),
-			),
-			'enable_in_memory_object_caching' => array(
-				'default'   => false,
-				'sanitizer' => array( $this, 'boolval' ),
-			),
-			'in_memory_cache'                 => array(
-				'default'   => 'memcached',
-				'sanitizer' => 'sanitize_text_field',
-			),
+		'enable_page_caching'             => array(
+		'default'   => false,
+		'sanitizer' => array( $this, 'boolval' ),
+		),
+		'advanced_mode'                   => array(
+		'default'   => false,
+		'sanitizer' => array( $this, 'boolval' ),
+		),
+		'enable_in_memory_object_caching' => array(
+		'default'   => false,
+		'sanitizer' => array( $this, 'boolval' ),
+		),
+		'in_memory_cache'                 => array(
+		'default'   => 'memcached',
+		'sanitizer' => 'sanitize_text_field',
+		),
 		);
 	}
 
@@ -40,20 +42,22 @@ class SC_Config {
 	 * @return boolean
 	 */
 	public function boolval( $value ) {
+
 		return (bool) $value;
 	}
 
 	/**
 	 * Return defaults
 	 *
-	 * @since 1.0
+	 * @since  1.0
 	 * @return array
 	 */
 	public function get_defaults() {
+
 		$defaults = array();
 
 		foreach ( $this->defaults as $key => $default ) {
-			$defaults[$key] = $default['default'];
+			$defaults[ $key ] = $default['default'];
 		}
 
 		return $defaults;
@@ -67,6 +71,7 @@ class SC_Config {
 	 * @return bool
 	 */
 	public function write( $config ) {
+
 		global $wp_filesystem;
 
 		$config_dir = WP_CONTENT_DIR  . '/sc-config';
@@ -79,7 +84,7 @@ class SC_Config {
 
 		$wp_filesystem->mkdir( $config_dir );
 
-		$config_file_string = '<?php ' . PHP_EOL . "defined( 'ABSPATH' ) || exit;" . PHP_EOL . "return " . var_export( $this->config, true ) . "; " . PHP_EOL;
+		$config_file_string = '<?php ' . PHP_EOL . "defined( 'ABSPATH' ) || exit;" . PHP_EOL . 'return ' . var_export( $this->config, true ) . '; ' . PHP_EOL;
 
 		if ( ! $wp_filesystem->put_contents( $config_file, $config_file_string, FS_CHMOD_FILE ) ) {
 			return false;
@@ -95,16 +100,44 @@ class SC_Config {
 	 * @return array
 	 */
 	public function get() {
+
 		return get_option( 'sc_simple_cache', $this->get_defaults() );
+	}
+
+	/**
+	 * Verify we can write to the file system
+	 *
+	 * @since  1.0
+	 * @return boolean
+	 */
+	public function verify_file_access() {
+
+		ob_start();
+		$creds = request_filesystem_credentials( admin_url( 'options-general.php?page=simple-cache' ), '', false, false, null );
+
+		if ( false === $creds ) {
+			ob_get_clean();
+			return false;
+		}
+
+		if ( ! WP_Filesystem( $creds ) ) {
+			ob_get_clean();
+			return false;
+		}
+
+		ob_get_clean();
+
+		return true;
 	}
 
 	/**
 	 * Return an instance of the current class, create one if it doesn't exist
 	 *
-	 * @since 1.0
+	 * @since  1.0
 	 * @return object
 	 */
 	public static function factory() {
+
 		static $instance;
 
 		if ( ! $instance ) {

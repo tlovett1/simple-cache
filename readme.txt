@@ -34,6 +34,9 @@ For full documentation, questions, feature requests, and support concerning the 
 
 == Changelog ==
 
+= 1.0.3 =
+* Fix error messaging around non-writeable file system
+
 = 1.0.2 =
 * Properly clean up files
 * Don't break if advanced-cache.php or object-cache.php is gone.
