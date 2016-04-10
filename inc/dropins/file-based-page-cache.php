@@ -11,8 +11,8 @@ if ( ! isset( $_SERVER['REQUEST_METHOD'] ) || $_SERVER['REQUEST_METHOD'] !== 'GE
 	return;
 }
 
-// Don't cache disallowed extensions
-if ( strtolower( $_SERVER['REQUEST_URI'] ) !== '/index.php' && in_array( pathinfo( $_SERVER['REQUEST_URI'], PATHINFO_EXTENSION ), array( 'php', 'xml', 'xsl' ) ) ) {
+// Don't cache disallowed extensions. Prevents wp-cron.php, xmlrpc.php, etc.
+if ( ! preg_match( '#index\.php$#i', $_SERVER['REQUEST_URI'] ) && in_array( pathinfo( $_SERVER['REQUEST_URI'], PATHINFO_EXTENSION ), array( 'php', 'xml', 'xsl' ) ) ) {
 	return;
 }
 
