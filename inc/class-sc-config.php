@@ -1,8 +1,7 @@
 <?php
 defined( 'ABSPATH' ) || exit;
 
-class SC_Config
-{
+class SC_Config {
 
 	/**
 	 * Setup object

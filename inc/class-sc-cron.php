@@ -1,8 +1,7 @@
 <?php
 defined( 'ABSPATH' ) || exit;
 
-class SC_Cron
-{
+class SC_Cron {
 
 	public function __construct() {
 

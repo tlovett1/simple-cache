@@ -280,8 +280,7 @@ function wp_cache_reset() {
  * in the wp-content folder which is looked at in wp-settings. If that file
  * exists, then this file will not be included.
  */
-class WP_Object_Cache
-{
+class WP_Object_Cache {
 
 	/**
 	 * Holds the cached objects

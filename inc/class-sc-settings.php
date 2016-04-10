@@ -1,8 +1,7 @@
 <?php
 defined( 'ABSPATH' ) || exit;
 
-class SC_Settings
-{
+class SC_Settings {
 
 	public function __construct() {
 
@@ -304,7 +303,7 @@ class SC_Settings
 						<tr>
 							<th scope="row"><label for="sc_manual_purge"><?php esc_html_e( 'Manually Delete Cache', 'simple-cache' ); ?></label></th>
 							<td>
-								<a class="button" href="options.php?wp_http_referer=<?php echo esc_url( wp_unslash( $_SERVER['REQUEST_URI'] ) ); ?>&amp;action=sc_purge_cache&amp;sc_cache_nonce=<?php echo wp_create_nonce( 'sc_purge_cache' ); ?>"><?php esc_html_e( 'Purge', 'simple-cache' ); ?></a>
+								<a class="button" href="?page=simple-cache&amp;wp_http_referer=<?php echo esc_url( wp_unslash( $_SERVER['REQUEST_URI'] ) ); ?>&amp;action=sc_purge_cache&amp;sc_cache_nonce=<?php echo wp_create_nonce( 'sc_purge_cache' ); ?>"><?php esc_html_e( 'Purge', 'simple-cache' ); ?></a>
 
 								<p class="description"><?php esc_html_e( 'Purges object and page caches.', 'simple-cache' ); ?></p>
 							</td>

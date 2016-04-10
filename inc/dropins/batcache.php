@@ -48,8 +48,7 @@ function vary_cache_on_function( $function ) {
 	$batcache->add_variant( $function );
 }
 
-class batcache
-{
+class batcache {
 	// This is the base configuration. You can edit these variables or move them into your wp-config.php file.
 	var $max_age = 3600; // Expire batcache items aged this many seconds (zero to disable batcache)
 

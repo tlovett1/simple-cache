@@ -1,8 +1,7 @@
 <?php
 defined( 'ABSPATH' ) || exit;
 
-class SC_Object_Cache
-{
+class SC_Object_Cache {
 
 	/**
 	 * Setup hooks/filters
