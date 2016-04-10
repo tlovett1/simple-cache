@@ -339,14 +339,6 @@ class WP_Object_Cache {
 	var $is_redis_connected = false;
 
 	/**
-	 * Whether or not the object cache thinks Redis needs a flush
-	 *
-	 * @var    bool
-	 * @access private
-	 */
-	var $do_redis_failback_flush = false;
-
-	/**
 	 * The last triggered error
 	 */
 	var $last_triggered_error = '';
@@ -934,7 +926,6 @@ class WP_Object_Cache {
 
 		if ( ! class_exists( 'Redis' ) ) {
 			$this->is_redis_connected = false;
-			$this->missing_redis_message = 'PHPRedis module is unavailable, which is required by Redis object cache. Simple Cache can not utilize object caching.';
 			return $this->is_redis_connected;
 		}
 
@@ -983,9 +974,7 @@ class WP_Object_Cache {
 			}
 		}
 		$this->is_redis_connected = $this->redis->isConnected();
-		if ( ! $this->is_redis_connected ) {
-			$this->missing_redis_message = 'Redis object cache cannot connect to Redis server. Simple Cache can not utilize object caching.';
-		}
+
 		return $this->is_redis_connected;
 	}
 
@@ -1013,48 +1002,25 @@ class WP_Object_Cache {
 				$retval = call_user_func_array( array( $this->redis, $method ), $arguments );
 				return $retval;
 			} catch ( RedisException $e ) {
-				// PhpRedis throws an Exception when it fails a server call.
-				// To prevent WordPress from fataling, we catch the Exception.
-				$retry_exception_messages = array( 'socket error on read socket', 'Connection closed', 'Redis server went away' );
-				$retry_exception_messages = apply_filters( 'wp_redis_retry_exception_messages', $retry_exception_messages );
-				if ( in_array( $e->getMessage(), $retry_exception_messages ) ) {
-					try {
-						$this->last_triggered_error = 'WP Redis: ' . $e->getMessage();
-						// Be friendly to developers debugging production servers by triggering an error
-                     // @codingStandardsIgnoreStart
-                     trigger_error( $this->last_triggered_error, E_USER_WARNING );
-                     // @codingStandardsIgnoreEnd
-					} catch ( PHPUnit_Framework_Error_Warning $e ) {
-						// PHPUnit throws an Exception when `trigger_error()` is called.
-						// To ensure our tests (which expect Exceptions to be caught) continue to run,
-						// we catch the PHPUnit exception and inspect the RedisException message
-					}
-					// Attempt to refresh the connection if it was successfully established once
-					// $this->is_redis_connected will be set inside _connect_redis()
-					if ( $this->_connect_redis() ) {
-						return call_user_func_array( array( $this, '_call_redis' ), array_merge( array( $method ), $arguments ) );
-					}
-					// Fall through to fallback below
-				} else {
-					throw $e;
-				}
-			}
-		}
 
-		if ( $this->is_redis_failback_flush_enabled() && ! $this->do_redis_failback_flush ) {
-			if ( $this->multisite ) {
-				$table = $wpdb->sitemeta;
-				$col1 = 'meta_key';
-				$col2 = 'meta_value';
-			} else {
-				$table = $wpdb->options;
-				$col1 = 'option_name';
-				$col2 = 'option_value';
+				try {
+					$this->last_triggered_error = 'WP Redis: ' . $e->getMessage();
+					// Be friendly to developers debugging production servers by triggering an error
+                 // @codingStandardsIgnoreStart
+                 trigger_error( $this->last_triggered_error, E_USER_WARNING );
+                 // @codingStandardsIgnoreEnd
+				} catch ( PHPUnit_Framework_Error_Warning $e ) {
+					// PHPUnit throws an Exception when `trigger_error()` is called.
+					// To ensure our tests (which expect Exceptions to be caught) continue to run,
+					// we catch the PHPUnit exception and inspect the RedisException message
+				}
+				// Attempt to refresh the connection if it was successfully established once
+				// $this->is_redis_connected will be set inside _connect_redis()
+				if ( $this->_connect_redis() ) {
+					return call_user_func_array( array( $this, '_call_redis' ), array_merge( array( $method ), $arguments ) );
+				}
+
 			}
-         // @codingStandardsIgnoreStart
-         $wpdb->query( "INSERT IGNORE INTO {$table} ({$col1},{$col2}) VALUES ('wp_redis_do_redis_failback_flush',1)" );
-         // @codingStandardsIgnoreEnd
-			$this->do_redis_failback_flush = true;
 		}
 
 		// Mock expected behavior from Redis for these methods
@@ -1086,70 +1052,15 @@ class WP_Object_Cache {
 	}
 
 	/**
-	 * Admin UI to let the end user know something about the Redis connection isn't working.
-	 */
-	public function wp_action_admin_notices_warn_missing_redis() {
-
-		if ( ! current_user_can( 'manage_options' ) || empty( $this->missing_redis_message ) ) {
-			return;
-		}
-		echo '<div class="message error"><p>' . esc_html( $this->missing_redis_message ) . '</p></div>';
-	}
-
-	/**
-	 * Whether or not wakeup flush is enabled
-	 *
-	 * @return bool
-	 */
-	private function is_redis_failback_flush_enabled() {
-
-		if ( defined( 'WP_INSTALLING' ) && WP_INSTALLING ) {
-			return false;
-		} else if ( defined( 'WP_REDIS_DISABLE_FAILBACK_FLUSH' ) && WP_REDIS_DISABLE_FAILBACK_FLUSH ) {
-			return false;
-		}
-		return true;
-	}
-
-	/**
 	 * Sets up object properties; PHP 5 style constructor
 	 *
 	 * @return null|WP_Object_Cache If cache is disabled, returns null.
 	 */
 	public function __construct() {
-
-		global $blog_id, $table_prefix, $wpdb;
+		global $table_prefix;
 
 		$this->multisite = is_multisite();
 		$this->blog_prefix = $this->multisite ? $blog_id . ':' : '';
-
-		if ( ! $this->_connect_redis() ) {
-			add_action( 'admin_notices', array( $this, 'wp_action_admin_notices_warn_missing_redis' ) );
-		}
-
-		if ( $this->multisite ) {
-			$table = $wpdb->sitemeta;
-			$col1 = 'meta_key';
-			$col2 = 'meta_value';
-		} else {
-			$table = $wpdb->options;
-			$col1 = 'option_name';
-			$col2 = 'option_value';
-		}
-		if ( $this->is_redis_failback_flush_enabled() ) {
-         // @codingStandardsIgnoreStart
-         $this->do_redis_failback_flush = (bool) $wpdb->get_results( "SELECT {$col2} FROM {$table} WHERE {$col1}='wp_redis_do_redis_failback_flush'" );
-         // @codingStandardsIgnoreEnd
-			if ( $this->is_redis_connected && $this->do_redis_failback_flush ) {
-				$ret = $this->_call_redis( 'flushAll' );
-				if ( $ret ) {
-                 // @codingStandardsIgnoreStart
-                 $wpdb->query( "DELETE FROM {$table} WHERE {$col1}='wp_redis_do_redis_failback_flush'" );
-                 // @codingStandardsIgnoreEnd
-					$this->do_redis_failback_flush = false;
-				}
-			}
-		}
 
 		$this->global_prefix = ( $this->multisite || defined( 'CUSTOM_USER_TABLE' ) && defined( 'CUSTOM_USER_META_TABLE' ) ) ? '' : $table_prefix;
 
