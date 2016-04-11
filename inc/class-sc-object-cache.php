@@ -92,7 +92,6 @@ class SC_Object_Cache {
 			$file_string = '<?php ' .
 			PHP_EOL . "defined( 'ABSPATH' ) || exit;" .
 			PHP_EOL . "define( 'SC_OBJECT_CACHE', true );" .
-			PHP_EOL . 'if ( is_admin() ) { return; }' .
 			PHP_EOL . "if ( ! @file_exists( WP_CONTENT_DIR . '/sc-config/config-' . \$_SERVER['HTTP_HOST'] . '.php' ) ) { return; }" .
 			PHP_EOL . 'global $sc_config;' .
 			PHP_EOL . "\$sc_config = include( WP_CONTENT_DIR . '/sc-config/config-' . \$_SERVER['HTTP_HOST'] . '.php' );" .
