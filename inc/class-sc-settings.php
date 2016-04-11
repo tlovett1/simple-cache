@@ -218,11 +218,12 @@ class SC_Settings {
 	public function screen_options() {
 
 		$config = SC_Config::factory()->get();
-	?>
-	 <div class="wrap">
-	  <h1><?php esc_html_e( 'Simple Cache Settings', 'simple-cache' ); ?></h1>
 
-	  <form action="" method="post">
+		?>
+		<div class="wrap">
+			<h1><?php esc_html_e( 'Simple Cache Settings', 'simple-cache' ); ?></h1>
+
+			<form action="" method="post">
 				<?php wp_nonce_field( 'sc_update_settings', 'sc_settings_nonce' ); ?>
 				<input type="hidden" name="action" value="sc_update">
 				<input type="hidden" name="wp_http_referer" value="<?php echo esc_attr( wp_unslash( $_SERVER['REQUEST_URI'] ) ); ?>'" />
@@ -235,14 +236,12 @@ class SC_Settings {
 					</select>
 				</div>
 
-				<table class="form-table sc-simple-mode-table <?php if ( empty( $config['advanced_mode'] ) ) : ?>show<?php
-			   endif; ?>">
+				<table class="form-table sc-simple-mode-table <?php if ( empty( $config['advanced_mode'] ) ) : ?>show<?php endif; ?>">
 					<tbody>
 						<tr>
 							<th scope="row"><label for="sc_enable_caching_simple"><span class="setting-highlight">*</span><?php _e( 'Enable Caching', 'simple-cache' ); ?></label></th>
 							<td>
-								<select <?php if ( ! empty( $config['advanced_mode'] ) ) : ?>disabled<?php
-							   endif; ?> name="sc_simple_cache[enable_page_caching]" id="sc_enable_page_caching_simple">
+								<select <?php if ( ! empty( $config['advanced_mode'] ) ) : ?>disabled<?php endif; ?> name="sc_simple_cache[enable_page_caching]" id="sc_enable_page_caching_simple">
 									<option value="0"><?php esc_html_e( 'No', 'simple-cache' ); ?></option>
 									<option <?php selected( $config['enable_page_caching'], true ); ?> value="1"><?php esc_html_e( 'Yes', 'simple-cache' ); ?></option>
 								</select>
@@ -251,29 +250,45 @@ class SC_Settings {
 							</td>
 						</tr>
 						<tr>
-							<th scope="row"><label for="sc_manual_purge"><?php esc_html_e( 'Manually Delete Cache', 'simple-cache' ); ?></label></th>
+							<th scope="row"><label for="sc_page_cache_length"><?php esc_html_e( 'Expire the cache after', 'simple-cache' ); ?></label></th>
 							<td>
-								<a class="button" href="options.php?wp_http_referer=<?php echo esc_url( wp_unslash( $_SERVER['REQUEST_URI'] ) ); ?>&amp;action=sc_purge_cache&amp;sc_cache_nonce=<?php echo wp_create_nonce( 'sc_purge_cache' ); ?>"><?php esc_html_e( 'Purge', 'simple-cache' ); ?></a>
-								<p class="description"><?php esc_html_e( 'This is helpful if you make a change to your site, and something is "stuck" in the cache.', 'simple-cache' ); ?></p>
+								<input size="5" type="text" value="<?php echo (int) $config['page_cache_length']; ?>" name="sc_simple_cache[page_cache_length]"> <span class="description"><?php esc_html_e( 'minutes', 'simple-cache' ); ?></span>
 							</td>
 						</tr>
 					</tbody>
 				</table>
 
-				<table class="form-table sc-advanced-mode-table <?php if ( ! empty( $config['advanced_mode'] ) ) : ?>show<?php
-			   endif; ?>">
+				<table class="form-table sc-advanced-mode-table <?php if ( ! empty( $config['advanced_mode'] ) ) : ?>show<?php endif; ?>">
 					<tbody>
+						<tr>
+							<th scope="row" colspan="2">
+								<h2 class="cache-title"><?php esc_html_e( 'Page Cache', 'simple-cache' ); ?></h2>
+							</th>
+						</tr>
+
 						<tr>
 							<th scope="row"><label for="sc_enable_caching_advanced"><?php _e( 'Enable Page Caching', 'simple-cache' ); ?></label></th>
 							<td>
-								<select <?php if ( empty( $config['advanced_mode'] ) ) : ?>disabled<?php
-							   endif; ?> name="sc_simple_cache[enable_page_caching]" id="sc_enable_page_caching_advanced">
+								<select <?php if ( empty( $config['advanced_mode'] ) ) : ?>disabled<?php endif; ?> name="sc_simple_cache[enable_page_caching]" id="sc_enable_page_caching_advanced">
 									<option value="0"><?php esc_html_e( 'No', 'simple-cache' ); ?></option>
 									<option <?php selected( $config['enable_page_caching'], true ); ?> value="1"><?php esc_html_e( 'Yes', 'simple-cache' ); ?></option>
 								</select>
 
 								<p class="description"><?php esc_html_e( 'When enabled, entire front end pages will be cached.', 'simple-cache' ); ?></p>
 							</td>
+						</tr>
+
+						<tr>
+							<th scope="row"><label for="sc_page_cache_length"><?php esc_html_e( 'Expire page cache after', 'simple-cache' ); ?></label></th>
+							<td>
+								<input size="5" type="text" value="<?php echo (int) $config['page_cache_length']; ?>" name="sc_simple_cache[page_cache_length]"> <span class="description"><?php esc_html_e( 'minutes', 'simple-cache' ); ?></span>
+							</td>
+						</tr>
+
+						<tr>
+							<th scope="row" colspan="2">
+								<h2 class="cache-title"><?php esc_html_e( 'Object Cache', 'simple-cache' ); ?></h2>
+							</th>
 						</tr>
 
 						<tr>
@@ -288,10 +303,8 @@ class SC_Settings {
 							</td>
 						</tr>
 						<tr>
-							<th class="in-memory-cache <?php if ( ! empty( $config['enable_in_memory_object_caching'] ) ) : ?>show<?php
-						   endif; ?>" scope="row"><label for="sc_in_memory_cache"><?php _e( 'In Memory Cache', 'simple-cache' ); ?></label></th>
-							<td class="in-memory-cache <?php if ( ! empty( $config['enable_in_memory_object_caching'] ) ) : ?>show<?php
-						   endif; ?>">
+							<th class="in-memory-cache <?php if ( ! empty( $config['enable_in_memory_object_caching'] ) ) : ?>show<?php endif; ?>" scope="row"><label for="sc_in_memory_cache"><?php _e( 'In Memory Cache', 'simple-cache' ); ?></label></th>
+							<td class="in-memory-cache <?php if ( ! empty( $config['enable_in_memory_object_caching'] ) ) : ?>show<?php endif; ?>">
 								<select name="sc_simple_cache[in_memory_cache]" id="sc_in_memory_cache">
 									<option <?php selected( $config['in_memory_cache'], 'memcached' ); ?> value="memcached">Memcached</option>
 									<option <?php selected( $config['in_memory_cache'], 'redis' ); ?> value="redis">Redis</option>
@@ -300,21 +313,16 @@ class SC_Settings {
 								<p class="description"><?php esc_html_e( "If you aren't sure what these are, you probably don't have them available. Contact your host to inquire.", 'simple-cache' ); ?></p>
 							</td>
 						</tr>
-						<tr>
-							<th scope="row"><label for="sc_manual_purge"><?php esc_html_e( 'Manually Delete Cache', 'simple-cache' ); ?></label></th>
-							<td>
-								<a class="button" href="?page=simple-cache&amp;wp_http_referer=<?php echo esc_url( wp_unslash( $_SERVER['REQUEST_URI'] ) ); ?>&amp;action=sc_purge_cache&amp;sc_cache_nonce=<?php echo wp_create_nonce( 'sc_purge_cache' ); ?>"><?php esc_html_e( 'Purge', 'simple-cache' ); ?></a>
-
-								<p class="description"><?php esc_html_e( 'Purges object and page caches.', 'simple-cache' ); ?></p>
-							</td>
-						</tr>
 					</tbody>
 				</table>
 
-				<?php submit_button(); ?>
-	  </form>
-	 </div>
-	<?php
+				<p class="submit">
+					<input type="submit" name="submit" id="submit" class="button button-primary" value="<?php esc_html_e( 'Save Changes', 'simple-cache' ); ?>">
+					<a class="button" style="margin-left: 10px;" href="?page=simple-cache&amp;wp_http_referer=<?php echo esc_url( wp_unslash( $_SERVER['REQUEST_URI'] ) ); ?>&amp;action=sc_purge_cache&amp;sc_cache_nonce=<?php echo wp_create_nonce( 'sc_purge_cache' ); ?>"><?php esc_html_e( 'Purge Cache', 'simple-cache' ); ?></a>
+				</p>
+			</form>
+		</div>
+		<?php
 	}
 
 	/**

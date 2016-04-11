@@ -28,9 +28,17 @@ class SC_Cron {
 	 */
 	public function filter_cron_schedules( $schedules ) {
 
+		$config = SC_Config::factory()->get();
+
+		$interval = HOUR_IN_SECONDS;
+
+		if ( ! empty( $config['page_cache_length'] ) && $config['page_cache_length'] > 0 ) {
+			$interval = $config['page_cache_length'] * 60;
+		}
+
 		$schedules['simple_cache'] = array(
-		'interval' => apply_filters( 'sc_cache_purge_interval', HOUR_IN_SECONDS ),
-		'display' => esc_html__( 'Simple Cache Purge Interval', 'simple-cache' ),
+			'interval' => apply_filters( 'sc_cache_purge_interval', $interval ),
+			'display'  => esc_html__( 'Simple Cache Purge Interval', 'simple-cache' ),
 		);
 		return $schedules;
 	}
@@ -44,12 +52,19 @@ class SC_Cron {
 
 		$config = SC_Config::factory()->get();
 
+		$timestamp = wp_next_scheduled( 'sc_purge_cache' );
+
 		// Do nothing if we are using the object cache
 		if ( ! empty( $config['advanced_mode'] ) && ! empty( $config['enable_in_memory_object_caching'] ) ) {
+			wp_unschedule_event( $timestamp, 'sc_purge_cache' );
 			return;
 		}
 
-		$timestamp = wp_next_scheduled( 'sc_purge_cache' );
+		// Expire cache never
+		if ( isset( $config['page_cache_length'] ) && $config['page_cache_length'] === 0 ) {
+			wp_unschedule_event( $timestamp, 'sc_purge_cache' );
+			return;
+		}
 
 		if ( ! $timestamp ) {
 			wp_schedule_event( time(), 'simple_cache', 'sc_purge_cache' );

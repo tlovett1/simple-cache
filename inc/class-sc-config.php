@@ -14,22 +14,26 @@ class SC_Config {
 	public function __construct() {
 
 		$this->defaults = array(
-		'enable_page_caching'             => array(
-		'default'   => false,
-		'sanitizer' => array( $this, 'boolval' ),
-		),
-		'advanced_mode'                   => array(
-		'default'   => false,
-		'sanitizer' => array( $this, 'boolval' ),
-		),
-		'enable_in_memory_object_caching' => array(
-		'default'   => false,
-		'sanitizer' => array( $this, 'boolval' ),
-		),
-		'in_memory_cache'                 => array(
-		'default'   => 'memcached',
-		'sanitizer' => 'sanitize_text_field',
-		),
+			'enable_page_caching' => array(
+				'default'         => false,
+				'sanitizer'       => array( $this, 'boolval' ),
+			),
+			'advanced_mode' => array(
+				'default'   => false,
+				'sanitizer' => array( $this, 'boolval' ),
+			),
+			'enable_in_memory_object_caching' => array(
+				'default'                     => false,
+				'sanitizer'                   => array( $this, 'boolval' ),
+			),
+			'in_memory_cache' => array(
+				'default'     => 'memcached',
+				'sanitizer'   => 'sanitize_text_field',
+			),
+			'page_cache_length' => array(
+				'default'       => 3600,
+				'sanitizer'     => 'intval',
+			),
 		);
 	}
 
