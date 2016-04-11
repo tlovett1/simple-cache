@@ -34,6 +34,10 @@ For full documentation, questions, feature requests, and support concerning the 
 
 == Changelog ==
 
+= 1.1 =
+* Add page cache length field
+* Code formatting
+
 = 1.0.3 =
 * Fix error messaging around non-writeable file system
 * Fix redis
