@@ -98,9 +98,8 @@ class SC_Advanced_Cache {
 			PHP_EOL . "define( 'SC_ADVANCED_CACHE', true );" .
 			PHP_EOL . 'if ( is_admin() ) { return; }' .
 			PHP_EOL . "if ( ! @file_exists( WP_CONTENT_DIR . '/sc-config/config-' . \$_SERVER['HTTP_HOST'] . '.php' ) ) { return; }" .
-			PHP_EOL . 'global $sc_config;' .
-			PHP_EOL . "\$sc_config = include( WP_CONTENT_DIR . '/sc-config/config-' . \$_SERVER['HTTP_HOST'] . '.php' );" .
-			PHP_EOL . "if ( empty( \$sc_config ) || empty( \$sc_config['enable_page_caching'] ) ) { return; }" .
+			PHP_EOL . "\$GLOBALS['sc_config'] = include( WP_CONTENT_DIR . '/sc-config/config-' . \$_SERVER['HTTP_HOST'] . '.php' );" .
+			PHP_EOL . "if ( empty( \$GLOBALS['sc_config'] ) || empty( \$GLOBALS['sc_config']['enable_page_caching'] ) ) { return; }" .
 			PHP_EOL . "if ( @file_exists( '" . untrailingslashit( plugin_dir_path( __FILE__ ) ) . '/dropins/' . $cache_file . "' ) ) { include_once( '" . untrailingslashit( plugin_dir_path( __FILE__ ) ) . '/dropins/' . $cache_file . "' ); }" . PHP_EOL;
 
 		}

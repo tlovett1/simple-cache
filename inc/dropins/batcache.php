@@ -361,9 +361,15 @@ HTML;
 // Pass in the global variable which may be an array of settings to override defaults.
 global $batcache;
 
-if ( empty( $batcache ) ) {
-	$batcache = array(
+if ( empty( $batcache ) && ! empty($GLOBALS['sc_config'] ) && isset( $GLOBALS['sc_config']['page_cache_length'] ) ) {
+	$max_age = $GLOBALS['sc_config']['page_cache_length'] * 60;
 
+	if ( 0 === $max_age ) {
+		$max_age = PHP_INT_MAX;
+	}
+
+	$batcache = array(
+		'max_age' => $max_age,
 	);
 }
 
@@ -525,14 +531,14 @@ if ( isset( $batcache->cache['time'] )  // We have cache
 		} else {
 			if ( php_sapi_name() != 'cgi-fcgi' ) {
 				$texts = array(
-				300 => 'Multiple Choices',
-				301 => 'Moved Permanently',
-				302 => 'Found',
-				303 => 'See Other',
-				304 => 'Not Modified',
-				305 => 'Use Proxy',
-				306 => 'Reserved',
-				307 => 'Temporary Redirect',
+					300 => 'Multiple Choices',
+					301 => 'Moved Permanently',
+					302 => 'Found',
+					303 => 'See Other',
+					304 => 'Not Modified',
+					305 => 'Use Proxy',
+					306 => 'Reserved',
+					307 => 'Temporary Redirect',
 				);
 				$protocol = $_SERVER['SERVER_PROTOCOL'];
 				if ( 'HTTP/1.1' != $protocol && 'HTTP/1.0' != $protocol ) {

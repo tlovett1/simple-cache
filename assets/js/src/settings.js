@@ -19,6 +19,8 @@
 	var simpleTable = document.querySelectorAll( '.sc-simple-mode-table' )[0];
 	var pageCachingSimple = document.getElementById( 'sc_enable_page_caching_simple' );
 	var pageCachingAdvanced = document.getElementById( 'sc_enable_page_caching_advanced' );
+	var pageCacheLengthSimple = document.getElementById( 'sc_page_cache_length_simple' );
+	var pageCacheLengthAdvanced = document.getElementById( 'sc_page_cache_length_advanced' );
 
 	$advancedModeToggle.on(
 		'change', function(event) {
@@ -28,12 +30,15 @@
 
 				pageCachingSimple.disabled = true;
 				pageCachingAdvanced.disabled = false;
+
+				pageCacheLengthSimple.disabled = true;
+				pageCacheLengthAdvanced.disabled = false;
 			} else {
 				simpleTable.className = simpleTable.className.replace( /show/i, '' ) + ' show';
 				advancedTable.className = advancedTable.className.replace( /show/i, '' );
 
-				pageCachingSimple.disabled = false;
-				pageCachingAdvanced.disabled = true;
+				pageCacheLengthSimple.disabled = false;
+				pageCacheLengthAdvanced.disabled = true;
 			}
 		}
 	);

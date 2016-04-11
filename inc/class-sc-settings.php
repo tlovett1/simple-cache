@@ -252,7 +252,7 @@ class SC_Settings {
 						<tr>
 							<th scope="row"><label for="sc_page_cache_length"><?php esc_html_e( 'Expire the cache after', 'simple-cache' ); ?></label></th>
 							<td>
-								<input size="5" type="text" value="<?php echo (int) $config['page_cache_length']; ?>" name="sc_simple_cache[page_cache_length]"> <span class="description"><?php esc_html_e( 'minutes', 'simple-cache' ); ?></span>
+								<input <?php if ( ! empty( $config['advanced_mode'] ) ) : ?>disabled<?php endif; ?> size="5" id="sc_page_cache_length_simple" type="text" value="<?php echo (int) $config['page_cache_length']; ?>" name="sc_simple_cache[page_cache_length]"> <span class="description"><?php esc_html_e( 'minutes', 'simple-cache' ); ?></span>
 							</td>
 						</tr>
 					</tbody>
@@ -281,7 +281,7 @@ class SC_Settings {
 						<tr>
 							<th scope="row"><label for="sc_page_cache_length"><?php esc_html_e( 'Expire page cache after', 'simple-cache' ); ?></label></th>
 							<td>
-								<input size="5" type="text" value="<?php echo (int) $config['page_cache_length']; ?>" name="sc_simple_cache[page_cache_length]"> <span class="description"><?php esc_html_e( 'minutes', 'simple-cache' ); ?></span>
+								<input <?php if ( empty( $config['advanced_mode'] ) ) : ?>disabled<?php endif; ?> size="5" id="sc_page_cache_length_advanced" type="text" value="<?php echo (int) $config['page_cache_length']; ?>" name="sc_simple_cache[page_cache_length]"> <span class="description"><?php esc_html_e( 'minutes', 'simple-cache' ); ?></span>
 							</td>
 						</tr>
 
