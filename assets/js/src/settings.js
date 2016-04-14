@@ -21,6 +21,8 @@
 	var pageCachingAdvanced = document.getElementById( 'sc_enable_page_caching_advanced' );
 	var pageCacheLengthSimple = document.getElementById( 'sc_page_cache_length_simple' );
 	var pageCacheLengthAdvanced = document.getElementById( 'sc_page_cache_length_advanced' );
+	var gzipCompressionSimple = document.getElementById( 'sc_enable_gzip_compression_simple' );
+	var gzipCompressionAdvanced = document.getElementById( 'sc_enable_gzip_compression_advanced' );
 
 	$advancedModeToggle.on(
 		'change', function(event) {
@@ -33,12 +35,25 @@
 
 				pageCacheLengthSimple.disabled = true;
 				pageCacheLengthAdvanced.disabled = false;
+
+				if ( gzipCompressionSimple ) {
+					gzipCompressionSimple.disabled = true;
+					gzipCompressionAdvanced.disabled = false;
+				}
 			} else {
 				simpleTable.className = simpleTable.className.replace( /show/i, '' ) + ' show';
 				advancedTable.className = advancedTable.className.replace( /show/i, '' );
 
+				pageCachingSimple.disabled = false;
+				pageCachingAdvanced.disabled = true;
+
 				pageCacheLengthSimple.disabled = false;
 				pageCacheLengthAdvanced.disabled = true;
+
+				if (gzipCompressionSimple) {
+					gzipCompressionSimple.disabled = false;
+					gzipCompressionAdvanced.disabled = true;
+				}
 			}
 		}
 	);

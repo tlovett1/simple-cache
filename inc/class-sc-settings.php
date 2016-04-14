@@ -255,6 +255,20 @@ class SC_Settings {
 								<input <?php if ( ! empty( $config['advanced_mode'] ) ) : ?>disabled<?php endif; ?> size="5" id="sc_page_cache_length_simple" type="text" value="<?php echo (int) $config['page_cache_length']; ?>" name="sc_simple_cache[page_cache_length]"> <span class="description"><?php esc_html_e( 'minutes', 'simple-cache' ); ?></span>
 							</td>
 						</tr>
+
+						<?php if ( function_exists( 'gzencode' ) ) : ?>
+							<tr>
+								<th scope="row"><label for="sc_enable_gzip_compression"><?php _e( 'Enable Compression', 'simple-cache' ); ?></label></th>
+								<td>
+									<select <?php if ( ! empty( $config['advanced_mode'] ) ) : ?>disabled<?php endif; ?> name="sc_simple_cache[enable_gzip_compression]" id="sc_enable_gzip_compression_simple">
+										<option value="0"><?php esc_html_e( 'No', 'simple-cache' ); ?></option>
+										<option <?php selected( $config['enable_gzip_compression'], true ); ?> value="1"><?php esc_html_e( 'Yes', 'simple-cache' ); ?></option>
+									</select>
+
+									<p class="description"><?php esc_html_e( 'When enabled, pages will be compressed. This is a good thing! This should always be enabled unless it causes issues.', 'simple-cache' ); ?></p>
+								</td>
+							</tr>
+						<?php endif; ?>
 					</tbody>
 				</table>
 
@@ -313,6 +327,26 @@ class SC_Settings {
 								<p class="description"><?php esc_html_e( "If you aren't sure what these are, you probably don't have them available. Contact your host to inquire.", 'simple-cache' ); ?></p>
 							</td>
 						</tr>
+
+						<tr>
+							<th scope="row" colspan="2">
+								<h2 class="cache-title"><?php esc_html_e( 'Compression', 'simple-cache' ); ?></h2>
+							</th>
+						</tr>
+
+						<?php if ( function_exists( 'gzencode' ) ) : ?>
+							<tr>
+								<th scope="row"><label for="sc_enable_gzip_compression"><?php _e( 'Enable gzip Compression', 'simple-cache' ); ?></label></th>
+								<td>
+									<select <?php if ( empty( $config['advanced_mode'] ) ) : ?>disabled<?php endif; ?> name="sc_simple_cache[enable_gzip_compression]" id="sc_enable_gzip_compression_advanced">
+										<option value="0"><?php esc_html_e( 'No', 'simple-cache' ); ?></option>
+										<option <?php selected( $config['enable_gzip_compression'], true ); ?> value="1"><?php esc_html_e( 'Yes', 'simple-cache' ); ?></option>
+									</select>
+
+									<p class="description"><?php esc_html_e( 'When enabled pages will be gzip compressed at the PHP level. Note many hosts set up gzip compression in Apache or nginx.', 'simple-cache' ); ?></p>
+								</td>
+							</tr>
+						<?php endif; ?>
 					</tbody>
 				</table>
 

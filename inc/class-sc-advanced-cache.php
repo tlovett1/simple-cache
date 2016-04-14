@@ -89,7 +89,7 @@ class SC_Advanced_Cache {
 		if ( ! empty( $config['enable_page_caching'] ) ) {
 			$cache_file = 'file-based-page-cache.php';
 
-			if ( ! empty( $config['enable_in_memory_object_caching'] ) ) {
+			if ( ! empty( $config['enable_in_memory_object_caching'] ) && ! empty( $config['advanced_mode'] ) ) {
 				$cache_file = 'batcache.php';
 			}
 

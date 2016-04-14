@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: Simple Cache\n"
 "Report-Msgid-Bugs-To: https://github.com/tlovett1/custom-contact-forms/"
 "issues\n"
-"POT-Creation-Date: 2016-04-11 01:18-0400\n"
+"POT-Creation-Date: 2016-04-14 01:39-0400\n"
 "PO-Revision-Date: 2016-04-11 01:17-0400\n"
 "Last-Translator: Taylor Lovett <tlovett88@gmail.com>\n"
 "Language-Team: \n"
@@ -85,12 +85,14 @@ msgid "Enable Advanced Mode"
 msgstr ""
 
 #: inc/class-sc-settings.php:234 inc/class-sc-settings.php:245
-#: inc/class-sc-settings.php:273 inc/class-sc-settings.php:298
+#: inc/class-sc-settings.php:264 inc/class-sc-settings.php:287
+#: inc/class-sc-settings.php:312 inc/class-sc-settings.php:342
 msgid "No"
 msgstr ""
 
 #: inc/class-sc-settings.php:235 inc/class-sc-settings.php:246
-#: inc/class-sc-settings.php:274 inc/class-sc-settings.php:299
+#: inc/class-sc-settings.php:265 inc/class-sc-settings.php:288
+#: inc/class-sc-settings.php:313 inc/class-sc-settings.php:343
 msgid "Yes"
 msgstr ""
 
@@ -108,54 +110,78 @@ msgstr ""
 msgid "Expire the cache after"
 msgstr ""
 
-#: inc/class-sc-settings.php:255 inc/class-sc-settings.php:284
+#: inc/class-sc-settings.php:255 inc/class-sc-settings.php:298
 msgid "minutes"
 msgstr ""
 
-#: inc/class-sc-settings.php:265
+#: inc/class-sc-settings.php:261
+msgid "Enable Compression"
+msgstr ""
+
+#: inc/class-sc-settings.php:268
+msgid ""
+"When enabled, pages will be compressed. This is a good thing! This should "
+"always be enabled unless it causes issues."
+msgstr ""
+
+#: inc/class-sc-settings.php:279
 msgid "Page Cache"
 msgstr ""
 
-#: inc/class-sc-settings.php:270
+#: inc/class-sc-settings.php:284
 msgid "Enable Page Caching"
 msgstr ""
 
-#: inc/class-sc-settings.php:277
+#: inc/class-sc-settings.php:291
 msgid "When enabled, entire front end pages will be cached."
 msgstr ""
 
-#: inc/class-sc-settings.php:282
+#: inc/class-sc-settings.php:296
 msgid "Expire page cache after"
 msgstr ""
 
-#: inc/class-sc-settings.php:290
+#: inc/class-sc-settings.php:304
 msgid "Object Cache"
 msgstr ""
 
-#: inc/class-sc-settings.php:295
+#: inc/class-sc-settings.php:309
 msgid "Enable In-Memory Object Caching"
 msgstr ""
 
-#: inc/class-sc-settings.php:302
+#: inc/class-sc-settings.php:316
 msgid ""
 "When enabled, things like database query results will be stored in memory."
 msgstr ""
 
-#: inc/class-sc-settings.php:306
+#: inc/class-sc-settings.php:320
 msgid "In Memory Cache"
 msgstr ""
 
-#: inc/class-sc-settings.php:313
+#: inc/class-sc-settings.php:327
 msgid ""
 "If you aren't sure what these are, you probably don't have them available. "
 "Contact your host to inquire."
 msgstr ""
 
-#: inc/class-sc-settings.php:320
+#: inc/class-sc-settings.php:333
+msgid "Compression"
+msgstr ""
+
+#: inc/class-sc-settings.php:339
+msgid "Enable gzip Compression"
+msgstr ""
+
+#: inc/class-sc-settings.php:346
+msgid ""
+"When enabled pages will be gzip compressed at the PHP level. Note many hosts "
+"set up gzip compression in Apache or nginx."
+msgstr ""
+
+#: inc/class-sc-settings.php:354
 msgid "Save Changes"
 msgstr ""
 
-#: inc/class-sc-settings.php:321
+#: inc/class-sc-settings.php:355
 msgid "Purge Cache"
 msgstr ""
 

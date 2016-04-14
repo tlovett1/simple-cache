@@ -38,11 +38,11 @@ ob_start( 'sc_cache' );
  * Cache output before it goes to the browser
  *
  * @param  string $buffer
+ * @param  int $flags
  * @since  1.0
  * @return string
  */
-function sc_cache( $buffer ) {
-
+function sc_cache( $buffer, $flags ) {
 	if ( strlen( $buffer ) < 255 ) {
 		return $buffer;
 	}
@@ -103,7 +103,11 @@ function sc_cache( $buffer ) {
 
 	header( 'Last-Modified: ' . gmdate( 'D, d M Y H:i:s' ) . ' GMT' );
 
-	return $buffer;
+	if ( function_exists( 'ob_gzhandler' ) && ! empty( $GLOBALS['sc_config']['enable_gzip_compression'] ) ) {
+		return ob_gzhandler( $buffer, $flags );
+	} else {
+		return $buffer;
+	}
 }
 
 /**
@@ -125,8 +129,14 @@ function sc_get_url_path() {
  * @since 1.0
  */
 function sc_serve_cache() {
+	$file_name = 'index.html';
 
-	$path = rtrim( WP_CONTENT_DIR . '/' ) . '/cache/simple-cache/' . sc_get_url_path() . '/index.html';
+	if ( function_exists( 'ob_gzhandler' ) && ! empty( $GLOBALS['sc_config']['enable_gzip_compression'] ) ) {
+		header( 'Content-Encoding: gzip' );
+		$file_name = 'index.gzip.html';
+	}
+
+	$path = rtrim( WP_CONTENT_DIR . '/' ) . '/cache/simple-cache/' . sc_get_url_path() . '/' . $file_name;
 
 	if ( @file_exists( $path ) && @is_readable( $path ) ) {
 		@readfile( $path );

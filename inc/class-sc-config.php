@@ -26,6 +26,10 @@ class SC_Config {
 				'default'                     => false,
 				'sanitizer'                   => array( $this, 'boolval' ),
 			),
+			'enable_gzip_compression' => array(
+				'default'             => false,
+				'sanitizer'           => array( $this, 'boolval' ),
+			),
 			'in_memory_cache' => array(
 				'default'     => 'memcached',
 				'sanitizer'   => 'sanitize_text_field',
@@ -104,7 +108,9 @@ class SC_Config {
 	 */
 	public function get() {
 
-		return get_option( 'sc_simple_cache', $this->get_defaults() );
+		$config = get_option( 'sc_simple_cache', $this->get_defaults() );
+
+		return wp_parse_args( $config, $this->get_defaults() );
 	}
 
 	/**
