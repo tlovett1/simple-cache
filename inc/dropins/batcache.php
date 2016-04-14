@@ -181,7 +181,7 @@ class batcache {
 		return $r;
 	}
 
-	function ob( $output ) {
+	function ob( $output, $flags ) {
 
 		// PHP5 and objects disappearing before output buffers?
 		wp_cache_init();
@@ -273,7 +273,12 @@ class batcache {
 
 		// Pass output to next ob handler
 		batcache_stats( 'batcache', 'total_page_views' );
-		return $this->cache['output'];
+
+		if ( function_exists( 'ob_gzhandler' ) && ! empty( $GLOBALS['sc_config']['enable_gzip_compression'] ) ) {
+			return ob_gzhandler( $this->cache['output'], $flags );
+		} else {
+			return $this->cache['output'];
+		}
 	}
 
 	function add_variant( $function ) {

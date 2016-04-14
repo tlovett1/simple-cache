@@ -131,7 +131,7 @@ function sc_get_url_path() {
 function sc_serve_cache() {
 	$file_name = 'index.html';
 
-	if ( function_exists( 'ob_gzhandler' ) && ! empty( $GLOBALS['sc_config']['enable_gzip_compression'] ) ) {
+	if ( function_exists( 'gzencode' ) && ! empty( $GLOBALS['sc_config']['enable_gzip_compression'] ) ) {
 		header( 'Content-Encoding: gzip' );
 		$file_name = 'index.gzip.html';
 	}
