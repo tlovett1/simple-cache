@@ -1,6 +1,11 @@
 <?php
 defined( 'ABSPATH' ) || exit;
 
+// We need Memcache to continue
+if ( ! class_exists( 'Memcache' ) ) {
+	return;
+}
+
 /**
  * Copyright (C) 2016 Ryan Boren, Denis de Bernardy, Matt Martz
  */

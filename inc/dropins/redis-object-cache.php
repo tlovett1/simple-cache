@@ -1,6 +1,11 @@
 <?php
 defined( 'ABSPATH' ) || exit;
 
+// We need Redis to continue
+if ( ! class_exists( 'Redis' ) ) {
+	return;
+}
+
 /**
  * Copyright (C) 2016 Pantheon, Josh Koenig, Matthew Boynes, Daniel Bachhuber Alley Interactive
  */
