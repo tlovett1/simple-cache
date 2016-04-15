@@ -298,35 +298,44 @@ class SC_Settings {
 								<input <?php if ( empty( $config['advanced_mode'] ) ) : ?>disabled<?php endif; ?> size="5" id="sc_page_cache_length_advanced" type="text" value="<?php echo (int) $config['page_cache_length']; ?>" name="sc_simple_cache[page_cache_length]"> <span class="description"><?php esc_html_e( 'minutes', 'simple-cache' ); ?></span>
 							</td>
 						</tr>
-
 						<tr>
 							<th scope="row" colspan="2">
-								<h2 class="cache-title"><?php esc_html_e( 'Object Cache', 'simple-cache' ); ?></h2>
+								<h2 class="cache-title"><?php esc_html_e( 'Object Cache (Redis or Memcache)', 'simple-cache' ); ?></h2>
 							</th>
 						</tr>
 
-						<tr>
-							<th scope="row"><label for="sc_enable_in_memory_object_caching"><?php _e( 'Enable In-Memory Object Caching', 'simple-cache' ); ?></label></th>
-							<td>
-								<select name="sc_simple_cache[enable_in_memory_object_caching]" id="sc_enable_in_memory_object_caching">
-									<option value="0"><?php esc_html_e( 'No', 'simple-cache' ); ?></option>
-									<option <?php selected( $config['enable_in_memory_object_caching'], true ); ?> value="1"><?php esc_html_e( 'Yes', 'simple-cache' ); ?></option>
-								</select>
+						<?php if ( class_exists( 'Memcache' ) || class_exists( 'Redis' ) ) : ?>
+							<tr>
+								<th scope="row"><label for="sc_enable_in_memory_object_caching"><?php _e( 'Enable In-Memory Object Caching', 'simple-cache' ); ?></label></th>
+								<td>
+									<select name="sc_simple_cache[enable_in_memory_object_caching]" id="sc_enable_in_memory_object_caching">
+										<option value="0"><?php esc_html_e( 'No', 'simple-cache' ); ?></option>
+										<option <?php selected( $config['enable_in_memory_object_caching'], true ); ?> value="1"><?php esc_html_e( 'Yes', 'simple-cache' ); ?></option>
+									</select>
 
-								<p class="description"><?php esc_html_e( 'When enabled, things like database query results will be stored in memory.', 'simple-cache' ); ?></p>
-							</td>
-						</tr>
-						<tr>
-							<th class="in-memory-cache <?php if ( ! empty( $config['enable_in_memory_object_caching'] ) ) : ?>show<?php endif; ?>" scope="row"><label for="sc_in_memory_cache"><?php _e( 'In Memory Cache', 'simple-cache' ); ?></label></th>
-							<td class="in-memory-cache <?php if ( ! empty( $config['enable_in_memory_object_caching'] ) ) : ?>show<?php endif; ?>">
-								<select name="sc_simple_cache[in_memory_cache]" id="sc_in_memory_cache">
-									<option <?php selected( $config['in_memory_cache'], 'memcached' ); ?> value="memcached">Memcached</option>
-									<option <?php selected( $config['in_memory_cache'], 'redis' ); ?> value="redis">Redis</option>
-								</select>
-
-								<p class="description"><?php esc_html_e( "If you aren't sure what these are, you probably don't have them available. Contact your host to inquire.", 'simple-cache' ); ?></p>
-							</td>
-						</tr>
+									<p class="description"><?php esc_html_e( "When enabled, things like database query results will be stored in memory. Right now Memcache and Redis are suppported. Note that if the proper Memcache or Redis PHP extensions aren't loaded, they won't show as options below.", 'simple-cache' ); ?></p>
+								</td>
+							</tr>
+							<tr>
+								<th class="in-memory-cache <?php if ( ! empty( $config['enable_in_memory_object_caching'] ) ) : ?>show<?php endif; ?>" scope="row"><label for="sc_in_memory_cache"><?php _e( 'In Memory Cache', 'simple-cache' ); ?></label></th>
+								<td class="in-memory-cache <?php if ( ! empty( $config['enable_in_memory_object_caching'] ) ) : ?>show<?php endif; ?>">
+									<select name="sc_simple_cache[in_memory_cache]" id="sc_in_memory_cache">
+										<?php if ( class_exists( 'Memcache' ) ) : ?>
+											<option <?php selected( $config['in_memory_cache'], 'memcached' ); ?> value="memcached">Memcached</option>
+										<?php endif; ?>
+										<?php if ( class_exists( 'Redis' ) ) : ?>
+											<option <?php selected( $config['in_memory_cache'], 'redis' ); ?> value="redis">Redis</option>
+										<?php endif; ?>
+									</select>
+								</td>
+							</tr>
+						<?php else : ?>
+							<tr>
+								<td colspan="2">
+									<?php esc_html_e( 'Neither Memcache or Redis PHP extensions are set up on your server.', 'simple-cache' ); ?>
+								</td>
+							</tr>
+						<?php endif; ?>
 
 						<tr>
 							<th scope="row" colspan="2">
