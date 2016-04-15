@@ -34,6 +34,9 @@ For full documentation, questions, feature requests, and support concerning the 
 
 == Changelog ==
 
+= 1.2.1 =
+* Fix advanced dropdown bug
+
 = 1.2 =
 * Support gzip compression
 * Fix bug when config variable doesn't exist
