@@ -52,7 +52,7 @@ class SC_Advanced_Cache {
 	}
 
 	/**
-	 * Empty file for clean up
+	 * Delete file for clean up
 	 *
 	 * @since  1.0
 	 * @return bool
@@ -63,7 +63,7 @@ class SC_Advanced_Cache {
 
 		$file = untrailingslashit( WP_CONTENT_DIR )  . '/advanced-cache.php';
 
-		if ( ! $wp_filesystem->put_contents( $file, '', FS_CHMOD_FILE ) ) {
+		if ( ! $wp_filesystem->delete( $file ) ) {
 			return false;
 		}
 
