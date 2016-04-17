@@ -29,26 +29,44 @@ class SC_Advanced_Cache {
 		$config = SC_Config::factory()->get();
 
 		if ( empty( $config['enable_page_caching'] ) ) {
+			// Not turned on do nothing
 			return;
 		}
 
+		$config_file_bad = true;
+		$advanced_cache_file_bad = true;
+
 		if ( defined( 'SC_ADVANCED_CACHE' ) && SC_ADVANCED_CACHE ) {
+			$advanced_cache_file_bad = false;
+		}
+
+		if ( defined( 'WP_CACHE' ) && WP_CACHE ) {
+			$config_file_bad = false;
+		}
+
+		if ( ! $config_file_bad && ! $advanced_cache_file_bad ) {
 			return;
 		}
 
 		?>
-	 <div class="error">
-	  <p>
-		<?php if ( empty( $config['advanced_mode'] ) ) : ?>
-		<?php esc_html_e( 'Woops! Caching was turned off in wp-config.php, or an important file that Simple Cache uses was edited or deleted.' ); ?>
-				<?php else : ?>
-		<?php esc_html_e( 'Woops! Caching was turned off in wp-config.php, or advanced-cache.php was edited or deleted.' ); ?>
+
+		<div class="error">
+			<p>
+				<?php if ( $config_file_bad ) : ?>
+					<?php esc_html_e( 'define("WP_CACHE", true); is not in wp-config.php.' ); ?>
 				<?php endif; ?>
 
+				<?php if ( $advanced_cache_file_bad ) : ?>
+					<?php esc_html_e( 'wp-content/advanced-cache.php was edited or deleted.' ); ?>
+				<?php endif; ?>
+
+				<?php esc_html_e( 'Simple Cache is not able to utilize page caching.', 'simple-cache' ); ?>
+
 				<a href="options-general.php?page=simple-cache&amp;wp_http_referer=<?php echo esc_url( wp_unslash( $_SERVER['REQUEST_URI'] ) ); ?>&amp;action=sc_update&amp;sc_settings_nonce=<?php echo wp_create_nonce( 'sc_update_settings' ); ?>" class="button button-primary" style="margin-left: 5px;"><?php esc_html_e( 'Fix', 'simple-cache' ); ?></a>
-	  </p>
-	 </div>
-		<?php
+			</p>
+		</div>
+
+	 <?php
 	}
 
 	/**
@@ -63,11 +81,19 @@ class SC_Advanced_Cache {
 
 		$file = untrailingslashit( WP_CONTENT_DIR )  . '/advanced-cache.php';
 
+		$ret = true;
+
 		if ( ! $wp_filesystem->delete( $file ) ) {
-			return false;
+			$ret = false;
 		}
 
-		return true;
+		$folder = untrailingslashit( WP_CONTENT_DIR )  . '/cache/simple-cache';
+
+		if ( ! $wp_filesystem->delete( $folder, true ) ) {
+			$ret = false;
+		}
+
+		return $ret;
 	}
 
 	/**

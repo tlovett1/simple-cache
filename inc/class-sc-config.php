@@ -140,6 +140,27 @@ class SC_Config {
 	}
 
 	/**
+	 * Delete files and option for clean up
+	 *
+	 * @since  1.2.2
+	 * @return bool
+	 */
+	public function clean_up() {
+
+		global $wp_filesystem;
+
+		$folder = untrailingslashit( WP_CONTENT_DIR )  . '/sc-config';
+
+		delete_option( 'sc_simple_cache' );
+
+		if ( ! $wp_filesystem->delete( $folder, true ) ) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
 	 * Return an instance of the current class, create one if it doesn't exist
 	 *
 	 * @since  1.0

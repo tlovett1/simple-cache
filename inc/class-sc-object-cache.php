@@ -22,7 +22,7 @@ class SC_Object_Cache {
 
 		$cant_write = get_option( 'sc_cant_write', false );
 
-		if ( ! $cant_write ) {
+		if ( $cant_write ) {
 			return;
 		}
 
@@ -39,7 +39,7 @@ class SC_Object_Cache {
 		?>
 	 <div class="error">
 	  <p>
-		<?php esc_html_e( 'Woops! object-cache.php was edited or deleted. Simple Cache is not able to utilize object caching.' ); ?>
+		<?php esc_html_e( 'wp-content/object-cache.php was edited or deleted. Simple Cache is not able to utilize object caching.' ); ?>
 
 				<a href="options-general.php?page=simple-cache&amp;wp_http_referer=<?php echo esc_url( wp_unslash( $_SERVER['REQUEST_URI'] ) ); ?>&amp;action=sc_update&amp;sc_settings_nonce=<?php echo wp_create_nonce( 'sc_update_settings' ); ?>" class="button button-primary" style="margin-left: 5px;"><?php esc_html_e( 'Fix', 'simple-cache' ); ?></a>
 	  </p>
@@ -48,7 +48,7 @@ class SC_Object_Cache {
 	}
 
 	/**
-	 * Empty file for clean up
+	 * Delete file for clean up
 	 *
 	 * @since  1.0
 	 * @return bool
@@ -59,7 +59,7 @@ class SC_Object_Cache {
 
 		$file = untrailingslashit( WP_CONTENT_DIR )  . '/object-cache.php';
 
-		if ( ! $wp_filesystem->put_contents( $file, '', FS_CHMOD_FILE ) ) {
+		if ( ! $wp_filesystem->delete( $file ) ) {
 			return false;
 		}
 
@@ -92,6 +92,7 @@ class SC_Object_Cache {
 			$file_string = '<?php ' .
 			PHP_EOL . "defined( 'ABSPATH' ) || exit;" .
 			PHP_EOL . "define( 'SC_OBJECT_CACHE', true );" .
+			PHP_EOL . 'if ( is_admin() ) { return; }' .
 			PHP_EOL . "if ( ! @file_exists( WP_CONTENT_DIR . '/sc-config/config-' . \$_SERVER['HTTP_HOST'] . '.php' ) ) { return; }" .
 			PHP_EOL . "\$GLOBALS['sc_config'] = include( WP_CONTENT_DIR . '/sc-config/config-' . \$_SERVER['HTTP_HOST'] . '.php' );" .
 			PHP_EOL . "if ( empty( \$GLOBALS['sc_config'] ) || empty( \$GLOBALS['sc_config']['enable_in_memory_object_caching'] ) ) { return; }" .

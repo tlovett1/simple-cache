@@ -18,6 +18,7 @@ Simple Cache was constructed after getting frustrated with the major caching plu
 * Simple Cache makes your site run very fast so you can handle lots of traffic.
 * Extremely easy to delete. Don't like the plugin? You can remove it, and your website won't break.
 * Easily clear the cache if you need to.
+* Enable gzip compression
 * Want to get advanced with object caching (Memached or Redis)? An advanced mode is available that will automatically setup [Batcache](https://wordpress.org/plugins/batcache/) and [Memcached](https://wordpress.org/plugins/memcached/)/[Redis](https://wordpress.org/plugins/wp-redis/) for you.
 
 If you need your site to run fast, don't have time to mess with complicated settings, and have been frustrated by other caching plugins, give Simple Cache a try.
@@ -33,6 +34,12 @@ If you need your site to run fast, don't have time to mess with complicated sett
 For full documentation, questions, feature requests, and support concerning the Simple Cache plugin, please refer to [Github](http://github.com/tlovett1/simple-cache).
 
 == Changelog ==
+
+= 1.2.2 =
+* On uninstall delete all related plugin files including config.
+* Turn off object caching in admin
+* Update notices
+* Dont show in memory options that aren't available
 
 = 1.2.1 =
 * Fix advanced dropdown bug
