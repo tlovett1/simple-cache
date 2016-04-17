@@ -35,7 +35,7 @@ class SC_Config {
 				'sanitizer'   => 'sanitize_text_field',
 			),
 			'page_cache_length' => array(
-				'default'       => 3600,
+				'default'       => 1440, // One day
 				'sanitizer'     => 'intval',
 			),
 		);
