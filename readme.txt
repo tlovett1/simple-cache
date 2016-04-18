@@ -35,6 +35,10 @@ For full documentation, questions, feature requests, and support concerning the 
 
 == Changelog ==
 
+= 1.2.3 =
+* Properly check needed file permissions
+* Sane default cache expiration time
+
 = 1.2.2 =
 * On uninstall delete all related plugin files including config.
 * Turn off object caching in admin

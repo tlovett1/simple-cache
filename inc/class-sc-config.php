@@ -157,6 +157,10 @@ class SC_Config {
 	 * @return boolean
 	 */
 	public function verify_file_access() {
+		if ( function_exists( 'clearstatcache' ) ) {
+			@clearstatcache();
+		}
+
 		// First check wp-config.php
 		if ( ! @is_writable( ABSPATH . 'wp-config.php' ) ) {
 			return false;
