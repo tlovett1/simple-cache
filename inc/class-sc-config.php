@@ -114,27 +114,78 @@ class SC_Config {
 	}
 
 	/**
+	 * Check if a directory is writable and we can create files as the same user as the current file
+	 *
+	 * @param  string  $dir
+	 * @since  1.2.3
+	 * @return boolean
+	 */
+	private function _is_dir_writable( $dir ) {
+		$temp_handle = @fopen( untrailingslashit( $dir ) .  '/temp-write-test-' . time(), 'w' );
+
+		if ( $temp_handle ) {
+
+			// Attempt to determine the file owner of the WordPress files, and that of newly created files
+			$wp_file_owner = $temp_file_owner = false;
+
+			if ( function_exists( 'fileowner' ) ) {
+				$wp_file_owner = @fileowner( __FILE__ );
+				$temp_file_owner = @fileowner( $temp_file_name );
+
+				@fclose( $temp_handle );
+				@unlink( $temp_file_name );
+
+				if ( $wp_file_owner !== false && $wp_file_owner === $temp_file_owner ) {
+					return false;
+				}
+			} else {
+				if ( ! @is_writable( $dir ) ) {
+					return false;
+				}
+			}
+		} else {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
 	 * Verify we can write to the file system
 	 *
 	 * @since  1.0
 	 * @return boolean
 	 */
 	public function verify_file_access() {
-
-		ob_start();
-		$creds = request_filesystem_credentials( admin_url( 'options-general.php?page=simple-cache' ), '', false, false, null );
-
-		if ( false === $creds ) {
-			ob_get_clean();
+		// First check wp-config.php
+		if ( ! @is_writable( ABSPATH . 'wp-config.php' ) ) {
 			return false;
 		}
 
-		if ( ! WP_Filesystem( $creds ) ) {
-			ob_get_clean();
+		// Now check wp-content. We need to be able to create files of the same user as this file
+		if ( ! $this->_is_dir_writable( untrailingslashit( WP_CONTENT_DIR ) ) ) {
 			return false;
 		}
 
-		ob_get_clean();
+		// If the cache and/or cache/simple-cache directories exist, make sure it's writeable
+		if ( @file_exists( untrailingslashit( WP_CONTENT_DIR ) . '/cache' ) ) {
+			if ( ! $this->_is_dir_writable( untrailingslashit( WP_CONTENT_DIR ) . '/cache' ) ) {
+				return false;
+			}
+
+			if ( @file_exists( untrailingslashit( WP_CONTENT_DIR ) . '/cache/simple-cache' ) ) {
+				if ( ! $this->_is_dir_writable( untrailingslashit( WP_CONTENT_DIR ) . '/cache/simple-cache' ) ) {
+					return false;
+				}
+			}
+		}
+
+		// If the sc-config directory exists, make sure it's writeable
+		if ( @file_exists( untrailingslashit( WP_CONTENT_DIR ) . '/sc-config' ) ) {
+			if ( ! $this->_is_dir_writable( untrailingslashit( WP_CONTENT_DIR ) . '/sc-config' ) ) {
+				return false;
+			}
+		}
 
 		return true;
 	}

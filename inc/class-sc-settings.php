@@ -69,7 +69,7 @@ class SC_Settings {
 		?>
 		<div class="notice notice-error">
 			<p>
-				<?php esc_html_e( "Simple Cache can't create or modify files on your system. Contact your host.", 'simple-cache' ); ?>
+				<?php esc_html_e( "Simple Cache can't create or modify needed files on your system. Specifically, Simple Cache needs to write to /wp-config.php and /wp-content. Contact your host.", 'simple-cache' ); ?>
 				<a href="options-general.php?page=simple-cache&amp;wp_http_referer=<?php echo esc_url( wp_unslash( $_SERVER['REQUEST_URI'] ) ); ?>&amp;action=sc_update&amp;sc_settings_nonce=<?php echo wp_create_nonce( 'sc_update_settings' ); ?>" class="button button-primary" style="margin-left: 5px;"><?php esc_html_e( 'Try Again', 'simple-cache' ); ?></a>
 			</p>
 		</div>
