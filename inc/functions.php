@@ -5,7 +5,7 @@
  *
  * @since  1.4
  */
-function sc_flush_cache() {
+function sc_cache_flush() {
 	global $wp_filesystem;
 
 	require_once( ABSPATH . 'wp-admin/includes/file.php');

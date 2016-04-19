@@ -89,7 +89,7 @@ class SC_Cron {
 			return;
 		}
 
-		sc_clear_cache();
+		sc_cache_flush();
 	}
 
 	/**

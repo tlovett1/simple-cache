@@ -122,7 +122,7 @@ class SC_Settings {
 				wp_die( 'Cheatin, eh?' );
 			}
 
-			sc_flush_cache();
+			sc_cache_flush();
 
 			if ( ! empty( $_REQUEST['wp_http_referer'] ) ) {
 				wp_redirect( $_REQUEST['wp_http_referer'] );
