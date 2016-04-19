@@ -77,9 +77,6 @@ class SC_Cron {
 	 * @since 1.0
 	 */
 	public function purge_file_cache() {
-
-		global $wp_filesystem;
-
 		$config = SC_Config::factory()->get();
 
 		// Do nothing, caching is turned off
@@ -92,9 +89,7 @@ class SC_Cron {
 			return;
 		}
 
-		WP_Filesystem();
-
-		$wp_filesystem->rmdir( untrailingslashit( WP_CONTENT_DIR ) . '/cache/simple-cache', true );
+		sc_clear_cache();
 	}
 
 	/**
