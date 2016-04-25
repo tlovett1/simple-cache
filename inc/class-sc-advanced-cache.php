@@ -120,13 +120,13 @@ class SC_Advanced_Cache {
 			}
 
 			$file_string = '<?php ' .
-			PHP_EOL . "defined( 'ABSPATH' ) || exit;" .
-			PHP_EOL . "define( 'SC_ADVANCED_CACHE', true );" .
-			PHP_EOL . 'if ( is_admin() ) { return; }' .
-			PHP_EOL . "if ( ! @file_exists( WP_CONTENT_DIR . '/sc-config/config-' . \$_SERVER['HTTP_HOST'] . '.php' ) ) { return; }" .
-			PHP_EOL . "\$GLOBALS['sc_config'] = include( WP_CONTENT_DIR . '/sc-config/config-' . \$_SERVER['HTTP_HOST'] . '.php' );" .
-			PHP_EOL . "if ( empty( \$GLOBALS['sc_config'] ) || empty( \$GLOBALS['sc_config']['enable_page_caching'] ) ) { return; }" .
-			PHP_EOL . "if ( @file_exists( '" . untrailingslashit( plugin_dir_path( __FILE__ ) ) . '/dropins/' . $cache_file . "' ) ) { include_once( '" . untrailingslashit( plugin_dir_path( __FILE__ ) ) . '/dropins/' . $cache_file . "' ); }" . PHP_EOL;
+			"\n\r" . "defined( 'ABSPATH' ) || exit;" .
+			"\n\r" . "define( 'SC_ADVANCED_CACHE', true );" .
+			"\n\r" . 'if ( is_admin() ) { return; }' .
+			"\n\r" . "if ( ! @file_exists( WP_CONTENT_DIR . '/sc-config/config-' . \$_SERVER['HTTP_HOST'] . '.php' ) ) { return; }" .
+			"\n\r" . "\$GLOBALS['sc_config'] = include( WP_CONTENT_DIR . '/sc-config/config-' . \$_SERVER['HTTP_HOST'] . '.php' );" .
+			"\n\r" . "if ( empty( \$GLOBALS['sc_config'] ) || empty( \$GLOBALS['sc_config']['enable_page_caching'] ) ) { return; }" .
+			"\n\r" . "if ( @file_exists( '" . untrailingslashit( plugin_dir_path( __FILE__ ) ) . '/dropins/' . $cache_file . "' ) ) { include_once( '" . untrailingslashit( plugin_dir_path( __FILE__ ) ) . '/dropins/' . $cache_file . "' ); }" . "\n\r";
 
 		}
 
@@ -181,7 +181,7 @@ class SC_Advanced_Cache {
 			return false;
 		}
 
-		$config_file = explode( PHP_EOL, $config_file_string );
+		$config_file = preg_split( "#(\n|\r)#", $config_file_string );
 		$line_key = false;
 
 		foreach ( $config_file as $key => $line ) {
@@ -203,7 +203,7 @@ class SC_Advanced_Cache {
 		array_shift( $config_file );
 		array_unshift( $config_file, '<?php', "define( 'WP_CACHE', $status_string ); // Simple Cache" );
 
-		if ( ! $wp_filesystem->put_contents( $config_path, implode( PHP_EOL, $config_file ), FS_CHMOD_FILE ) ) {
+		if ( ! $wp_filesystem->put_contents( $config_path, implode( "\n\r", $config_file ), FS_CHMOD_FILE ) ) {
 			return false;
 		}
 

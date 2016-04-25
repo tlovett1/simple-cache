@@ -91,7 +91,7 @@ class SC_Config {
 
 		$wp_filesystem->mkdir( $config_dir );
 
-		$config_file_string = '<?php ' . PHP_EOL . "defined( 'ABSPATH' ) || exit;" . PHP_EOL . 'return ' . var_export( $this->config, true ) . '; ' . PHP_EOL;
+		$config_file_string = '<?php ' . "\n\r" . "defined( 'ABSPATH' ) || exit;" . "\n\r" . 'return ' . var_export( $this->config, true ) . '; ' . "\n\r";
 
 		if ( ! $wp_filesystem->put_contents( $config_file, $config_file_string, FS_CHMOD_FILE ) ) {
 			return false;
