@@ -3,7 +3,7 @@ Contributors: tlovett1
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=HR34W94MM53RQ
 Tags: cache, page cache, object caching, object cache, memcache, redis, memcached
 Requires at least: 3.9
-Tested up to: 4.5
+Tested up to: 4.6
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -34,6 +34,10 @@ If you need your site to run fast, don't have time to mess with complicated sett
 For full documentation, questions, feature requests, and support concerning the Simple Cache plugin, please refer to [Github](http://github.com/tlovett1/simple-cache).
 
 == Changelog ==
+
+= 1.2.4 =
+* Fix config file getting erased in Windows
+* Add developer function sc_cache_flush() for clearing the cache
 
 = 1.2.3 =
 * Properly check needed file permissions
