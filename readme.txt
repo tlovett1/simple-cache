@@ -35,6 +35,9 @@ For full documentation, questions, feature requests, and support concerning the 
 
 == Changelog ==
 
+= 1.2.5 =
+* Support wp-config.php one directory below WP.
+
 = 1.2.4 =
 * Fix config file getting erased in Windows
 * Add developer function sc_cache_flush() for clearing the cache
