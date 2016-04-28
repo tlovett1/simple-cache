@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: Simple Cache\n"
 "Report-Msgid-Bugs-To: https://github.com/tlovett1/custom-contact-forms/"
 "issues\n"
-"POT-Creation-Date: 2016-04-18 01:00-0400\n"
+"POT-Creation-Date: 2016-04-28 09:38-0400\n"
 "PO-Revision-Date: 2016-04-11 01:17-0400\n"
 "Last-Translator: Taylor Lovett <tlovett88@gmail.com>\n"
 "Language-Team: \n"
@@ -62,7 +62,7 @@ msgstr ""
 #: inc/class-sc-settings.php:72
 msgid ""
 "Simple Cache can't create or modify needed files on your system. "
-"Specifically, Simple Cache needs to write to /wp-config.php and /wp-content "
+"Specifically, Simple Cache needs to write to wp-config.php and /wp-content "
 "using PHP's fopen() function. Contact your host."
 msgstr ""
 
@@ -74,83 +74,83 @@ msgstr ""
 msgid "Simple Cache"
 msgstr ""
 
-#: inc/class-sc-settings.php:148
+#: inc/class-sc-settings.php:144
 msgid "Cheatin, eh?"
 msgstr ""
 
-#: inc/class-sc-settings.php:224
+#: inc/class-sc-settings.php:220
 msgid "Simple Cache Settings"
 msgstr ""
 
-#: inc/class-sc-settings.php:232
+#: inc/class-sc-settings.php:228
 msgid "Enable Advanced Mode"
 msgstr ""
 
-#: inc/class-sc-settings.php:234 inc/class-sc-settings.php:245
-#: inc/class-sc-settings.php:264 inc/class-sc-settings.php:287
-#: inc/class-sc-settings.php:312 inc/class-sc-settings.php:351
+#: inc/class-sc-settings.php:230 inc/class-sc-settings.php:241
+#: inc/class-sc-settings.php:260 inc/class-sc-settings.php:283
+#: inc/class-sc-settings.php:308 inc/class-sc-settings.php:347
 msgid "No"
 msgstr ""
 
-#: inc/class-sc-settings.php:235 inc/class-sc-settings.php:246
-#: inc/class-sc-settings.php:265 inc/class-sc-settings.php:288
-#: inc/class-sc-settings.php:313 inc/class-sc-settings.php:352
+#: inc/class-sc-settings.php:231 inc/class-sc-settings.php:242
+#: inc/class-sc-settings.php:261 inc/class-sc-settings.php:284
+#: inc/class-sc-settings.php:309 inc/class-sc-settings.php:348
 msgid "Yes"
 msgstr ""
 
-#: inc/class-sc-settings.php:242
+#: inc/class-sc-settings.php:238
 msgid "Enable Caching"
 msgstr ""
 
-#: inc/class-sc-settings.php:249
+#: inc/class-sc-settings.php:245
 msgid ""
 "Turn this on to get started. This setting turns on caching and is really all "
 "you need."
 msgstr ""
 
-#: inc/class-sc-settings.php:253
+#: inc/class-sc-settings.php:249
 msgid "Expire the cache after"
 msgstr ""
 
-#: inc/class-sc-settings.php:255 inc/class-sc-settings.php:298
+#: inc/class-sc-settings.php:251 inc/class-sc-settings.php:294
 msgid "minutes"
 msgstr ""
 
-#: inc/class-sc-settings.php:261
+#: inc/class-sc-settings.php:257
 msgid "Enable Compression"
 msgstr ""
 
-#: inc/class-sc-settings.php:268
+#: inc/class-sc-settings.php:264
 msgid ""
 "When enabled, pages will be compressed. This is a good thing! This should "
 "always be enabled unless it causes issues."
 msgstr ""
 
-#: inc/class-sc-settings.php:279
+#: inc/class-sc-settings.php:275
 msgid "Page Cache"
 msgstr ""
 
-#: inc/class-sc-settings.php:284
+#: inc/class-sc-settings.php:280
 msgid "Enable Page Caching"
 msgstr ""
 
-#: inc/class-sc-settings.php:291
+#: inc/class-sc-settings.php:287
 msgid "When enabled, entire front end pages will be cached."
 msgstr ""
 
-#: inc/class-sc-settings.php:296
+#: inc/class-sc-settings.php:292
 msgid "Expire page cache after"
 msgstr ""
 
-#: inc/class-sc-settings.php:303
+#: inc/class-sc-settings.php:299
 msgid "Object Cache (Redis or Memcache)"
 msgstr ""
 
-#: inc/class-sc-settings.php:309
+#: inc/class-sc-settings.php:305
 msgid "Enable In-Memory Object Caching"
 msgstr ""
 
-#: inc/class-sc-settings.php:316
+#: inc/class-sc-settings.php:312
 msgid ""
 "When enabled, things like database query results will be stored in memory. "
 "Right now Memcache and Redis are suppported. Note that if the proper "
@@ -158,37 +158,37 @@ msgid ""
 "below."
 msgstr ""
 
-#: inc/class-sc-settings.php:320
+#: inc/class-sc-settings.php:316
 msgid "In Memory Cache"
 msgstr ""
 
-#: inc/class-sc-settings.php:335
+#: inc/class-sc-settings.php:331
 msgid "Neither Memcache or Redis PHP extensions are set up on your server."
 msgstr ""
 
-#: inc/class-sc-settings.php:342
+#: inc/class-sc-settings.php:338
 msgid "Compression"
 msgstr ""
 
-#: inc/class-sc-settings.php:348
+#: inc/class-sc-settings.php:344
 msgid "Enable gzip Compression"
 msgstr ""
 
-#: inc/class-sc-settings.php:355
+#: inc/class-sc-settings.php:351
 msgid ""
 "When enabled pages will be gzip compressed at the PHP level. Note many hosts "
 "set up gzip compression in Apache or nginx."
 msgstr ""
 
-#: inc/class-sc-settings.php:363
+#: inc/class-sc-settings.php:359
 msgid "Save Changes"
 msgstr ""
 
-#: inc/class-sc-settings.php:364
+#: inc/class-sc-settings.php:360
 msgid "Purge Cache"
 msgstr ""
 
-#: simple-cache.php:54
+#: simple-cache.php:55
 #, php-format
 msgid "<a href=\"%s\">Settings</a>"
 msgstr ""
