@@ -162,7 +162,7 @@ class SC_Config {
 		}
 
 		// First check wp-config.php
-		if ( ! @is_writable( ABSPATH . 'wp-config.php' ) ) {
+		if ( ! @is_writable( ABSPATH . 'wp-config.php' ) && ! @is_writable( ABSPATH . '../wp-config.php' ) ) {
 			return false;
 		}
 
