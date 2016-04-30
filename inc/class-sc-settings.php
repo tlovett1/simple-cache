@@ -20,6 +20,24 @@ class SC_Settings {
 		add_action( 'admin_notices', array( $this, 'setup_notice' ) );
 		add_action( 'admin_notices', array( $this, 'cant_write_notice' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'action_admin_enqueue_scripts_styles' ) );
+		add_action( 'admin_bar_menu', array( $this, 'admin_bar_menu' ) );
+
+	}
+
+	/**
+	 * Add purge cache button to admin bar
+	 *
+	 * @since 1,3
+	 */
+	public function admin_bar_menu() {
+		global $wp_admin_bar;
+
+		$wp_admin_bar->add_menu( array(
+			'id'     => 'sc-purge-cache',
+			'parent' => 'top-secondary',
+			'href' => esc_url( admin_url( 'options-general.php?page=simple-cache&amp;wp_http_referer=' . esc_url( wp_unslash( $_SERVER['REQUEST_URI'] ) ) . '&amp;action=sc_purge_cache&amp;sc_cache_nonce=' . wp_create_nonce( 'sc_purge_cache' ) ) ),
+			'title'  => esc_html__( 'Purge Cache', 'simple-cache' ),
+		) );
 	}
 
 	/**
