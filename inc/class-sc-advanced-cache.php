@@ -11,6 +11,69 @@ class SC_Advanced_Cache {
 	public function setup() {
 
 		add_action( 'admin_notices', array( $this, 'print_notice' ) );
+		add_action( 'pre_post_update', array( $this, 'purge_post_on_update' ), 10, 1 );
+		add_action( 'save_post', array( $this, 'purge_post_on_update' ), 10, 1 );
+		add_action( 'wp_trash_post', array( $this, 'purge_post_on_update' ), 10, 1 );
+	}
+
+	/**
+	 * Automatically purge file based page cache on post changes
+	 *
+	 * @param  int $post_id
+	 * @since  1.3
+	 */
+	public function purge_post_on_update( $post_id ) {
+		$post_type = get_post_type( $post_id );
+
+		if ( ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) || 'revision' === $post_type ) {
+			return;
+		} elseif ( ! current_user_can( 'edit_post', $post_id ) && ( ! defined( 'DOING_CRON' ) || ! DOING_CRON ) ) {
+			return;
+		}
+
+		$config = SC_Config::factory()->get();
+
+		// File based caching only
+		if ( ! empty( $config['enable_page_caching'] ) && empty( $config['enable_in_memory_object_caching'] ) ) {
+			global $wp_filesystem;
+
+			WP_Filesystem();
+
+			$sub_path = preg_replace( '#https?://#i', '', get_permalink( $post_id ) );
+
+			$path = untrailingslashit( WP_CONTENT_DIR ) . '/cache/simple-cache/' . preg_replace( '#https?://#i', '', get_permalink( $post_id ) );
+
+			$wp_filesystem->delete( untrailingslashit( $path ) . '/index.html' );
+			$wp_filesystem->delete( untrailingslashit( $path ) . '/index.gzip.html' );
+		}
+	}
+
+	/**
+	 * Delete cached single post view on update
+	 *
+	 * @since  1.2.6
+	 */
+	public function purge_post_on_transition( $new_status, $old_status, $post ) {
+		if ( $new_status !== 'publish' && $old_status !== 'publish' ) {
+			return;
+		}
+
+		$config = SC_Config::factory()->get();
+
+		// File based caching only
+		if ( ! empty( $config['enable_page_caching'] ) && empty( $config['enable_in_memory_object_caching'] ) ) {
+			global $wp_filesystem;
+
+			WP_Filesystem();
+
+			$path = untrailingslashit( WP_CONTENT_DIR ) . '/cache/simple-cache/' . preg_replace( '#https?://#i', '', get_permalink( $post_id ) );
+
+			$wp_filesystem->delete( $path, true );
+		}
+	}
+
+	public function purge_post_on_comment( $comment_ID, $approved, $comment_data ) {
+
 	}
 
 	/**
