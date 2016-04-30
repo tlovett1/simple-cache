@@ -35,6 +35,10 @@ For full documentation, questions, feature requests, and support concerning the 
 
 == Changelog ==
 
+= 1.3 =
+* Purge single view cache for all post types when they are updated/deleted
+* Admin bar button for purging the cache
+
 = 1.2.5 =
 * Support wp-config.php one directory below WP.
 
