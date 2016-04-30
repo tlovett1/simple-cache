@@ -49,34 +49,6 @@ class SC_Advanced_Cache {
 	}
 
 	/**
-	 * Delete cached single post view on update
-	 *
-	 * @since  1.2.6
-	 */
-	public function purge_post_on_transition( $new_status, $old_status, $post ) {
-		if ( $new_status !== 'publish' && $old_status !== 'publish' ) {
-			return;
-		}
-
-		$config = SC_Config::factory()->get();
-
-		// File based caching only
-		if ( ! empty( $config['enable_page_caching'] ) && empty( $config['enable_in_memory_object_caching'] ) ) {
-			global $wp_filesystem;
-
-			WP_Filesystem();
-
-			$path = untrailingslashit( WP_CONTENT_DIR ) . '/cache/simple-cache/' . preg_replace( '#https?://#i', '', get_permalink( $post_id ) );
-
-			$wp_filesystem->delete( $path, true );
-		}
-	}
-
-	public function purge_post_on_comment( $comment_ID, $approved, $comment_data ) {
-
-	}
-
-	/**
 	 * Print out a warning if WP_CACHE is off when it should be on or if advanced-cache.php is messed up
 	 *
 	 * @since 1.0
