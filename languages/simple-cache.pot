@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: Simple Cache\n"
 "Report-Msgid-Bugs-To: https://github.com/tlovett1/custom-contact-forms/"
 "issues\n"
-"POT-Creation-Date: 2016-04-28 09:38-0400\n"
+"POT-Creation-Date: 2016-04-30 13:04-0400\n"
 "PO-Revision-Date: 2016-04-11 01:17-0400\n"
 "Last-Translator: Taylor Lovett <tlovett88@gmail.com>\n"
 "Language-Team: \n"
@@ -25,19 +25,19 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: node_modules\n"
 
-#: inc/class-sc-advanced-cache.php:56
+#: inc/class-sc-advanced-cache.php:91
 msgid "define(\"WP_CACHE\", true); is not in wp-config.php."
 msgstr ""
 
-#: inc/class-sc-advanced-cache.php:60
+#: inc/class-sc-advanced-cache.php:95
 msgid "wp-content/advanced-cache.php was edited or deleted."
 msgstr ""
 
-#: inc/class-sc-advanced-cache.php:63
+#: inc/class-sc-advanced-cache.php:98
 msgid "Simple Cache is not able to utilize page caching."
 msgstr ""
 
-#: inc/class-sc-advanced-cache.php:65 inc/class-sc-object-cache.php:44
+#: inc/class-sc-advanced-cache.php:100 inc/class-sc-object-cache.php:44
 msgid "Fix"
 msgstr ""
 
@@ -51,106 +51,110 @@ msgid ""
 "to utilize object caching."
 msgstr ""
 
-#: inc/class-sc-settings.php:47
+#: inc/class-sc-settings.php:39 inc/class-sc-settings.php:378
+msgid "Purge Cache"
+msgstr ""
+
+#: inc/class-sc-settings.php:65
 msgid "Simple Cache won't work until you turn it on."
 msgstr ""
 
-#: inc/class-sc-settings.php:48
+#: inc/class-sc-settings.php:66
 msgid "Turn On Caching"
 msgstr ""
 
-#: inc/class-sc-settings.php:72
+#: inc/class-sc-settings.php:90
 msgid ""
 "Simple Cache can't create or modify needed files on your system. "
 "Specifically, Simple Cache needs to write to wp-config.php and /wp-content "
 "using PHP's fopen() function. Contact your host."
 msgstr ""
 
-#: inc/class-sc-settings.php:73
+#: inc/class-sc-settings.php:91
 msgid "Try Again"
 msgstr ""
 
-#: inc/class-sc-settings.php:110
+#: inc/class-sc-settings.php:128
 msgid "Simple Cache"
 msgstr ""
 
-#: inc/class-sc-settings.php:144
+#: inc/class-sc-settings.php:162
 msgid "Cheatin, eh?"
 msgstr ""
 
-#: inc/class-sc-settings.php:220
+#: inc/class-sc-settings.php:238
 msgid "Simple Cache Settings"
 msgstr ""
 
-#: inc/class-sc-settings.php:228
+#: inc/class-sc-settings.php:246
 msgid "Enable Advanced Mode"
 msgstr ""
 
-#: inc/class-sc-settings.php:230 inc/class-sc-settings.php:241
-#: inc/class-sc-settings.php:260 inc/class-sc-settings.php:283
-#: inc/class-sc-settings.php:308 inc/class-sc-settings.php:347
+#: inc/class-sc-settings.php:248 inc/class-sc-settings.php:259
+#: inc/class-sc-settings.php:278 inc/class-sc-settings.php:301
+#: inc/class-sc-settings.php:326 inc/class-sc-settings.php:365
 msgid "No"
 msgstr ""
 
-#: inc/class-sc-settings.php:231 inc/class-sc-settings.php:242
-#: inc/class-sc-settings.php:261 inc/class-sc-settings.php:284
-#: inc/class-sc-settings.php:309 inc/class-sc-settings.php:348
+#: inc/class-sc-settings.php:249 inc/class-sc-settings.php:260
+#: inc/class-sc-settings.php:279 inc/class-sc-settings.php:302
+#: inc/class-sc-settings.php:327 inc/class-sc-settings.php:366
 msgid "Yes"
 msgstr ""
 
-#: inc/class-sc-settings.php:238
+#: inc/class-sc-settings.php:256
 msgid "Enable Caching"
 msgstr ""
 
-#: inc/class-sc-settings.php:245
+#: inc/class-sc-settings.php:263
 msgid ""
 "Turn this on to get started. This setting turns on caching and is really all "
 "you need."
 msgstr ""
 
-#: inc/class-sc-settings.php:249
+#: inc/class-sc-settings.php:267
 msgid "Expire the cache after"
 msgstr ""
 
-#: inc/class-sc-settings.php:251 inc/class-sc-settings.php:294
+#: inc/class-sc-settings.php:269 inc/class-sc-settings.php:312
 msgid "minutes"
 msgstr ""
 
-#: inc/class-sc-settings.php:257
+#: inc/class-sc-settings.php:275
 msgid "Enable Compression"
 msgstr ""
 
-#: inc/class-sc-settings.php:264
+#: inc/class-sc-settings.php:282
 msgid ""
 "When enabled, pages will be compressed. This is a good thing! This should "
 "always be enabled unless it causes issues."
 msgstr ""
 
-#: inc/class-sc-settings.php:275
+#: inc/class-sc-settings.php:293
 msgid "Page Cache"
 msgstr ""
 
-#: inc/class-sc-settings.php:280
+#: inc/class-sc-settings.php:298
 msgid "Enable Page Caching"
 msgstr ""
 
-#: inc/class-sc-settings.php:287
+#: inc/class-sc-settings.php:305
 msgid "When enabled, entire front end pages will be cached."
 msgstr ""
 
-#: inc/class-sc-settings.php:292
+#: inc/class-sc-settings.php:310
 msgid "Expire page cache after"
 msgstr ""
 
-#: inc/class-sc-settings.php:299
+#: inc/class-sc-settings.php:317
 msgid "Object Cache (Redis or Memcache)"
 msgstr ""
 
-#: inc/class-sc-settings.php:305
+#: inc/class-sc-settings.php:323
 msgid "Enable In-Memory Object Caching"
 msgstr ""
 
-#: inc/class-sc-settings.php:312
+#: inc/class-sc-settings.php:330
 msgid ""
 "When enabled, things like database query results will be stored in memory. "
 "Right now Memcache and Redis are suppported. Note that if the proper "
@@ -158,34 +162,30 @@ msgid ""
 "below."
 msgstr ""
 
-#: inc/class-sc-settings.php:316
+#: inc/class-sc-settings.php:334
 msgid "In Memory Cache"
 msgstr ""
 
-#: inc/class-sc-settings.php:331
+#: inc/class-sc-settings.php:349
 msgid "Neither Memcache or Redis PHP extensions are set up on your server."
 msgstr ""
 
-#: inc/class-sc-settings.php:338
+#: inc/class-sc-settings.php:356
 msgid "Compression"
 msgstr ""
 
-#: inc/class-sc-settings.php:344
+#: inc/class-sc-settings.php:362
 msgid "Enable gzip Compression"
 msgstr ""
 
-#: inc/class-sc-settings.php:351
+#: inc/class-sc-settings.php:369
 msgid ""
 "When enabled pages will be gzip compressed at the PHP level. Note many hosts "
 "set up gzip compression in Apache or nginx."
 msgstr ""
 
-#: inc/class-sc-settings.php:359
+#: inc/class-sc-settings.php:377
 msgid "Save Changes"
-msgstr ""
-
-#: inc/class-sc-settings.php:360
-msgid "Purge Cache"
 msgstr ""
 
 #: simple-cache.php:55
