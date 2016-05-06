@@ -18,7 +18,7 @@ if ( ! preg_match( '#index\.php$#i', $_SERVER['REQUEST_URI'] ) && in_array( path
 
 // Don't cache if logged in
 if ( ! empty( $_COOKIE ) ) {
-	$wp_cookies = array( 'wordpressuser_', 'wordpresspass_', 'wordpress_', 'wordpress_sec_', 'wordpress_logged_in_' );
+	$wp_cookies = array( 'wordpressuser_', 'wordpresspass_', 'wordpress_sec_', 'wordpress_logged_in_' );
 
 	foreach ( $_COOKIE as $key => $value ) {
 		foreach ( $wp_cookies as $cookie ) {
