@@ -14,6 +14,87 @@ class SC_Advanced_Cache {
 		add_action( 'pre_post_update', array( $this, 'purge_post_on_update' ), 10, 1 );
 		add_action( 'save_post', array( $this, 'purge_post_on_update' ), 10, 1 );
 		add_action( 'wp_trash_post', array( $this, 'purge_post_on_update' ), 10, 1 );
+		add_action( 'comment_post', array( $this, 'purge_post_on_new_comment' ), 10, 3 );
+		add_action( 'wp_set_comment_status', array( $this, 'purge_post_on_comment_status_change' ) );
+		add_action( 'set_comment_cookies', array( $this, 'set_comment_cookie_exceptions' ) );
+	}
+
+	/**
+	 * When user posts a comment, set a cookie so we don't show them page cache
+	 *
+	 * @param  WP_Comment $comment
+	 * @param  WP_User $user
+	 * @since  1.3
+	 */
+	public function set_comment_cookie_exceptions( $comment, $user ) {
+		$config = SC_Config::factory()->get();
+
+		// File based caching only
+		if ( ! empty( $config['enable_page_caching'] ) && empty( $config['enable_in_memory_object_caching'] ) ) {
+			$post_id = $comment->comment_post_ID;
+
+			setcookie( 'sc_commented_posts[' . $post_id . ']', parse_url( get_permalink( $post_id ), PHP_URL_PATH ), ( time() + HOUR_IN_SECONDS * 24 * 30 ) );
+		}
+	}
+
+	/**
+	 * Every time a comments status changes, purge it's parent posts cache
+	 *
+	 * @param  int $comment_ID
+	 * @param  int $comment_status
+	 * @since  1.3
+	 */
+	public function purge_post_on_comment_status_change( $comment_ID, $comment_status ) {
+		$config = SC_Config::factory()->get();
+
+		// File based caching only
+		if ( ! empty( $config['enable_page_caching'] ) && empty( $config['enable_in_memory_object_caching'] ) ) {
+			$comment = get_comment( $comment_ID );
+			$post_id = $comment->comment_post_ID;
+
+			global $wp_filesystem;
+
+			WP_Filesystem();
+
+			$sub_path = preg_replace( '#https?://#i', '', get_permalink( $post_id ) );
+
+			$path = untrailingslashit( WP_CONTENT_DIR ) . '/cache/simple-cache/' . preg_replace( '#https?://#i', '', get_permalink( $post_id ) );
+
+			$wp_filesystem->delete( untrailingslashit( $path ) . '/index.html' );
+			$wp_filesystem->delete( untrailingslashit( $path ) . '/index.gzip.html' );
+		}
+	}
+
+	/**
+	 * Purge post cache when there is a new approved comment
+	 *
+	 * @param  int $comment_ID
+	 * @param  int $approved
+	 * @param  array $commentdata
+	 * @since  1.3
+	 */
+	public function purge_post_on_comment( $comment_ID, $approved, $commentdata ) {
+		if ( empty( $approved ) ) {
+			return;
+		}
+
+		$config = SC_Config::factory()->get();
+
+		// File based caching only
+		if ( ! empty( $config['enable_page_caching'] ) && empty( $config['enable_in_memory_object_caching'] ) ) {
+			$post_id = $commentdata['comment_post_ID'];
+
+			global $wp_filesystem;
+
+			WP_Filesystem();
+
+			$sub_path = preg_replace( '#https?://#i', '', get_permalink( $post_id ) );
+
+			$path = untrailingslashit( WP_CONTENT_DIR ) . '/cache/simple-cache/' . preg_replace( '#https?://#i', '', get_permalink( $post_id ) );
+
+			$wp_filesystem->delete( untrailingslashit( $path ) . '/index.html' );
+			$wp_filesystem->delete( untrailingslashit( $path ) . '/index.gzip.html' );
+		}
 	}
 
 	/**
