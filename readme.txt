@@ -23,6 +23,8 @@ Simple Cache was constructed after getting frustrated with the major caching plu
 
 If you need your site to run fast, don't have time to mess with complicated settings, and have been frustrated by other caching plugins, give Simple Cache a try.
 
+Pull requests are welcome on [Github](https://github.com/tlovett1/simple-cache).
+
 == Installation ==
 
 1. Install the plugin through your dashboard.
