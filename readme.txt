@@ -35,6 +35,12 @@ For full documentation, questions, feature requests, and support concerning the 
 
 == Changelog ==
 
+= 1.4 =
+* Properly purge cache when comments are created/approved.
+* Make sure user gets non cached pages after commenting
+* Fix bug causing php files with get params to be cached
+* Properly check WordPress logged in cookies
+
 = 1.3 =
 * Purge single view cache for all post types when they are updated/deleted
 * Admin bar button for purging the cache
