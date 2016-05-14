@@ -197,6 +197,10 @@ class SC_Settings {
 				SC_Advanced_Cache::factory()->toggle_caching( false );
 			}
 
+			// Reschedule cron events
+			SC_Cron::factory()->unschedule_events();
+			SC_Cron::factory()->schedule_events();
+
 			if ( ! empty( $_REQUEST['wp_http_referer'] ) ) {
 				wp_redirect( $_REQUEST['wp_http_referer'] );
 				exit;

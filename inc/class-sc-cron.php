@@ -44,6 +44,17 @@ class SC_Cron {
 	}
 
 	/**
+	 * Unschedule events
+	 *
+	 * @since  1.4.1
+	 */
+	public function unschedule_events() {
+		$timestamp = wp_next_scheduled( 'sc_purge_cache' );
+
+		wp_unschedule_event( $timestamp, 'sc_purge_cache' );
+	}
+
+	/**
 	 * Setup cron jobs
 	 *
 	 * @since 1.0
