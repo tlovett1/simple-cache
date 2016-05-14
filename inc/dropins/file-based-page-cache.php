@@ -11,8 +11,9 @@ if ( ! isset( $_SERVER['REQUEST_METHOD'] ) || $_SERVER['REQUEST_METHOD'] !== 'GE
 	return;
 }
 
-$file_extension = pathinfo( $_SERVER['REQUEST_URI'], PATHINFO_EXTENSION );
-$file_extension = preg_replace( '#^(.*)\?.*$#', '$1', $file_extension );
+$file_extension = $_SERVER['REQUEST_URI'];
+$file_extension = preg_replace( '#^(.*?)\?.*$#', '$1', $file_extension );
+$file_extension = trim( preg_replace( '#^.*\.(.*)$#', '$1', $file_extension ) );
 
 // Don't cache disallowed extensions. Prevents wp-cron.php, xmlrpc.php, etc.
 if ( ! preg_match( '#index\.php$#i', $_SERVER['REQUEST_URI'] ) && in_array( $file_extension, array( 'php', 'xml', 'xsl' ) ) ) {
