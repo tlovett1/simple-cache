@@ -42,6 +42,7 @@ For full documentation, questions, feature requests, and support concerning the 
 * Make sure we don't cache wp-login.php and other php files.
 * Reschedule cron when settings are saved
 * Properly output HTTP caching headers
+* Make HTML cache comment more human readable.
 
 = 1.4 =
 * Properly purge cache when comments are created/approved.
