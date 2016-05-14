@@ -46,6 +46,7 @@ For full documentation, questions, feature requests, and support concerning the 
 * Fix rtrim file path bug
 * Properly clear file cache on cron
 * *(Important)* Purge all cache when a post is updated/created. This makes sure you don't show a stale blog index when content is created/updated.
+* Make sure config file doesnt balloon
 
 = 1.4 =
 * Properly purge cache when comments are created/approved.
