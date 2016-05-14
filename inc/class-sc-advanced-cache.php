@@ -310,6 +310,12 @@ class SC_Advanced_Cache {
 		array_shift( $config_file );
 		array_unshift( $config_file, '<?php', "define( 'WP_CACHE', $status_string ); // Simple Cache" );
 
+		foreach ( $config_file as $key => $line ) {
+			if ( '' === $line ) {
+				unset( $config_file[$key] );
+			}
+		}
+
 		if ( ! $wp_filesystem->put_contents( $config_path, implode( "\n\r", $config_file ), FS_CHMOD_FILE ) ) {
 			return false;
 		}
