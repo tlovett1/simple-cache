@@ -14,7 +14,7 @@ class SC_Cron {
 	 */
 	private function setup() {
 
-		add_action( 'sc_purge_file_cache', array( $this, 'purge_cache' ) );
+		add_action( 'sc_purge_cache', array( $this, 'purge_cache' ) );
 		add_action( 'init', array( $this, 'schedule_events' ) );
 		add_filter( 'cron_schedules', array( $this, 'filter_cron_schedules' ) );
 	}
@@ -87,7 +87,7 @@ class SC_Cron {
 	 *
 	 * @since 1.0
 	 */
-	public function purge_file_cache() {
+	public function purge_cache() {
 		$config = SC_Config::factory()->get();
 
 		// Do nothing, caching is turned off

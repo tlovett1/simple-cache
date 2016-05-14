@@ -43,6 +43,8 @@ For full documentation, questions, feature requests, and support concerning the 
 * Reschedule cron when settings are saved
 * Properly output HTTP caching headers
 * Make HTML cache comment more human readable.
+* Fix rtrim file path bug
+* Properly clear file cache on cron
 
 = 1.4 =
 * Properly purge cache when comments are created/approved.
