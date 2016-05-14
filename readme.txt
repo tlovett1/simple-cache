@@ -37,6 +37,9 @@ For full documentation, questions, feature requests, and support concerning the 
 
 == Changelog ==
 
+= 1.4.1 =
+* Make sure file.php is included on purging. Props [sagliksever](https://github.com/sagliksever)
+
 = 1.4 =
 * Properly purge cache when comments are created/approved.
 * Make sure user gets non cached pages after commenting

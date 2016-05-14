@@ -116,6 +116,8 @@ class SC_Advanced_Cache {
 
 		// File based caching only
 		if ( ! empty( $config['enable_page_caching'] ) && empty( $config['enable_in_memory_object_caching'] ) ) {
+			require_once( ABSPATH . 'wp-admin/includes/file.php' );
+
 			global $wp_filesystem;
 
 			WP_Filesystem();
