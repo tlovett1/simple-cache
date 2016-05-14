@@ -39,6 +39,9 @@ For full documentation, questions, feature requests, and support concerning the 
 
 = 1.4.1 =
 * Make sure file.php is included on purging. Props [sagliksever](https://github.com/sagliksever)
+* Make sure we don't cache wp-login.php and other php files.
+* Reschedule cron when settings are saved
+* Properly output HTTP caching headers
 
 = 1.4 =
 * Properly purge cache when comments are created/approved.
