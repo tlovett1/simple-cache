@@ -105,15 +105,21 @@ function sc_cache( $buffer, $flags ) {
 		}
 	}
 
-	$cached_statement = "\n<!-- Cache served by Simple Cache " . time() . " -->\n";
+	$modified_time = time(); // Make sure modified time is consistent
 
-	$filesystem->put_contents( $path . '/index.html', $buffer . $cached_statement, FS_CHMOD_FILE );
+	$buffer .= "\n<!-- Cache served by Simple Cache " . $modified_time . " -->\n";
+
+	$filesystem->put_contents( $path . '/index.html', $buffer, FS_CHMOD_FILE );
 
 	if ( function_exists( 'gzencode' ) ) {
-		$filesystem->put_contents( $path . '/index.gzip.html', gzencode( $buffer . $cached_statement, 3 ), FS_CHMOD_FILE );
+		$filesystem->put_contents( $path . '/index.gzip.html', gzencode( $buffer, 3 ), FS_CHMOD_FILE );
 	}
 
-	header( 'Last-Modified: ' . gmdate( 'D, d M Y H:i:s' ) . ' GMT' );
+	$filesystem->touch( $path . '/index.html', $modified_time );
+
+	header( 'Cache-Control: no-cache' ); // Check back every time to see if re-download is necessary
+
+	header( 'Last-Modified: ' . gmdate( 'D, d M Y H:i:s', $modified_time ) . ' GMT' );
 
 	if ( function_exists( 'ob_gzhandler' ) && ! empty( $GLOBALS['sc_config']['enable_gzip_compression'] ) ) {
 		return ob_gzhandler( $buffer, $flags );
@@ -148,7 +154,16 @@ function sc_serve_cache() {
 		$file_name = 'index.gzip.html';
 	}
 
-	$path = rtrim( WP_CONTENT_DIR . '/' ) . '/cache/simple-cache/' . sc_get_url_path() . '/' . $file_name;
+	$path = rtrim( WP_CONTENT_DIR, '/' ) . '/cache/simple-cache/' . rtrim( sc_get_url_path(), '/' ) . '/' . $file_name;
+
+	$modified_time = (int) @filemtime( $path );
+
+	header( 'Cache-Control: no-cache' ); // Check back in an hour
+
+	if ( ! empty( $modified_time ) && ! empty( $_SERVER[ 'HTTP_IF_MODIFIED_SINCE' ] ) && strtotime( $_SERVER[ 'HTTP_IF_MODIFIED_SINCE' ] ) === $modified_time  ) {
+		  header( $_SERVER['SERVER_PROTOCOL'] . ' 304 Not Modified', true, 304 );
+		  exit;
+	}
 
 	if ( @file_exists( $path ) && @is_readable( $path ) ) {
 		@readfile( $path );
