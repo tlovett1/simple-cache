@@ -107,7 +107,7 @@ function sc_cache( $buffer, $flags ) {
 
 	$modified_time = time(); // Make sure modified time is consistent
 
-	$buffer .= "\n<!-- Cache served by Simple Cache " . $modified_time . " -->\n";
+	$buffer .= "\n<!-- Cache served by Simple Cache - Last modified: " . gmdate( 'D, d M Y H:i:s', $modified_time ) . " GMT -->\n";
 
 	$filesystem->put_contents( $path . '/index.html', $buffer, FS_CHMOD_FILE );
 
