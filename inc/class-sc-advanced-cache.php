@@ -98,7 +98,7 @@ class SC_Advanced_Cache {
 	}
 
 	/**
-	 * Automatically purge file based page cache on post changes
+	 * Automatically purge all file based page cache on post changes
 	 *
 	 * @param  int $post_id
 	 * @since  1.3
@@ -116,18 +116,7 @@ class SC_Advanced_Cache {
 
 		// File based caching only
 		if ( ! empty( $config['enable_page_caching'] ) && empty( $config['enable_in_memory_object_caching'] ) ) {
-			require_once( ABSPATH . 'wp-admin/includes/file.php' );
-
-			global $wp_filesystem;
-
-			WP_Filesystem();
-
-			$sub_path = preg_replace( '#https?://#i', '', get_permalink( $post_id ) );
-
-			$path = untrailingslashit( WP_CONTENT_DIR ) . '/cache/simple-cache/' . preg_replace( '#https?://#i', '', get_permalink( $post_id ) );
-
-			$wp_filesystem->delete( untrailingslashit( $path ) . '/index.html' );
-			$wp_filesystem->delete( untrailingslashit( $path ) . '/index.gzip.html' );
+			sc_cache_flush();
 		}
 	}
 
