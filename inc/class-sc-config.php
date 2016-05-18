@@ -121,7 +121,8 @@ class SC_Config {
 	 * @return boolean
 	 */
 	private function _is_dir_writable( $dir ) {
-		$temp_handle = @fopen( untrailingslashit( $dir ) .  '/temp-write-test-' . time(), 'w' );
+		$temp_file_name = untrailingslashit( $dir ) .  '/temp-write-test-' . time();
+		$temp_handle = fopen( $temp_file_name, 'w' );
 
 		if ( $temp_handle ) {
 
@@ -130,12 +131,15 @@ class SC_Config {
 
 			if ( function_exists( 'fileowner' ) ) {
 				$wp_file_owner = @fileowner( __FILE__ );
+				// Pass in the temporary handle to determine the file owner.
 				$temp_file_owner = @fileowner( $temp_file_name );
 
+				// Close and remove the temporary file.
 				@fclose( $temp_handle );
-				@unlink( $temp_file_name );
+				@unlink( $temp_handle );
 
-				if ( $wp_file_owner !== false && $wp_file_owner === $temp_file_owner ) {
+				// Return if we cannot determine the file owner, or if the owner IDs do not match.
+				if ( $wp_file_owner === false || $wp_file_owner !== $temp_file_owner ) {
 					return false;
 				}
 			} else {
