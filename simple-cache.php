@@ -4,7 +4,7 @@
  * Plugin URI: http://taylorlovett.com
  * Description: A simple caching plugin that just works.
  * Author: Taylor Lovett
- * Version: 1.4.1
+ * Version: 1.4.2
  * Text Domain: simple-cache
  * Domain Path: /languages
  * Author URI: http://taylorlovett.com
@@ -12,7 +12,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'SC_VERSION', '1.4.1' );
+define( 'SC_VERSION', '1.4.2' );
 
 require_once dirname( __FILE__ ) . '/inc/functions.php';
 require_once dirname( __FILE__ ) . '/inc/class-sc-settings.php';

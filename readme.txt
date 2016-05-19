@@ -37,6 +37,9 @@ For full documentation, questions, feature requests, and support concerning the 
 
 == Changelog ==
 
+= 1.4.2 =
+* Properly verify files can be created/edited. Props [davetgreen](https://github.com/davetgreen)
+
 = 1.4.1 =
 * Make sure file.php is included on purging. Props [sagliksever](https://github.com/sagliksever)
 * Make sure we don't cache wp-login.php and other php files.
