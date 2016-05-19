@@ -135,8 +135,8 @@ class SC_Config {
 				$temp_file_owner = @fileowner( $temp_file_name );
 
 				// Close and remove the temporary file.
-				@fclose( $temp_handle );
-				@unlink( $temp_handle );
+				@fclose( $temp_file_name );
+				@unlink( $temp_file_name );
 
 				// Return if we cannot determine the file owner, or if the owner IDs do not match.
 				if ( $wp_file_owner === false || $wp_file_owner !== $temp_file_owner ) {
