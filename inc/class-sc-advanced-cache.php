@@ -316,7 +316,7 @@ class SC_Advanced_Cache {
 			}
 		}
 
-		if ( ! $wp_filesystem->put_contents( $config_path, implode( "\n\r", $config_file ), FS_CHMOD_FILE ) ) {
+		if ( ! $wp_filesystem->put_contents( $config_path, implode( PHP_EOL, $config_file ), FS_CHMOD_FILE ) ) {
 			return false;
 		}
 
