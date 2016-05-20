@@ -160,11 +160,11 @@ class SC_Advanced_Cache {
 		<div class="error">
 			<p>
 				<?php if ( $config_file_bad ) : ?>
-					<?php esc_html_e( 'define("WP_CACHE", true); is not in wp-config.php.' ); ?>
+					<?php esc_html_e( 'define("WP_CACHE", true); is not in wp-config.php.', 'simple-cache' ); ?>
 				<?php endif; ?>
 
 				<?php if ( $advanced_cache_file_bad ) : ?>
-					<?php esc_html_e( 'wp-content/advanced-cache.php was edited or deleted.' ); ?>
+					<?php esc_html_e( 'wp-content/advanced-cache.php was edited or deleted.', 'simple-cache' ); ?>
 				<?php endif; ?>
 
 				<?php esc_html_e( 'Simple Cache is not able to utilize page caching.', 'simple-cache' ); ?>
