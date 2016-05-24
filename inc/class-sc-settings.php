@@ -359,7 +359,7 @@ class SC_Settings {
 						<?php else : ?>
 							<tr>
 								<td colspan="2">
-									<?php esc_html_e( 'Neither Memcache (NOT Memcached) or Redis PHP extensions are set up on your server.', 'simple-cache' ); ?>
+									<?php _e( 'Neither <a href="https://pecl.php.net/package/memcache">Memcache</a> (NOT Memcached) nor <a href="https://pecl.php.net/package/redis">Redis</a> PHP extensions are set up on your server.', 'simple-cache' ); ?>
 								</td>
 							</tr>
 						<?php endif; ?>
