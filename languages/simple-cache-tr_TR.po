@@ -1,0 +1,203 @@
+# Copyright (C) 2014 Taylor Lovett
+# This file is distributed under the same license as the Editorial Access Manager package.
+msgid ""
+msgstr ""
+"Project-Id-Version: Simple Cache\n"
+"Report-Msgid-Bugs-To: https://github.com/tlovett1/custom-contact-forms/"
+"issues\n"
+"POT-Creation-Date: 2016-04-30 13:04-0400\n"
+"PO-Revision-Date: 2016-05-20 20:53+0200\n"
+"Last-Translator: Taylor Lovett <tlovett88@gmail.com>\n"
+"Language-Team: \n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.6.7\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;__ngettext:1,2;_n:1,2;__ngettext_noop:1,2;"
+"_n_noop:1,2;_c,_nc:4c,1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2;"
+"esc_html_e;esc_html__;esc_attr__;esc_attr_e\n"
+"X-Textdomain-Support: yes\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: node_modules\n"
+
+#: inc/class-sc-advanced-cache.php:91
+msgid "define(\"WP_CACHE\", true); is not in wp-config.php."
+msgstr ""
+"wp-config.php dosyasında define(\"WP_CACHE\", true); satırı bulunamıyor."
+
+#: inc/class-sc-advanced-cache.php:95
+msgid "wp-content/advanced-cache.php was edited or deleted."
+msgstr ""
+"wp-content/advanced-cache.php dosyası düzenlenmiş yada silinmiş olabilir."
+
+#: inc/class-sc-advanced-cache.php:98
+msgid "Simple Cache is not able to utilize page caching."
+msgstr "Simple Cache sayfa önbelleğini kullanabilecek durumda değil."
+
+#: inc/class-sc-advanced-cache.php:100 inc/class-sc-object-cache.php:44
+msgid "Fix"
+msgstr "Onar"
+
+#: inc/class-sc-cron.php:41
+msgid "Simple Cache Purge Interval"
+msgstr ""
+
+#: inc/class-sc-object-cache.php:42
+msgid ""
+"wp-content/object-cache.php was edited or deleted. Simple Cache is not able "
+"to utilize object caching."
+msgstr ""
+
+#: inc/class-sc-settings.php:39 inc/class-sc-settings.php:378
+msgid "Purge Cache"
+msgstr "Önbelleği Temizle"
+
+#: inc/class-sc-settings.php:65
+msgid "Simple Cache won't work until you turn it on."
+msgstr "Siz açana kadar Simple Cache çalışmayacaktır."
+
+#: inc/class-sc-settings.php:66
+msgid "Turn On Caching"
+msgstr "Önbelleklemeyi Aç"
+
+#: inc/class-sc-settings.php:90
+msgid ""
+"Simple Cache can't create or modify needed files on your system. "
+"Specifically, Simple Cache needs to write to wp-config.php and /wp-content "
+"using PHP's fopen() function. Contact your host."
+msgstr ""
+
+#: inc/class-sc-settings.php:91
+msgid "Try Again"
+msgstr "Tekrar Dene"
+
+#: inc/class-sc-settings.php:128
+msgid "Simple Cache"
+msgstr "Simple Cache"
+
+#: inc/class-sc-settings.php:162
+msgid "Cheatin, eh?"
+msgstr "Hile mi yapıyorsunuz?"
+
+#: inc/class-sc-settings.php:238
+msgid "Simple Cache Settings"
+msgstr "Simple Cache Ayarları"
+
+#: inc/class-sc-settings.php:246
+msgid "Enable Advanced Mode"
+msgstr "Gelişmiş Modu Aç"
+
+#: inc/class-sc-settings.php:248 inc/class-sc-settings.php:259
+#: inc/class-sc-settings.php:278 inc/class-sc-settings.php:301
+#: inc/class-sc-settings.php:326 inc/class-sc-settings.php:365
+msgid "No"
+msgstr "Hayır"
+
+#: inc/class-sc-settings.php:249 inc/class-sc-settings.php:260
+#: inc/class-sc-settings.php:279 inc/class-sc-settings.php:302
+#: inc/class-sc-settings.php:327 inc/class-sc-settings.php:366
+msgid "Yes"
+msgstr "Evet"
+
+#: inc/class-sc-settings.php:256
+msgid "Enable Caching"
+msgstr "Önbelleklemeyi Aç"
+
+#: inc/class-sc-settings.php:263
+msgid ""
+"Turn this on to get started. This setting turns on caching and is really all "
+"you need."
+msgstr "İhtiyacınız olan önbellekleme özelliği için aktif hale getirin."
+
+#: inc/class-sc-settings.php:267
+msgid "Expire the cache after"
+msgstr "Önbellekleme süresi"
+
+#: inc/class-sc-settings.php:269 inc/class-sc-settings.php:312
+msgid "minutes"
+msgstr "dakika"
+
+#: inc/class-sc-settings.php:275
+msgid "Enable Compression"
+msgstr "Sıkıştırmayı Aç"
+
+#: inc/class-sc-settings.php:282
+msgid ""
+"When enabled, pages will be compressed. This is a good thing! This should "
+"always be enabled unless it causes issues."
+msgstr ""
+"Aktif durumda iken sayfalar sıkıştırılacaktir ve faydalı bir özelliktir. Bir "
+"soruna sebep olmadığı sürece açık kalmalıdır."
+
+#: inc/class-sc-settings.php:293
+msgid "Page Cache"
+msgstr "Sayfa Önbelleklemesi"
+
+#: inc/class-sc-settings.php:298
+msgid "Enable Page Caching"
+msgstr "Sayfa Önbelleklemesini Aç"
+
+#: inc/class-sc-settings.php:305
+msgid "When enabled, entire front end pages will be cached."
+msgstr ""
+"Aktif hale getirdiğinizde tüm site sayfaları önbelleklemeye alınacaktır."
+
+#: inc/class-sc-settings.php:310
+msgid "Expire page cache after"
+msgstr "Sayfa önbellekleme süresi"
+
+#: inc/class-sc-settings.php:317
+msgid "Object Cache (Redis or Memcache)"
+msgstr "Object Cache (Redis ya da Memcache)"
+
+#: inc/class-sc-settings.php:323
+msgid "Enable In-Memory Object Caching"
+msgstr "Hafıza üzerinde Nesne Önbelleklemesi"
+
+#: inc/class-sc-settings.php:330
+msgid ""
+"When enabled, things like database query results will be stored in memory. "
+"Right now Memcache and Redis are suppported. Note that if the proper "
+"Memcache or Redis PHP extensions aren't loaded, they won't show as options "
+"below."
+msgstr ""
+"Aktif hale getirdiğinizde veritabanı sorguları gibi şeyler RAM'de "
+"tutulacaktır. Şimdilik Memcache ve Redis destekleniyor. Memcache yada Redis "
+"için PHP eklentileri yüklenmediyse seçenek olarak aşağıda görünmeyecektir."
+
+#: inc/class-sc-settings.php:334
+msgid "In Memory Cache"
+msgstr "Hafıza Önbelleği"
+
+#: inc/class-sc-settings.php:349
+msgid "Neither Memcache or Redis PHP extensions are set up on your server."
+msgstr "PHP için Memcache yada Redis eklentileri sunucunuzda kurulu değil."
+
+#: inc/class-sc-settings.php:356
+msgid "Compression"
+msgstr "Sıkıştırma"
+
+#: inc/class-sc-settings.php:362
+msgid "Enable gzip Compression"
+msgstr "Gzip sıkıştırmasını aç"
+
+#: inc/class-sc-settings.php:369
+msgid ""
+"When enabled pages will be gzip compressed at the PHP level. Note many hosts "
+"set up gzip compression in Apache or nginx."
+msgstr ""
+"Bu özelliği aktifleştirmeniz PHP düzeyinde gzip sıkıştırmasını açar. Not: "
+"pek çok host Apache yada nginx üzerinde gzip sıkıştırmasını destekler."
+
+#: inc/class-sc-settings.php:377
+msgid "Save Changes"
+msgstr "Değişiklikleri Kaydet"
+
+#: simple-cache.php:55
+#, php-format
+msgid "<a href=\"%s\">Settings</a>"
+msgstr "<a href=\"%s\">Ayarlar</a>"
