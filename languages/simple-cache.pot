@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: Simple Cache\n"
 "Report-Msgid-Bugs-To: https://github.com/tlovett1/custom-contact-forms/"
 "issues\n"
-"POT-Creation-Date: 2016-05-24 00:17-0400\n"
+"POT-Creation-Date: 2016-05-24 00:33-0400\n"
 "PO-Revision-Date: 2016-04-11 01:17-0400\n"
 "Last-Translator: Taylor Lovett <tlovett88@gmail.com>\n"
 "Language-Team: \n"
@@ -179,8 +179,9 @@ msgstr ""
 
 #: inc/class-sc-settings.php:362
 msgid ""
-"Neither Memcache (NOT Memcached) or Redis PHP extensions are set up on your "
-"server."
+"Neither <a href=\"https://pecl.php.net/package/memcache\">Memcache</a> (NOT "
+"Memcached) nor <a href=\"https://pecl.php.net/package/redis\">Redis</a> PHP "
+"extensions are set up on your server."
 msgstr ""
 
 #: inc/class-sc-settings.php:369
