@@ -38,6 +38,10 @@ class SC_Config {
 				'default'       => 1440, // One day
 				'sanitizer'     => 'intval',
 			),
+			'cache_exception_urls' => array(
+				'default'       => '',
+				'sanitizer'     => 'wp_kses_post',
+			),
 		);
 	}
 

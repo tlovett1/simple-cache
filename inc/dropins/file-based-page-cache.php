@@ -43,6 +43,46 @@ if ( ! empty( $_COOKIE ) ) {
 	}
 }
 
+// Deal with optional cache exceptions
+if ( ! empty( $GLOBALS['sc_config']['cache_exception_urls'] ) ) {
+	$exceptions = preg_split( '#(\n|\r)#', $GLOBALS['sc_config']['cache_exception_urls'] );
+
+	foreach ( $exceptions as $exception ) {
+		if ( preg_match( '#^[\s]*$#', $exception ) ) {
+			continue;
+		}
+
+		$exception = trim( $exception );
+
+		if ( preg_match( '#^https?://#', $exception ) ) {
+
+			$exception = rtrim( $exception, '/' );
+			$url = rtrim( 'http' . ( isset( $_SERVER['HTTPS'] ) ? 's' : '' ) . '://' . "{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}", '/' );
+
+			if ( strtolower( $exception ) === strtolower( $url ) ) {
+				// Exception match!
+				return;
+			}
+
+		} elseif ( preg_match( '#^/#', $exception ) ) {
+			$path = $_SERVER['REQUEST_URI'];
+
+			if ( '/' !== $path ) {
+				$path = rtrim( $path, '/' );
+			}
+
+			if ( '/' !== $exception ) {
+				$exception = rtrim( $exception, '/' );
+			}
+
+			if ( strtolower( $exception ) === strtolower( $path ) ) {
+				// Exception match!
+				return;
+			}
+		}
+	}
+}
+
 sc_serve_cache();
 
 ob_start( 'sc_cache' );

@@ -311,6 +311,15 @@ class SC_Settings {
 						</tr>
 
 						<tr>
+							<th scope="row"><label for="sc_cache_exception_urls"><?php _e( 'Exception URL(s)', 'simple-cache' ); ?></label></th>
+							<td>
+								<textarea name="sc_simple_cache[cache_exception_urls]" class="widefat" id="sc_cache_exception_urls"><?php echo esc_html( $config['cache_exception_urls'] ); ?></textarea>
+
+								<p class="description"><?php esc_html_e( 'Allows you to add URL(s) to be exempt from page caching. One URL per line. URL(s) can be full URLs (http://google.com) or absolute paths (/my/url/).', 'simple-cache' ); ?></p>
+							</td>
+						</tr>
+
+						<tr>
 							<th scope="row"><label for="sc_page_cache_length"><?php esc_html_e( 'Expire page cache after', 'simple-cache' ); ?></label></th>
 							<td>
 								<input <?php if ( empty( $config['advanced_mode'] ) ) : ?>disabled<?php endif; ?> size="5" id="sc_page_cache_length_advanced" type="text" value="<?php echo (int) $config['page_cache_length']; ?>" name="sc_simple_cache[page_cache_length]"> <span class="description"><?php esc_html_e( 'minutes', 'simple-cache' ); ?></span>
