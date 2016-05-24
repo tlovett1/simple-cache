@@ -37,6 +37,10 @@ For full documentation, questions, feature requests, and support concerning the 
 
 == Changelog ==
 
+= 1.5 =
+* Add page cache URL exemptions in advanced mode
+* Improve messaging around object caching extensions
+
 = 1.4.2 =
 * Properly verify files can be created/edited. Props [davetgreen](https://github.com/davetgreen)
 
