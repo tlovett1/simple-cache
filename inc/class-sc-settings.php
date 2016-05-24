@@ -331,7 +331,7 @@ class SC_Settings {
 										<option <?php selected( $config['enable_in_memory_object_caching'], true ); ?> value="1"><?php esc_html_e( 'Yes', 'simple-cache' ); ?></option>
 									</select>
 
-									<p class="description"><?php esc_html_e( "When enabled, things like database query results will be stored in memory. Right now Memcache and Redis are suppported. Note that if the proper Memcache or Redis PHP extensions aren't loaded, they won't show as options below.", 'simple-cache' ); ?></p>
+									<p class="description"><?php _e( "When enabled, things like database query results will be stored in memory. Right now Memcache and Redis are suppported. Note that if the proper <a href='https://pecl.php.net/package/memcache'>Memcache</a> (NOT Memcached) or <a href='https://pecl.php.net/package/redis'>Redis</a> PHP extensions aren't loaded, they won't show as options below.", 'simple-cache' ); ?></p>
 								</td>
 							</tr>
 							<tr>
@@ -339,7 +339,7 @@ class SC_Settings {
 								<td class="in-memory-cache <?php if ( ! empty( $config['enable_in_memory_object_caching'] ) ) : ?>show<?php endif; ?>">
 									<select name="sc_simple_cache[in_memory_cache]" id="sc_in_memory_cache">
 										<?php if ( class_exists( 'Memcache' ) ) : ?>
-											<option <?php selected( $config['in_memory_cache'], 'memcached' ); ?> value="memcached">Memcached</option>
+											<option <?php selected( $config['in_memory_cache'], 'memcached' ); ?> value="memcached">Memcache</option>
 										<?php endif; ?>
 										<?php if ( class_exists( 'Redis' ) ) : ?>
 											<option <?php selected( $config['in_memory_cache'], 'redis' ); ?> value="redis">Redis</option>
@@ -350,7 +350,7 @@ class SC_Settings {
 						<?php else : ?>
 							<tr>
 								<td colspan="2">
-									<?php esc_html_e( 'Neither Memcache or Redis PHP extensions are set up on your server.', 'simple-cache' ); ?>
+									<?php esc_html_e( 'Neither Memcache (NOT Memcached) or Redis PHP extensions are set up on your server.', 'simple-cache' ); ?>
 								</td>
 							</tr>
 						<?php endif; ?>
