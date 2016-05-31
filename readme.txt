@@ -38,7 +38,7 @@ For full documentation, questions, feature requests, and support concerning the 
 == Changelog ==
 
 = 1.5.1 =
-* Only create gzip file cache file if necessary
+* Only create gzip file cache file if necessary and vice-versa
 * Don't check exceptions in simple mode
 
 = 1.5 =

@@ -150,13 +150,13 @@ function sc_cache( $buffer, $flags ) {
 
 	$buffer .= "\n<!-- Cache served by Simple Cache - Last modified: " . gmdate( 'D, d M Y H:i:s', $modified_time ) . " GMT -->\n";
 
-	$filesystem->put_contents( $path . '/index.html', $buffer, FS_CHMOD_FILE );
-
 	if ( ! empty( $GLOBALS['sc_config']['enable_gzip_compression'] ) && function_exists( 'gzencode' ) ) {
 		$filesystem->put_contents( $path . '/index.gzip.html', gzencode( $buffer, 3 ), FS_CHMOD_FILE );
+		$filesystem->touch( $path . '/index.gzip.html', $modified_time );
+	} else {
+		$filesystem->put_contents( $path . '/index.html', $buffer, FS_CHMOD_FILE );
+		$filesystem->touch( $path . '/index.html', $modified_time );
 	}
-
-	$filesystem->touch( $path . '/index.html', $modified_time );
 
 	header( 'Cache-Control: no-cache' ); // Check back every time to see if re-download is necessary
 
