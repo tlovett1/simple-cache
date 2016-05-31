@@ -44,7 +44,7 @@ if ( ! empty( $_COOKIE ) ) {
 }
 
 // Deal with optional cache exceptions
-if ( ! empty( $GLOBALS['sc_config']['cache_exception_urls'] ) ) {
+if ( ! empty( $GLOBALS['sc_config']['advanced_mode'] ) && ! empty( $GLOBALS['sc_config']['cache_exception_urls'] ) ) {
 	$exceptions = preg_split( '#(\n|\r)#', $GLOBALS['sc_config']['cache_exception_urls'] );
 
 	foreach ( $exceptions as $exception ) {
