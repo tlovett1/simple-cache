@@ -152,7 +152,7 @@ function sc_cache( $buffer, $flags ) {
 
 	$filesystem->put_contents( $path . '/index.html', $buffer, FS_CHMOD_FILE );
 
-	if ( function_exists( 'gzencode' ) ) {
+	if ( ! empty( $GLOBALS['sc_config']['enable_gzip_compression'] ) && function_exists( 'gzencode' ) ) {
 		$filesystem->put_contents( $path . '/index.gzip.html', gzencode( $buffer, 3 ), FS_CHMOD_FILE );
 	}
 
