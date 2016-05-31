@@ -37,6 +37,10 @@ For full documentation, questions, feature requests, and support concerning the 
 
 == Changelog ==
 
+= 1.5.1 =
+* Only create gzip file cache file if necessary
+* Don't check exceptions in simple mode
+
 = 1.5 =
 * Add page cache URL exemptions in advanced mode
 * Improve messaging around object caching extensions
