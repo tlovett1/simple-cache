@@ -37,6 +37,9 @@ For full documentation, questions, feature requests, and support concerning the 
 
 == Changelog ==
 
+= 1.5.3 =
+* Fix non-HTML (JSON) file caching.
+
 = 1.5.2 =
 * Fix password protected posts
 
