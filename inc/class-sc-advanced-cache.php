@@ -15,7 +15,7 @@ class SC_Advanced_Cache {
 		add_action( 'save_post', array( $this, 'purge_post_on_update' ), 10, 1 );
 		add_action( 'wp_trash_post', array( $this, 'purge_post_on_update' ), 10, 1 );
 		add_action( 'comment_post', array( $this, 'purge_post_on_new_comment' ), 10, 3 );
-		add_action( 'wp_set_comment_status', array( $this, 'purge_post_on_comment_status_change' ) );
+		add_action( 'wp_set_comment_status', array( $this, 'purge_post_on_comment_status_change' ), 10, 2 );
 		add_action( 'set_comment_cookies', array( $this, 'set_comment_cookie_exceptions' ) );
 	}
 

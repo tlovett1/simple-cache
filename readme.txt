@@ -37,6 +37,10 @@ For full documentation, questions, feature requests, and support concerning the 
 
 == Changelog ==
 
+= 1.5.4 =
+* Fix comment status PHP notice
+* Only let admins see purge cache button
+
 = 1.5.3 =
 * Fix non-HTML (JSON) file caching.
 

@@ -32,6 +32,10 @@ class SC_Settings {
 	public function admin_bar_menu() {
 		global $wp_admin_bar;
 
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+
 		$wp_admin_bar->add_menu( array(
 			'id'     => 'sc-purge-cache',
 			'parent' => 'top-secondary',
