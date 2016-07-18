@@ -92,7 +92,6 @@ class SC_Object_Cache {
 			$file_string = '<?php ' .
 			"\n\r" . "defined( 'ABSPATH' ) || exit;" .
 			"\n\r" . "define( 'SC_OBJECT_CACHE', true );" .
-			"\n\r" . 'if ( is_admin() ) { return; }' .
 			"\n\r" . "if ( ! @file_exists( WP_CONTENT_DIR . '/sc-config/config-' . \$_SERVER['HTTP_HOST'] . '.php' ) ) { return; }" .
 			"\n\r" . "\$GLOBALS['sc_config'] = include( WP_CONTENT_DIR . '/sc-config/config-' . \$_SERVER['HTTP_HOST'] . '.php' );" .
 			"\n\r" . "if ( empty( \$GLOBALS['sc_config'] ) || empty( \$GLOBALS['sc_config']['enable_in_memory_object_caching'] ) ) { return; }" .
