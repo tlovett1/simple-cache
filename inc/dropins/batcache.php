@@ -54,7 +54,7 @@ class batcache {
 
 	var $remote  = 0; // Zero disables sending buffers to remote datacenters (req/sec is never sent)
 
-	var $times   = 1; // Only batcache a page after it is accessed this many times... (two or more)
+	var $times   = 2; // Only batcache a page after it is accessed this many times... (two or more)
 	var $seconds = 120; // ...in this many seconds (zero to ignore this and use batcache immediately)
 
 	var $group   = 'batcache'; // Name of memcached group. You can simulate a cache flush by changing this.
