@@ -37,6 +37,12 @@ For full documentation, questions, feature requests, and support concerning the 
 
 == Changelog ==
 
+= 1.5.5 =
+* __Fix Memcache cache purging with the following:__
+* Allow Memcache flushing in multisite
+* Include object cache within the admin
+* Only batcache when a URL is accessed 2 times
+
 = 1.5.4 =
 * Fix comment status PHP notice
 * Only let admins see purge cache button
