@@ -227,7 +227,7 @@ class SC_Config {
 	 * Return an instance of the current class, create one if it doesn't exist
 	 *
 	 * @since  1.0
-	 * @return object
+	 * @return SC_Config
 	 */
 	public static function factory() {
 

@@ -303,7 +303,7 @@ class SC_Settings {
 						</tr>
 
 						<tr>
-							<th scope="row"><label for="sc_enable_caching_advanced"><?php _e( 'Enable Page Caching', 'simple-cache' ); ?></label></th>
+							<th scope="row"><label for="sc_enable_page_caching_advanced"><?php _e( 'Enable Page Caching', 'simple-cache' ); ?></label></th>
 							<td>
 								<select <?php if ( empty( $config['advanced_mode'] ) ) : ?>disabled<?php endif; ?> name="sc_simple_cache[enable_page_caching]" id="sc_enable_page_caching_advanced">
 									<option value="0"><?php esc_html_e( 'No', 'simple-cache' ); ?></option>
@@ -324,7 +324,7 @@ class SC_Settings {
 						</tr>
 
 						<tr>
-							<th scope="row"><label for="sc_page_cache_length"><?php esc_html_e( 'Expire page cache after', 'simple-cache' ); ?></label></th>
+							<th scope="row"><label for="sc_page_cache_length_advanced"><?php esc_html_e( 'Expire page cache after', 'simple-cache' ); ?></label></th>
 							<td>
 								<input <?php if ( empty( $config['advanced_mode'] ) ) : ?>disabled<?php endif; ?> size="5" id="sc_page_cache_length_advanced" type="text" value="<?php echo (int) $config['page_cache_length']; ?>" name="sc_simple_cache[page_cache_length]"> <span class="description"><?php esc_html_e( 'minutes', 'simple-cache' ); ?></span>
 							</td>
@@ -376,7 +376,7 @@ class SC_Settings {
 
 						<?php if ( function_exists( 'gzencode' ) ) : ?>
 							<tr>
-								<th scope="row"><label for="sc_enable_gzip_compression"><?php _e( 'Enable gzip Compression', 'simple-cache' ); ?></label></th>
+								<th scope="row"><label for="sc_enable_gzip_compression_advanced"><?php _e( 'Enable gzip Compression', 'simple-cache' ); ?></label></th>
 								<td>
 									<select <?php if ( empty( $config['advanced_mode'] ) ) : ?>disabled<?php endif; ?> name="sc_simple_cache[enable_gzip_compression]" id="sc_enable_gzip_compression_advanced">
 										<option value="0"><?php esc_html_e( 'No', 'simple-cache' ); ?></option>
