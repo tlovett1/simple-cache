@@ -193,7 +193,6 @@ function sc_serve_cache() {
 	$file_name = 'index.html';
 
 	if ( function_exists( 'gzencode' ) && ! empty( $GLOBALS['sc_config']['enable_gzip_compression'] ) ) {
-		header( 'Content-Encoding: gzip' );
 		$file_name = 'index.gzip.html';
 	}
 
@@ -204,11 +203,19 @@ function sc_serve_cache() {
 	header( 'Cache-Control: no-cache' ); // Check back in an hour
 
 	if ( ! empty( $modified_time ) && ! empty( $_SERVER[ 'HTTP_IF_MODIFIED_SINCE' ] ) && strtotime( $_SERVER[ 'HTTP_IF_MODIFIED_SINCE' ] ) === $modified_time  ) {
-		  header( $_SERVER['SERVER_PROTOCOL'] . ' 304 Not Modified', true, 304 );
-		  exit;
+		if ( function_exists( 'gzencode' ) && ! empty( $GLOBALS['sc_config']['enable_gzip_compression'] ) ) {
+			header( 'Content-Encoding: gzip' );
+		}
+
+		header( $_SERVER['SERVER_PROTOCOL'] . ' 304 Not Modified', true, 304 );
+		exit;
 	}
 
 	if ( @file_exists( $path ) && @is_readable( $path ) ) {
+		if ( function_exists( 'gzencode' ) && ! empty( $GLOBALS['sc_config']['enable_gzip_compression'] ) ) {
+			header( 'Content-Encoding: gzip' );
+		}
+
 		@readfile( $path );
 
 		exit;
