@@ -153,6 +153,14 @@ class FileBasedPageCacheTest extends \PHPUnit_Framework_TestCase {
 
 		$this->assertTrue( sc_url_exception_match( $exception, true ) );
 		$_SERVER = [];
+
+		// Test full url exception
+		$_SERVER['REQUEST_URI'] = '/test/url';
+		$exception = 'https?://test\.com/[a-z]+';
+		$_SERVER['HTTP_HOST'] = 'test.com';
+
+		$this->assertFalse( sc_url_exception_match( $exception, true ) );
+		$_SERVER = [];
 	}
 
 }

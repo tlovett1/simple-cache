@@ -162,7 +162,7 @@ function sc_url_exception_match( $exception, $regex = false ) {
 		$url = rtrim( 'http' . ( isset( $_SERVER['HTTPS'] ) ? 's' : '' ) . '://' . "{$_SERVER['HTTP_HOST']}{$_SERVER['REQUEST_URI']}", '/' );
 
 		if ( $regex ) {
-			if ( preg_match( '#^' . $exception . '#', $url ) ) {
+			if ( preg_match( '#^' . $exception . '$#', $url ) ) {
 				// Exception match!
 				return true;
 			}
@@ -186,7 +186,7 @@ function sc_url_exception_match( $exception, $regex = false ) {
 		$path = $_SERVER['REQUEST_URI'];
 
 		if ( $regex ) {
-			if ( preg_match( '#^' . $exception . '#', $path ) ) {
+			if ( preg_match( '#^' . $exception . '$#', $path ) ) {
 				// Exception match!
 				return true;
 			}

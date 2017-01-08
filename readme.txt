@@ -37,6 +37,9 @@ For full documentation, questions, feature requests, and support concerning the 
 
 == Changelog ==
 
+= 1.6 =
+* Add wildcards and regex to cache exemptions
+
 = 1.5.6 =
 * Prevent gzipping on 404 or non-cached pages
 
