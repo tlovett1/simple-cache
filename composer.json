@@ -1,0 +1,15 @@
+{
+  "name": "tlovett1/simple-cache",
+  "description": "A simple caching plugin for WordPress.",
+  "license": "GPLv2",
+  "type": "wordpress-plugin",
+  "authors": [
+      {
+          "name": "Taylor Lovett",
+          "email": "tlovett88@gmail.com"
+      }
+  ],
+  "require-dev": {
+    "10up/wp_mock": "dev-dev"
+  }
+}
