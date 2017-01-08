@@ -319,7 +319,15 @@ class SC_Settings {
 							<td>
 								<textarea name="sc_simple_cache[cache_exception_urls]" class="widefat" id="sc_cache_exception_urls"><?php echo esc_html( $config['cache_exception_urls'] ); ?></textarea>
 
-								<p class="description"><?php esc_html_e( 'Allows you to add URL(s) to be exempt from page caching. One URL per line. URL(s) can be full URLs (http://google.com) or absolute paths (/my/url/).', 'simple-cache' ); ?></p>
+								<p class="description"><?php esc_html_e( 'Allows you to add URL(s) to be exempt from page caching. One URL per line. URL(s) can be full URLs (http://google.com) or absolute paths (/my/url/). You can also use wildcards like so /url/* (matches any url starting with /url/).', 'simple-cache' ); ?></p>
+
+								<p>
+									<select name="sc_simple_cache[enable_url_exemption_regex]" id="sc_enable_url_exemption_regex">
+										<option value="0"><?php esc_html_e( 'No', 'simple-cache' ); ?></option>
+										<option <?php selected( $config['enable_url_exemption_regex'], true ); ?> value="1"><?php esc_html_e( 'Yes', 'simple-cache' ); ?></option>
+									</select>
+									<?php esc_html_e( 'Enable Regex', 'simple-cache' ); ?>
+								</p>
 							</td>
 						</tr>
 
