@@ -37,6 +37,9 @@ For full documentation, questions, feature requests, and support concerning the 
 
 == Changelog ==
 
+= 1.6.1 =
+* Fix comment update warnings
+
 = 1.6 =
 * Add wildcards and regex to cache exemptions
 
