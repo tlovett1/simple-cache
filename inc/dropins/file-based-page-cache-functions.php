@@ -68,8 +68,13 @@ function sc_cache( $buffer, $flags ) {
 
 	$modified_time = time(); // Make sure modified time is consistent
 
+	if ( ! WP_DEBUG ) {
+		$buffer = preg_replace( '/<!--[^\[](.|\s)*?-->/', '', $buffer ); // Remove HTML comments but keep conditional comments
+		$buffer = preg_replace( '!\s+!', ' ', $buffer ); // Remove unnecessary whitespaces
+	}
+
 	if ( preg_match( '#</html>#i', $buffer ) ) {
-		$buffer .= "\n<!-- Cache served by Simple Cache - Last modified: " . gmdate( 'D, d M Y H:i:s', $modified_time ) . " GMT -->\n";
+		$buffer .= "\n<!-- Cache served by Simple Cache - Last modified: " . gmdate( 'D, d M Y H:i:s', $modified_time ) . " GMT -->";
 	}
 
 	if ( ! empty( $GLOBALS['sc_config']['enable_gzip_compression'] ) && function_exists( 'gzencode' ) ) {
