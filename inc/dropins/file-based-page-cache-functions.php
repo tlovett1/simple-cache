@@ -68,7 +68,7 @@ function sc_cache( $buffer, $flags ) {
 
 	$modified_time = time(); // Make sure modified time is consistent
 
-	if ( ! WP_DEBUG ) {
+	if ( ! defined( 'WP_DEBUG' ) || ! WP_DEBUG ) {
 		$buffer = preg_replace( '/<!--[^\[](.|\s)*?-->/', '', $buffer ); // Remove HTML comments but keep conditional comments
 		$buffer = preg_replace( '!\s+!', ' ', $buffer ); // Remove unnecessary whitespaces
 	}
