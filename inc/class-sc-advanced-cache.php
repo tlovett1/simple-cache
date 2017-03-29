@@ -103,7 +103,9 @@ class SC_Advanced_Cache {
 	public function purge_post_on_update( $post_id ) {
 		$post_type = get_post_type( $post_id );
 
-		if ( ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) || 'revision' === $post_type ) {
+		if ( 'publish' !== get_post_status( $post_id ) ) {
+			return;
+		} elseif ( ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) || 'revision' === $post_type ) {
 			return;
 		} elseif ( ! current_user_can( 'edit_post', $post_id ) && ( ! defined( 'DOING_CRON' ) || ! DOING_CRON ) ) {
 			return;
