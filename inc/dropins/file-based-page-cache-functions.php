@@ -25,6 +25,14 @@ function sc_cache( $buffer, $flags ) {
 		return $buffer;
 	}
 
+	// Set the permission constants if not already set.
+	// Normally, this is taken care of in WP_Filesystem constructor, but it is
+	// not invoked here, because WP_Filesystem_Direct is instantiated directly.
+	if ( ! defined('FS_CHMOD_DIR') )
+		define('FS_CHMOD_DIR', ( fileperms( ABSPATH ) & 0777 | 0755 ) );
+	if ( ! defined('FS_CHMOD_FILE') )
+		define('FS_CHMOD_FILE', ( fileperms( ABSPATH . 'index.php' ) & 0777 | 0644 ) );
+
 	include_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php';
 	include_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php';
 
