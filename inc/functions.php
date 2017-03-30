@@ -12,7 +12,7 @@ function sc_cache_flush() {
 
 	WP_Filesystem();
 
-	$wp_filesystem->rmdir( untrailingslashit( WP_CONTENT_DIR ) . '/cache/simple-cache', true );
+	$wp_filesystem->rmdir( WP_CONTENT_DIR . '/cache/simple-cache', true );
 
 	if ( function_exists( 'wp_cache_flush' ) ) {
 		wp_cache_flush();

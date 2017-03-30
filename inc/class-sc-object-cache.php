@@ -57,7 +57,7 @@ class SC_Object_Cache {
 
 		global $wp_filesystem;
 
-		$file = untrailingslashit( WP_CONTENT_DIR )  . '/object-cache.php';
+		$file = WP_CONTENT_DIR . '/object-cache.php';
 
 		if ( ! $wp_filesystem->delete( $file ) ) {
 			return false;
@@ -76,7 +76,7 @@ class SC_Object_Cache {
 
 		global $wp_filesystem;
 
-		$file = untrailingslashit( WP_CONTENT_DIR )  . '/object-cache.php';
+		$file = WP_CONTENT_DIR . '/object-cache.php';
 
 		$config = SC_Config::factory()->get();
 
@@ -95,7 +95,7 @@ class SC_Object_Cache {
 			"\n\r" . "if ( ! @file_exists( WP_CONTENT_DIR . '/sc-config/config-' . \$_SERVER['HTTP_HOST'] . '.php' ) ) { return; }" .
 			"\n\r" . "\$GLOBALS['sc_config'] = include( WP_CONTENT_DIR . '/sc-config/config-' . \$_SERVER['HTTP_HOST'] . '.php' );" .
 			"\n\r" . "if ( empty( \$GLOBALS['sc_config'] ) || empty( \$GLOBALS['sc_config']['enable_in_memory_object_caching'] ) ) { return; }" .
-			"\n\r" . "if ( @file_exists( '" . untrailingslashit( plugin_dir_path( __FILE__ ) ) . '/dropins/' . $cache_file . "' ) ) { require_once( '" . untrailingslashit( plugin_dir_path( __FILE__ ) ) . '/dropins/' . $cache_file . "' ); }" . "\n\r";
+			"\n\r" . "if ( @file_exists( '" . dirname( __FILE__ ) . '/dropins/' . $cache_file . "' ) ) { require_once( '" . dirname( __FILE__ ) . '/dropins/' . $cache_file . "' ); }" . "\n\r";
 
 		}
 

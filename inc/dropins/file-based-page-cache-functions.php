@@ -31,15 +31,15 @@ function sc_cache( $buffer, $flags ) {
 	$filesystem = new WP_Filesystem_Direct( new StdClass() );
 
 	// Make sure we can read/write files and that proper folders exist
-	if ( ! $filesystem->exists( untrailingslashit( WP_CONTENT_DIR ) . '/cache' ) ) {
-		if ( ! $filesystem->mkdir( untrailingslashit( WP_CONTENT_DIR ) . '/cache' ) ) {
+	if ( ! $filesystem->exists( WP_CONTENT_DIR . '/cache' ) ) {
+		if ( ! $filesystem->mkdir( WP_CONTENT_DIR . '/cache' ) ) {
 			// Can not cache!
 			return $buffer;
 		}
 	}
 
-	if ( ! $filesystem->exists( untrailingslashit( WP_CONTENT_DIR ) . '/cache/simple-cache' ) ) {
-		if ( ! $filesystem->mkdir( untrailingslashit( WP_CONTENT_DIR ) . '/cache/simple-cache' ) ) {
+	if ( ! $filesystem->exists( WP_CONTENT_DIR . '/cache/simple-cache' ) ) {
+		if ( ! $filesystem->mkdir( WP_CONTENT_DIR . '/cache/simple-cache' ) ) {
 			// Can not cache!
 			return $buffer;
 		}
@@ -51,7 +51,7 @@ function sc_cache( $buffer, $flags ) {
 
 	$dirs = explode( '/', $url_path );
 
-	$path = untrailingslashit( WP_CONTENT_DIR ) . '/cache/simple-cache';
+	$path = WP_CONTENT_DIR . '/cache/simple-cache';
 
 	foreach ( $dirs as $dir ) {
 		if ( ! empty( $dir ) ) {
@@ -116,7 +116,7 @@ function sc_serve_cache() {
 		$file_name = 'index.gzip.html';
 	}
 
-	$path = rtrim( WP_CONTENT_DIR, '/' ) . '/cache/simple-cache/' . rtrim( sc_get_url_path(), '/' ) . '/' . $file_name;
+	$path = WP_CONTENT_DIR . '/cache/simple-cache/' . rtrim( sc_get_url_path(), '/' ) . '/' . $file_name;
 
 	$modified_time = (int) @filemtime( $path );
 
