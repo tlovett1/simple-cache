@@ -179,26 +179,26 @@ class SC_Config {
 		}
 
 		// Now check wp-content. We need to be able to create files of the same user as this file
-		if ( ! $this->_is_dir_writable( untrailingslashit( WP_CONTENT_DIR ) ) ) {
+		if ( ! $this->_is_dir_writable( WP_CONTENT_DIR ) ) {
 			return false;
 		}
 
 		// If the cache and/or cache/simple-cache directories exist, make sure it's writeable
-		if ( @file_exists( untrailingslashit( WP_CONTENT_DIR ) . '/cache' ) ) {
-			if ( ! $this->_is_dir_writable( untrailingslashit( WP_CONTENT_DIR ) . '/cache' ) ) {
+		if ( @file_exists( WP_CONTENT_DIR . '/cache' ) ) {
+			if ( ! $this->_is_dir_writable( WP_CONTENT_DIR . '/cache' ) ) {
 				return false;
 			}
 
-			if ( @file_exists( untrailingslashit( WP_CONTENT_DIR ) . '/cache/simple-cache' ) ) {
-				if ( ! $this->_is_dir_writable( untrailingslashit( WP_CONTENT_DIR ) . '/cache/simple-cache' ) ) {
+			if ( @file_exists( WP_CONTENT_DIR . '/cache/simple-cache' ) ) {
+				if ( ! $this->_is_dir_writable( WP_CONTENT_DIR . '/cache/simple-cache' ) ) {
 					return false;
 				}
 			}
 		}
 
 		// If the sc-config directory exists, make sure it's writeable
-		if ( @file_exists( untrailingslashit( WP_CONTENT_DIR ) . '/sc-config' ) ) {
-			if ( ! $this->_is_dir_writable( untrailingslashit( WP_CONTENT_DIR ) . '/sc-config' ) ) {
+		if ( @file_exists( WP_CONTENT_DIR . '/sc-config' ) ) {
+			if ( ! $this->_is_dir_writable( WP_CONTENT_DIR . '/sc-config' ) ) {
 				return false;
 			}
 		}
@@ -216,7 +216,7 @@ class SC_Config {
 
 		global $wp_filesystem;
 
-		$folder = untrailingslashit( WP_CONTENT_DIR )  . '/sc-config';
+		$folder = WP_CONTENT_DIR . '/sc-config';
 
 		delete_option( 'sc_simple_cache' );
 
