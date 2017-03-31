@@ -80,8 +80,6 @@ class SC_Settings {
 	 */
 	public function cant_write_notice() {
 
-		global $pagenow;
-
 		$cant_write = get_option( 'sc_cant_write', false );
 
 		if ( ! $cant_write ) {

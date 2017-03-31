@@ -57,8 +57,6 @@ class SC_Advanced_Cache {
 
 			WP_Filesystem();
 
-			$sub_path = preg_replace( '#https?://#i', '', get_permalink( $post_id ) );
-
 			$path = untrailingslashit( WP_CONTENT_DIR ) . '/cache/simple-cache/' . preg_replace( '#https?://#i', '', get_permalink( $post_id ) );
 
 			$wp_filesystem->delete( untrailingslashit( $path ) . '/index.html' );
@@ -88,8 +86,6 @@ class SC_Advanced_Cache {
 			global $wp_filesystem;
 
 			WP_Filesystem();
-
-			$sub_path = preg_replace( '#https?://#i', '', get_permalink( $post_id ) );
 
 			$path = untrailingslashit( WP_CONTENT_DIR ) . '/cache/simple-cache/' . preg_replace( '#https?://#i', '', get_permalink( $post_id ) );
 
@@ -259,9 +255,6 @@ class SC_Advanced_Cache {
 		if ( defined( 'WP_CACHE' ) && WP_CACHE === $status ) {
 			return;
 		}
-
-		// Lets look 4 levels deep for wp-config.php
-		$levels = 4;
 
 		$file = '/wp-config.php';
 		$config_path = false;
