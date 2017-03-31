@@ -143,7 +143,7 @@ class SC_Config {
 				$temp_file_owner = @fileowner( $temp_file_name );
 
 				// Close and remove the temporary file.
-				@fclose( $temp_file_name );
+				@fclose( $temp_handle );
 				@unlink( $temp_file_name );
 
 				// Return if we cannot determine the file owner, or if the owner IDs do not match.
