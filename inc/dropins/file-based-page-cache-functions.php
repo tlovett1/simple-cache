@@ -21,7 +21,7 @@ function sc_cache( $buffer, $flags ) {
 	}
 
 	// Don't cache search, 404, or password protected
-	if ( is_404() || is_search() || post_password_required() ) {
+	if ( http_response_code() !== 200 || is_search() || post_password_required() ) {
 		return $buffer;
 	}
 
