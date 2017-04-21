@@ -259,7 +259,7 @@ class SC_Settings {
 				<table class="form-table sc-simple-mode-table <?php if ( empty( $config['advanced_mode'] ) ) : ?>show<?php endif; ?>">
 					<tbody>
 						<tr>
-							<th scope="row"><label for="sc_enable_caching_simple"><span class="setting-highlight">*</span><?php _e( 'Enable Caching', 'simple-cache' ); ?></label></th>
+							<th scope="row"><label for="sc_enable_page_caching_simple"><span class="setting-highlight">*</span><?php _e( 'Enable Caching', 'simple-cache' ); ?></label></th>
 							<td>
 								<select <?php if ( ! empty( $config['advanced_mode'] ) ) : ?>disabled<?php endif; ?> name="sc_simple_cache[enable_page_caching]" id="sc_enable_page_caching_simple">
 									<option value="0"><?php esc_html_e( 'No', 'simple-cache' ); ?></option>
@@ -270,7 +270,7 @@ class SC_Settings {
 							</td>
 						</tr>
 						<tr>
-							<th scope="row"><label for="sc_page_cache_length"><?php esc_html_e( 'Expire the cache after', 'simple-cache' ); ?></label></th>
+							<th scope="row"><label for="sc_page_cache_length_simple"><?php esc_html_e( 'Expire the cache after', 'simple-cache' ); ?></label></th>
 							<td>
 								<input <?php if ( ! empty( $config['advanced_mode'] ) ) : ?>disabled<?php endif; ?> size="5" id="sc_page_cache_length_simple" type="text" value="<?php echo (int) $config['page_cache_length']; ?>" name="sc_simple_cache[page_cache_length]"> <span class="description"><?php esc_html_e( 'minutes', 'simple-cache' ); ?></span>
 							</td>
@@ -278,7 +278,7 @@ class SC_Settings {
 
 						<?php if ( function_exists( 'gzencode' ) ) : ?>
 							<tr>
-								<th scope="row"><label for="sc_enable_gzip_compression"><?php _e( 'Enable Compression', 'simple-cache' ); ?></label></th>
+								<th scope="row"><label for="sc_enable_gzip_compression_simple"><?php _e( 'Enable Compression', 'simple-cache' ); ?></label></th>
 								<td>
 									<select <?php if ( ! empty( $config['advanced_mode'] ) ) : ?>disabled<?php endif; ?> name="sc_simple_cache[enable_gzip_compression]" id="sc_enable_gzip_compression_simple">
 										<option value="0"><?php esc_html_e( 'No', 'simple-cache' ); ?></option>
