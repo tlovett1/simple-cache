@@ -89,11 +89,11 @@ class SC_Config {
 
 		global $wp_filesystem;
 
-		$config_dir = WP_CONTENT_DIR  . '/sc-config';
+		$config_dir = WP_CONTENT_DIR . '/sc-config';
 
 		$site_url_parts = parse_url( site_url() );
 
-		$config_file = $config_dir  . '/config-' . $site_url_parts['host'] . '.php';
+		$config_file = $config_dir . '/config-' . $site_url_parts['host'] . '.php';
 
 		$this->config = wp_parse_args( $config, $this->get_defaults() );
 
@@ -129,7 +129,7 @@ class SC_Config {
 	 * @return boolean
 	 */
 	private function _is_dir_writable( $dir ) {
-		$temp_file_name = untrailingslashit( $dir ) .  '/temp-write-test-' . time();
+		$temp_file_name = untrailingslashit( $dir ) . '/temp-write-test-' . time();
 		$temp_handle = fopen( $temp_file_name, 'w' );
 
 		if ( $temp_handle ) {
@@ -216,7 +216,7 @@ class SC_Config {
 
 		global $wp_filesystem;
 
-		$folder = untrailingslashit( WP_CONTENT_DIR )  . '/sc-config';
+		$folder = untrailingslashit( WP_CONTENT_DIR ) . '/sc-config';
 
 		delete_option( 'sc_simple_cache' );
 
