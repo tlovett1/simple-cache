@@ -37,6 +37,11 @@ For full documentation, questions, feature requests, and support concerning the 
 
 == Changelog ==
 
+= 1.6.3 =
+* Fix missing `FS_CHMOD_DIR` and `FS_CHMOD_MODE` in `sc_cache()`. Props [chesio](https://github.com/chesio)
+* Make form labels properly clickable. Props [ranss](https://github.com/ranss)
+* Only show notices to admins. Props [psorensen](https://github.com/psorensen)
+
 = 1.6.2 =
 * Prevent fatal when commenting with Captcha.
 
