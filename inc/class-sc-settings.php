@@ -143,7 +143,7 @@ class SC_Settings {
 
 		if ( ! empty( $_REQUEST['action'] ) && 'sc_purge_cache' === $_REQUEST['action'] ) {
 			if ( ! current_user_can( 'manage_options' ) || empty( $_REQUEST['sc_cache_nonce'] ) || ! wp_verify_nonce( $_REQUEST['sc_cache_nonce'], 'sc_purge_cache' ) ) {
-				wp_die( 'Cheatin, eh?' );
+				wp_die( esc_html__( 'Cheatin, eh?', 'simple-cache' ) );
 			}
 
 			sc_cache_flush();
