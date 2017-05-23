@@ -1062,7 +1062,7 @@ class WP_Object_Cache {
 	 * @return null|WP_Object_Cache If cache is disabled, returns null.
 	 */
 	public function __construct() {
-		global $table_prefix;
+		global $table_prefix, $blog_id;
 
 		$this->multisite = is_multisite();
 		$this->blog_prefix = $this->multisite ? $blog_id . ':' : '';

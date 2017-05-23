@@ -3,7 +3,7 @@ Contributors: tlovett1
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=HR34W94MM53RQ
 Tags: cache, page cache, object caching, object cache, memcache, redis, memcached
 Requires at least: 3.9
-Tested up to: 4.8
+Tested up to: 4.9
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -36,6 +36,9 @@ Pull requests are welcome on [Github](https://github.com/tlovett1/simple-cache).
 For full documentation, questions, feature requests, and support concerning the Simple Cache plugin, please refer to [Github](http://github.com/tlovett1/simple-cache).
 
 == Changelog ==
+
+= 1.6.4 =
+* Fix undefined `$blog_id` warning in redis object cache.
 
 = 1.6.3 =
 * Fix missing `FS_CHMOD_DIR` and `FS_CHMOD_MODE` in `sc_cache()`. Props [chesio](https://github.com/chesio)
