@@ -223,14 +223,26 @@ class SC_Advanced_Cache {
 				$cache_file = 'batcache.php';
 			}
 
-			$file_string = '<?php ' .
-			"\n\r" . "defined( 'ABSPATH' ) || exit;" .
-			"\n\r" . "define( 'SC_ADVANCED_CACHE', true );" .
-			"\n\r" . 'if ( is_admin() ) { return; }' .
-			"\n\r" . "if ( ! @file_exists( WP_CONTENT_DIR . '/sc-config/config-' . \$_SERVER['HTTP_HOST'] . '.php' ) ) { return; }" .
-			"\n\r" . "\$GLOBALS['sc_config'] = include( WP_CONTENT_DIR . '/sc-config/config-' . \$_SERVER['HTTP_HOST'] . '.php' );" .
-			"\n\r" . "if ( empty( \$GLOBALS['sc_config'] ) || empty( \$GLOBALS['sc_config']['enable_page_caching'] ) ) { return; }" .
-			"\n\r" . "if ( @file_exists( '" . untrailingslashit( plugin_dir_path( __FILE__ ) ) . '/dropins/' . $cache_file . "' ) ) { include_once( '" . untrailingslashit( plugin_dir_path( __FILE__ ) ) . '/dropins/' . $cache_file . "' ); }" . "\n\r";
+            $file_template = "
+<?php
+defined( 'ABSPATH' ) || exit;
+define( 'SC_ADVANCED_CACHE', true );
+if ( is_admin() ) { return; }
+if ( ! @file_exists( WP_CONTENT_DIR . '/sc-config/config-' . \$_SERVER['HTTP_HOST'] . '.php' ) ) { return; }
+\$GLOBALS['sc_config'] = include( WP_CONTENT_DIR . '/sc-config/config-' . \$_SERVER['HTTP_HOST'] . '.php' );
+if ( empty( \$GLOBALS['sc_config'] ) || empty( \$GLOBALS['sc_config']['enable_page_caching'] ) ) { return; }
+if ( @file_exists( '%s/dropins/%s' ) ) { include_once( '%s/dropins/%s' ); }
+";
+
+            $file_string = sprintf( $file_template,
+                untrailingslashit( plugin_dir_path( __FILE__ ) ),
+                $cache_file,
+                untrailingslashit( plugin_dir_path( __FILE__ ) ),
+                $cache_file
+            );
+
+            // Make it Windows friendly
+            $file_string = str_replace( "\n", "\r\n", $file_string );
 
 		}
 
