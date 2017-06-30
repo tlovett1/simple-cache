@@ -36,7 +36,7 @@ class SC_Config {
 			),
 			'page_cache_length' => array(
 				'default'       => 1440, // One day
-				'sanitizer'     => 'intval',
+				'sanitizer'     => 'floatval',
 			),
 			'page_cache_length_unit' => array(
 				'default'            => 'minutes',
