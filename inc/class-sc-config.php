@@ -35,11 +35,11 @@ class SC_Config {
 				'sanitizer'   => 'sanitize_text_field',
 			),
 			'page_cache_length' => array(
-				'default'       => 1,
+				'default'       => 24,
 				'sanitizer'     => 'floatval',
 			),
 			'page_cache_length_unit' => array(
-				'default'            => 'days',
+				'default'            => 'hours',
 				'sanitizer'          => array( $this, 'sanitize_length_unit' ),
 			),
 			'cache_exception_urls' => array(
@@ -72,7 +72,7 @@ class SC_Config {
 	 * @return string
 	 */
 	public function sanitize_length_unit( $value ) {
-		$accepted_values = array( 'minutes', 'days', 'weeks' );
+		$accepted_values = array( 'minutes', 'hours', 'days', 'weeks' );
 
 		if ( in_array( $value, $accepted_values ) ) {
 			return $value;

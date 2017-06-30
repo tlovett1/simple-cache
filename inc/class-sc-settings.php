@@ -279,6 +279,7 @@ class SC_Settings {
 								<input <?php if ( ! empty( $config['advanced_mode'] ) ) : ?>disabled<?php endif; ?> size="5" id="sc_page_cache_length_simple" type="text" value="<?php echo (float) $config['page_cache_length']; ?>" name="sc_simple_cache[page_cache_length]">
 								<select <?php if ( ! empty( $config['advanced_mode'] ) ) : ?>disabled<?php endif; ?> name="sc_simple_cache[page_cache_length_unit]" id="sc_page_cache_length_unit_simple">
 									<option <?php selected( $config['page_cache_length_unit'], 'minutes' ); ?> value="minutes"><?php esc_html_e( 'minutes', 'simple-cache' ); ?></option>
+									<option <?php selected( $config['page_cache_length_unit'], 'hours' ); ?> value="hours"><?php esc_html_e( 'hours', 'simple-cache' ); ?></option>
 									<option <?php selected( $config['page_cache_length_unit'], 'days' ); ?> value="days"><?php esc_html_e( 'days', 'simple-cache' ); ?></option>
 									<option <?php selected( $config['page_cache_length_unit'], 'weeks' ); ?> value="weeks"><?php esc_html_e( 'weeks', 'simple-cache' ); ?></option>
 								</select>
@@ -344,6 +345,7 @@ class SC_Settings {
 								<input <?php if ( empty( $config['advanced_mode'] ) ) : ?>disabled<?php endif; ?> size="5" id="sc_page_cache_length_advanced" type="text" value="<?php echo (float) $config['page_cache_length']; ?>" name="sc_simple_cache[page_cache_length]">
 								<select <?php if ( empty( $config['advanced_mode'] ) ) : ?>disabled<?php endif; ?> name="sc_simple_cache[page_cache_length_unit]" id="sc_page_cache_length_unit_advanced">
 									<option <?php selected( $config['page_cache_length_unit'], 'minutes' ); ?> value="minutes"><?php esc_html_e( 'minutes', 'simple-cache' ); ?></option>
+									<option <?php selected( $config['page_cache_length_unit'], 'hours' ); ?> value="hours"><?php esc_html_e( 'hours', 'simple-cache' ); ?></option>
 									<option <?php selected( $config['page_cache_length_unit'], 'days' ); ?> value="days"><?php esc_html_e( 'days', 'simple-cache' ); ?></option>
 									<option <?php selected( $config['page_cache_length_unit'], 'weeks' ); ?> value="weeks"><?php esc_html_e( 'weeks', 'simple-cache' ); ?></option>
 								</select>
