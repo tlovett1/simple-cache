@@ -33,7 +33,14 @@ class SC_Cron {
 		$interval = HOUR_IN_SECONDS;
 
 		if ( ! empty( $config['page_cache_length'] ) && $config['page_cache_length'] > 0 ) {
-			$interval = $config['page_cache_length'] * 60;
+
+			$interval = $config['page_cache_length'] * MINUTE_IN_SECONDS;
+
+			if ( ! empty( $config['page_cache_length'] ) && 'days' === $config['page_cache_length'] ) {
+				$interval = $config['page_cache_length'] * DAY_IN_SECONDS;
+			} elseif ( ! empty( $config['page_cache_length'] ) && 'weeks' === $config['page_cache_length'] ) {
+				$interval = $config['page_cache_length'] * WEEK_IN_SECONDS;
+			}
 		}
 
 		$schedules['simple_cache'] = array(
