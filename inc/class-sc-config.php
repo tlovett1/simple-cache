@@ -38,6 +38,10 @@ class SC_Config {
 				'default'       => 1440, // One day
 				'sanitizer'     => 'intval',
 			),
+			'page_cache_length_unit' => array(
+				'default'            => 'minutes',
+				'sanitizer'          => array( $this, 'sanitize_length_unit' ),
+			),
 			'cache_exception_urls' => array(
 				'default'       => '',
 				'sanitizer'     => 'wp_kses_post',
@@ -59,6 +63,22 @@ class SC_Config {
 	public function boolval( $value ) {
 
 		return (bool) $value;
+	}
+
+	/**
+	 * Make sure the length unit has an expected value
+	 *
+	 * @param  string $value
+	 * @return string
+	 */
+	public function sanitize_length_unit( $value ) {
+		$accepted_values = array( 'minutes', 'days', 'weeks' );
+
+		if ( in_array( $value, $accepted_values ) ) {
+			return $value;
+		}
+
+		return 'minutes';
 	}
 
 	/**
