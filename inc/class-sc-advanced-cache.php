@@ -22,7 +22,7 @@ class SC_Advanced_Cache {
 	 * When user posts a comment, set a cookie so we don't show them page cache
 	 *
 	 * @param  WP_Comment $comment
-	 * @param  WP_User $user
+	 * @param  WP_User    $user
 	 * @since  1.3
 	 */
 	public function set_comment_cookie_exceptions( $comment, $user ) {
@@ -48,8 +48,8 @@ class SC_Advanced_Cache {
 
 		// File based caching only
 		if ( ! empty( $config['enable_page_caching'] ) && empty( $config['enable_in_memory_object_caching'] ) ) {
-			require_once( ABSPATH . 'wp-admin/includes/file.php');
-			
+			require_once( ABSPATH . 'wp-admin/includes/file.php' );
+
 			$comment = get_comment( $comment_ID );
 			$post_id = $comment->comment_post_ID;
 
@@ -67,8 +67,8 @@ class SC_Advanced_Cache {
 	/**
 	 * Purge post cache when there is a new approved comment
 	 *
-	 * @param  int $comment_ID
-	 * @param  int $approved
+	 * @param  int   $comment_ID
+	 * @param  int   $approved
 	 * @param  array $commentdata
 	 * @since  1.3
 	 */
@@ -170,7 +170,7 @@ class SC_Advanced_Cache {
 			</p>
 		</div>
 
-	 <?php
+		<?php
 	}
 
 	/**
@@ -183,7 +183,7 @@ class SC_Advanced_Cache {
 
 		global $wp_filesystem;
 
-		$file = untrailingslashit( WP_CONTENT_DIR )  . '/advanced-cache.php';
+		$file = untrailingslashit( WP_CONTENT_DIR ) . '/advanced-cache.php';
 
 		$ret = true;
 
@@ -191,7 +191,7 @@ class SC_Advanced_Cache {
 			$ret = false;
 		}
 
-		$folder = untrailingslashit( WP_CONTENT_DIR )  . '/cache/simple-cache';
+		$folder = untrailingslashit( WP_CONTENT_DIR ) . '/cache/simple-cache';
 
 		if ( ! $wp_filesystem->delete( $folder, true ) ) {
 			$ret = false;
@@ -210,7 +210,7 @@ class SC_Advanced_Cache {
 
 		global $wp_filesystem;
 
-		$file = untrailingslashit( WP_CONTENT_DIR )  . '/advanced-cache.php';
+		$file = untrailingslashit( WP_CONTENT_DIR ) . '/advanced-cache.php';
 
 		$config = SC_Config::factory()->get();
 
@@ -264,8 +264,8 @@ class SC_Advanced_Cache {
 				$file = '/..' . $file;
 			}
 
-			if ( $wp_filesystem->exists( untrailingslashit( ABSPATH )  . $file ) ) {
-				$config_path = untrailingslashit( ABSPATH )  . $file;
+			if ( $wp_filesystem->exists( untrailingslashit( ABSPATH ) . $file ) ) {
+				$config_path = untrailingslashit( ABSPATH ) . $file;
 				break;
 			}
 		}
@@ -306,7 +306,7 @@ class SC_Advanced_Cache {
 
 		foreach ( $config_file as $key => $line ) {
 			if ( '' === $line ) {
-				unset( $config_file[$key] );
+				unset( $config_file[ $key ] );
 			}
 		}
 

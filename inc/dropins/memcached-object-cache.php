@@ -235,7 +235,7 @@ class WP_Object_Cache {
 			} else {
 				$value = $this->cache[ $key ];
 			}
-		} else if ( in_array( $group, $this->no_mc_groups ) ) {
+		} elseif ( in_array( $group, $this->no_mc_groups ) ) {
 			$this->cache[ $key ] = $value = false;
 		} else {
 			$value = $mc->get( $key );
@@ -273,7 +273,7 @@ class WP_Object_Cache {
 						$return[ $key ] = $this->cache[ $key ];
 					}
 					continue;
-				} else if ( in_array( $group, $this->no_mc_groups ) ) {
+				} elseif ( in_array( $group, $this->no_mc_groups ) ) {
 					$return[ $key ] = false;
 					continue;
 				} else {
@@ -406,7 +406,7 @@ class WP_Object_Cache {
 
 	function failure_callback( $host, $port ) {
 
-		//error_log("Connection failure for $host:$port\n", 3, '/tmp/memcached.txt');
+		// error_log("Connection failure for $host:$port\n", 3, '/tmp/memcached.txt');
 	}
 
 	function __construct() {
@@ -457,4 +457,4 @@ class WP_Object_Cache {
 		$this->cache_misses =& $this->stats['add'];
 	}
 }
-?>
+

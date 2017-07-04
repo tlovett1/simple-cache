@@ -57,7 +57,7 @@ class SC_Object_Cache {
 
 		global $wp_filesystem;
 
-		$file = untrailingslashit( WP_CONTENT_DIR )  . '/object-cache.php';
+		$file = untrailingslashit( WP_CONTENT_DIR ) . '/object-cache.php';
 
 		if ( ! $wp_filesystem->delete( $file ) ) {
 			return false;
@@ -76,7 +76,7 @@ class SC_Object_Cache {
 
 		global $wp_filesystem;
 
-		$file = untrailingslashit( WP_CONTENT_DIR )  . '/object-cache.php';
+		$file = untrailingslashit( WP_CONTENT_DIR ) . '/object-cache.php';
 
 		$config = SC_Config::factory()->get();
 

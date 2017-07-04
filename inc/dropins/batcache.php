@@ -12,7 +12,6 @@ if ( ! function_exists( 'batcache_stats' ) ) {
 }
 
 // nananananananananananananananana BATCACHE!!!
-
 function batcache_cancel() {
 
 	global $batcache;
@@ -25,14 +24,14 @@ function batcache_cancel() {
 // Variants can be set by functions which use early-set globals like $_SERVER to run simple tests.
 // Functions defined in WordPress, plugins, and themes are not available and MUST NOT be used.
 // Example: vary_cache_on_function('return preg_match("/feedburner/i", $_SERVER["HTTP_USER_AGENT"]);');
-//          This will cause batcache to cache a variant for requests from Feedburner.
+// This will cause batcache to cache a variant for requests from Feedburner.
 // Tips for writing $function:
-//  X_X  DO NOT use any functions from your theme or plugins. Those files have not been included. Fatal error.
-//  X_X  DO NOT use any WordPress functions except is_admin() and is_multisite(). Fatal error.
-//  X_X  DO NOT include or require files from anywhere without consulting expensive professionals first. Fatal error.
-//  X_X  DO NOT use $wpdb, $blog_id, $current_user, etc. These have not been initialized.
-//  ^_^  DO understand how create_function works. This is how your code is used: create_function('', $function);
-//  ^_^  DO remember to return something. The return value determines the cache variant.
+// X_X  DO NOT use any functions from your theme or plugins. Those files have not been included. Fatal error.
+// X_X  DO NOT use any WordPress functions except is_admin() and is_multisite(). Fatal error.
+// X_X  DO NOT include or require files from anywhere without consulting expensive professionals first. Fatal error.
+// X_X  DO NOT use $wpdb, $blog_id, $current_user, etc. These have not been initialized.
+// ^_^  DO understand how create_function works. This is how your code is used: create_function('', $function);
+// ^_^  DO remember to return something. The return value determines the cache variant.
 function vary_cache_on_function( $function ) {
 
 	global $batcache;
@@ -366,7 +365,7 @@ HTML;
 // Pass in the global variable which may be an array of settings to override defaults.
 global $batcache;
 
-if ( empty( $batcache ) && ! empty($GLOBALS['sc_config'] ) && isset( $GLOBALS['sc_config']['page_cache_length'] ) ) {
+if ( empty( $batcache ) && ! empty( $GLOBALS['sc_config'] ) && isset( $GLOBALS['sc_config']['page_cache_length'] ) ) {
 	$max_age = $GLOBALS['sc_config']['page_cache_length'] * 60;
 
 	if ( 0 === $max_age ) {
@@ -398,7 +397,6 @@ if ( ! empty( $GLOBALS['sc_config']['cache_exception_urls'] ) ) {
 				// Exception match!
 				return;
 			}
-
 		} elseif ( preg_match( '#^/#', $exception ) ) {
 			$path = $_SERVER['REQUEST_URI'];
 
@@ -469,22 +467,25 @@ if ( ! is_object( $wp_object_cache ) ) {
 }
 
 // Now that the defaults are set, you might want to use different settings under certain conditions.
-
-/* Example: if your documents have a mobile variant (a different document served by the same URL) you must tell batcache about the variance. Otherwise you might accidentally cache the mobile version and serve it to desktop users, or vice versa.
+/*
+ Example: if your documents have a mobile variant (a different document served by the same URL) you must tell batcache about the variance. Otherwise you might accidentally cache the mobile version and serve it to desktop users, or vice versa.
 $batcache->unique['mobile'] = is_mobile_user_agent();
 */
 
-/* Example: never batcache for this host
+/*
+ Example: never batcache for this host
 if ( $_SERVER['HTTP_HOST'] == 'do-not-batcache-me.com' )
 return;
 */
 
-/* Example: batcache everything on this host regardless of traffic level
+/*
+ Example: batcache everything on this host regardless of traffic level
 if ( $_SERVER['HTTP_HOST'] == 'always-batcache-me.com' )
 return;
 */
 
-/* Example: If you sometimes serve variants dynamically (e.g. referrer search term highlighting) you probably don't want to batcache those variants. Remember this code is run very early in wp-settings.php so plugins are not yet loaded. You will get a fatal error if you try to call an undefined function. Either include your plugin now or define a test function in this file.
+/*
+ Example: If you sometimes serve variants dynamically (e.g. referrer search term highlighting) you probably don't want to batcache those variants. Remember this code is run very early in wp-settings.php so plugins are not yet loaded. You will get a fatal error if you try to call an undefined function. Either include your plugin now or define a test function in this file.
 if ( include_once( 'plugins/searchterm-highlighter.php') && referrer_has_search_terms() )
 return;
 */
@@ -533,7 +534,7 @@ $batcache->cache = wp_cache_get( $batcache->key, $batcache->group );
 if ( isset( $batcache->cache['version'] ) && $batcache->cache['version'] != $batcache->url_version ) {
 	// Always refresh the cache if a newer version is available.
 	$batcache->do = true;
-} else if ( $batcache->seconds < 1 || $batcache->times < 2 ) {
+} elseif ( $batcache->seconds < 1 || $batcache->times < 2 ) {
 	// Are we only caching frequently-requested pages?
 	$batcache->do = true;
 } else {

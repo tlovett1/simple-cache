@@ -37,7 +37,7 @@ if ( ! empty( $_COOKIE ) ) {
 
 	if ( ! empty( $_COOKIE['sc_commented_posts'] ) ) {
 		foreach ( $_COOKIE['sc_commented_posts'] as $path ) {
-			if ( rtrim( $path, '/') === rtrim( $_SERVER['REQUEST_URI'], '/' ) ) {
+			if ( rtrim( $path, '/' ) === rtrim( $_SERVER['REQUEST_URI'], '/' ) ) {
 				// User commented on this post
 				return;
 			}

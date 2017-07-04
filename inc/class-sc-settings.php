@@ -51,9 +51,9 @@ class SC_Settings {
 	 */
 	public function setup_notice() {
 
-		if ( ! current_user_can('manage_options')) {
+		if ( ! current_user_can( 'manage_options' ) ) {
 	        return;
-        }
+		}
 
 		$cant_write = get_option( 'sc_cant_write', false );
 

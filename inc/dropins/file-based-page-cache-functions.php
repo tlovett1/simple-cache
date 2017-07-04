@@ -11,7 +11,7 @@
  * Cache output before it goes to the browser
  *
  * @param  string $buffer
- * @param  int $flags
+ * @param  int    $flags
  * @since  1.0
  * @return string
  */
@@ -28,10 +28,12 @@ function sc_cache( $buffer, $flags ) {
 	// Set the permission constants if not already set.
 	// Normally, this is taken care of in WP_Filesystem constructor, but it is
 	// not invoked here, because WP_Filesystem_Direct is instantiated directly.
-	if ( ! defined('FS_CHMOD_DIR') )
-		define('FS_CHMOD_DIR', ( fileperms( ABSPATH ) & 0777 | 0755 ) );
-	if ( ! defined('FS_CHMOD_FILE') )
-		define('FS_CHMOD_FILE', ( fileperms( ABSPATH . 'index.php' ) & 0777 | 0644 ) );
+	if ( ! defined( 'FS_CHMOD_DIR' ) ) {
+		define( 'FS_CHMOD_DIR', ( fileperms( ABSPATH ) & 0777 | 0755 ) );
+	}
+	if ( ! defined( 'FS_CHMOD_FILE' ) ) {
+		define( 'FS_CHMOD_FILE', ( fileperms( ABSPATH . 'index.php' ) & 0777 | 0644 ) );
+	}
 
 	include_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php';
 	include_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php';
@@ -130,7 +132,7 @@ function sc_serve_cache() {
 
 	header( 'Cache-Control: no-cache' ); // Check back in an hour
 
-	if ( ! empty( $modified_time ) && ! empty( $_SERVER[ 'HTTP_IF_MODIFIED_SINCE' ] ) && strtotime( $_SERVER[ 'HTTP_IF_MODIFIED_SINCE' ] ) === $modified_time  ) {
+	if ( ! empty( $modified_time ) && ! empty( $_SERVER['HTTP_IF_MODIFIED_SINCE'] ) && strtotime( $_SERVER['HTTP_IF_MODIFIED_SINCE'] ) === $modified_time  ) {
 		if ( function_exists( 'gzencode' ) && ! empty( $GLOBALS['sc_config']['enable_gzip_compression'] ) ) {
 			header( 'Content-Encoding: gzip' );
 		}
@@ -189,7 +191,6 @@ function sc_url_exception_match( $exception, $regex = false ) {
 				return true;
 			}
 		}
-
 	} else {
 		$path = $_SERVER['REQUEST_URI'];
 

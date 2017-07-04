@@ -144,7 +144,7 @@ class SC_Config {
 	/**
 	 * Check if a directory is writable and we can create files as the same user as the current file
 	 *
-	 * @param  string  $dir
+	 * @param  string $dir
 	 * @since  1.2.3
 	 * @return boolean
 	 */
