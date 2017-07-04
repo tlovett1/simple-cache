@@ -5,6 +5,7 @@ var sass = require( 'gulp-sass' );
 var concat = require( 'gulp-concat' );
 var uglify = require( 'gulp-uglify' );
 var rename = require( 'gulp-rename' );
+var wpPot = require('gulp-wp-pot');
 
 gulp.task(
 	'lint', function() {
@@ -35,6 +36,18 @@ gulp.task(
 	'watch', function() {
 		gulp.watch( 'assets/js/src/*.js', ['lint', 'scripts'] );
 		gulp.watch( 'assets/css/scss/*.scss', ['sass'] );
+	}
+);
+
+gulp.task(
+	'makepot',
+	function () {
+		return gulp.src(['*.php', 'inc/**/*.php'])
+		.pipe(wpPot({
+			domain: 'simple-cache',
+			package: 'Simple Cache'
+		}))
+		.pipe(gulp.dest('languages/simple-cache.pot'));
 	}
 );
 
