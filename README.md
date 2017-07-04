@@ -1,4 +1,4 @@
-Simple Cache
+Simple Cache [![Build Status](https://travis-ci.org/tlovett1/simple-cache.svg?branch=master)](https://travis-ci.org/tlovett1/simple-cache)
 ===============
 
 Simple Cache was constructed after getting frustrated with the major caching plugins available and building sites with developer-only complex caching solutions that get millions of page views per day. Simple Cache promises the following:
