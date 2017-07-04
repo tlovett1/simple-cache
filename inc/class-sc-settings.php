@@ -50,7 +50,7 @@ class SC_Settings {
 	 * @since 1.0
 	 */
 	public function setup_notice() {
-		
+
 		if ( ! current_user_can('manage_options')) {
 	        return;
         }
@@ -276,7 +276,13 @@ class SC_Settings {
 						<tr>
 							<th scope="row"><label for="sc_page_cache_length_simple"><?php esc_html_e( 'Expire the cache after', 'simple-cache' ); ?></label></th>
 							<td>
-								<input <?php if ( ! empty( $config['advanced_mode'] ) ) : ?>disabled<?php endif; ?> size="5" id="sc_page_cache_length_simple" type="text" value="<?php echo (int) $config['page_cache_length']; ?>" name="sc_simple_cache[page_cache_length]"> <span class="description"><?php esc_html_e( 'minutes', 'simple-cache' ); ?></span>
+								<input <?php if ( ! empty( $config['advanced_mode'] ) ) : ?>disabled<?php endif; ?> size="5" id="sc_page_cache_length_simple" type="text" value="<?php echo (float) $config['page_cache_length']; ?>" name="sc_simple_cache[page_cache_length]">
+								<select <?php if ( ! empty( $config['advanced_mode'] ) ) : ?>disabled<?php endif; ?> name="sc_simple_cache[page_cache_length_unit]" id="sc_page_cache_length_unit_simple">
+									<option <?php selected( $config['page_cache_length_unit'], 'minutes' ); ?> value="minutes"><?php esc_html_e( 'minutes', 'simple-cache' ); ?></option>
+									<option <?php selected( $config['page_cache_length_unit'], 'hours' ); ?> value="hours"><?php esc_html_e( 'hours', 'simple-cache' ); ?></option>
+									<option <?php selected( $config['page_cache_length_unit'], 'days' ); ?> value="days"><?php esc_html_e( 'days', 'simple-cache' ); ?></option>
+									<option <?php selected( $config['page_cache_length_unit'], 'weeks' ); ?> value="weeks"><?php esc_html_e( 'weeks', 'simple-cache' ); ?></option>
+								</select>
 							</td>
 						</tr>
 
@@ -336,7 +342,13 @@ class SC_Settings {
 						<tr>
 							<th scope="row"><label for="sc_page_cache_length_advanced"><?php esc_html_e( 'Expire page cache after', 'simple-cache' ); ?></label></th>
 							<td>
-								<input <?php if ( empty( $config['advanced_mode'] ) ) : ?>disabled<?php endif; ?> size="5" id="sc_page_cache_length_advanced" type="text" value="<?php echo (int) $config['page_cache_length']; ?>" name="sc_simple_cache[page_cache_length]"> <span class="description"><?php esc_html_e( 'minutes', 'simple-cache' ); ?></span>
+								<input <?php if ( empty( $config['advanced_mode'] ) ) : ?>disabled<?php endif; ?> size="5" id="sc_page_cache_length_advanced" type="text" value="<?php echo (float) $config['page_cache_length']; ?>" name="sc_simple_cache[page_cache_length]">
+								<select <?php if ( empty( $config['advanced_mode'] ) ) : ?>disabled<?php endif; ?> name="sc_simple_cache[page_cache_length_unit]" id="sc_page_cache_length_unit_advanced">
+									<option <?php selected( $config['page_cache_length_unit'], 'minutes' ); ?> value="minutes"><?php esc_html_e( 'minutes', 'simple-cache' ); ?></option>
+									<option <?php selected( $config['page_cache_length_unit'], 'hours' ); ?> value="hours"><?php esc_html_e( 'hours', 'simple-cache' ); ?></option>
+									<option <?php selected( $config['page_cache_length_unit'], 'days' ); ?> value="days"><?php esc_html_e( 'days', 'simple-cache' ); ?></option>
+									<option <?php selected( $config['page_cache_length_unit'], 'weeks' ); ?> value="weeks"><?php esc_html_e( 'weeks', 'simple-cache' ); ?></option>
+								</select>
 							</td>
 						</tr>
 						<tr>
