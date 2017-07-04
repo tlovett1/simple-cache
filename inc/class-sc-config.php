@@ -35,8 +35,12 @@ class SC_Config {
 				'sanitizer'   => 'sanitize_text_field',
 			),
 			'page_cache_length' => array(
-				'default'       => 1440, // One day
-				'sanitizer'     => 'intval',
+				'default'       => 24,
+				'sanitizer'     => 'floatval',
+			),
+			'page_cache_length_unit' => array(
+				'default'            => 'hours',
+				'sanitizer'          => array( $this, 'sanitize_length_unit' ),
 			),
 			'cache_exception_urls' => array(
 				'default'       => '',
@@ -59,6 +63,22 @@ class SC_Config {
 	public function boolval( $value ) {
 
 		return (bool) $value;
+	}
+
+	/**
+	 * Make sure the length unit has an expected value
+	 *
+	 * @param  string $value
+	 * @return string
+	 */
+	public function sanitize_length_unit( $value ) {
+		$accepted_values = array( 'minutes', 'hours', 'days', 'weeks' );
+
+		if ( in_array( $value, $accepted_values ) ) {
+			return $value;
+		}
+
+		return 'minutes';
 	}
 
 	/**

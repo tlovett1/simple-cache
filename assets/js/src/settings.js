@@ -21,6 +21,8 @@
 	var pageCachingAdvanced = document.getElementById( 'sc_enable_page_caching_advanced' );
 	var pageCacheLengthSimple = document.getElementById( 'sc_page_cache_length_simple' );
 	var pageCacheLengthAdvanced = document.getElementById( 'sc_page_cache_length_advanced' );
+	var pageCacheLengthUnitSimple = document.getElementById( 'sc_page_cache_length_unit_simple' );
+	var pageCacheLengthUnitAdvanced = document.getElementById( 'sc_page_cache_length_unit_advanced' );
 	var gzipCompressionSimple = document.getElementById( 'sc_enable_gzip_compression_simple' );
 	var gzipCompressionAdvanced = document.getElementById( 'sc_enable_gzip_compression_advanced' );
 
@@ -36,6 +38,9 @@
 				pageCacheLengthSimple.disabled = true;
 				pageCacheLengthAdvanced.disabled = false;
 
+				pageCacheLengthUnitSimple.disabled = true;
+				pageCacheLengthUnitAdvanced.disabled = false;
+
 				if ( gzipCompressionSimple ) {
 					gzipCompressionSimple.disabled = true;
 					gzipCompressionAdvanced.disabled = false;
@@ -49,6 +54,9 @@
 
 				pageCacheLengthSimple.disabled = false;
 				pageCacheLengthAdvanced.disabled = true;
+
+				pageCacheLengthUnitSimple.disabled = false;
+				pageCacheLengthUnitAdvanced.disabled = true;
 
 				if (gzipCompressionSimple) {
 					gzipCompressionSimple.disabled = false;
