@@ -89,9 +89,20 @@ class SC_Object_Cache {
 				$cache_file = 'redis-object-cache.php';
 			}
 
+			/**
+			 * Salt to be used with the cache keys.
+			 *
+			 * We need a random string not long as cache key size is limited and
+			 * not with special characters as they cause issues with some caches.
+			 *
+			 * @var string
+			 */
+			$cache_key_salt = wp_generate_password( 10, false );
+
 			$file_string = '<?php ' .
 			"\n\r" . "defined( 'ABSPATH' ) || exit;" .
 			"\n\r" . "define( 'SC_OBJECT_CACHE', true );" .
+			"\n\r" . "define( 'WP_CACHE_KEY_SALT', '{$cache_key_salt}' );" .
 			"\n\r" . "if ( ! @file_exists( WP_CONTENT_DIR . '/sc-config/config-' . \$_SERVER['HTTP_HOST'] . '.php' ) ) { return; }" .
 			"\n\r" . "\$GLOBALS['sc_config'] = include( WP_CONTENT_DIR . '/sc-config/config-' . \$_SERVER['HTTP_HOST'] . '.php' );" .
 			"\n\r" . "if ( empty( \$GLOBALS['sc_config'] ) || empty( \$GLOBALS['sc_config']['enable_in_memory_object_caching'] ) ) { return; }" .
