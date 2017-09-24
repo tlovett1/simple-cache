@@ -78,6 +78,12 @@ function sc_cache( $buffer, $flags ) {
 
 	$modified_time = time(); // Make sure modified time is consistent
 
+	// Prevent mixed content when there's an http request but the site URL uses https
+	if ( ! $_SERVER['HTTPS'] && 0 === ( strpos( get_option( 'siteurl' ), 'https' ) ) ) {
+		$http_site_url  = str_replace( 'https://', 'http://', get_option( 'siteurl' ) );
+		$buffer         = str_replace( $http_site_url, get_option( 'siteurl' ), $buffer );
+	}
+
 	if ( preg_match( '#</html>#i', $buffer ) ) {
 		$buffer .= "\n<!-- Cache served by Simple Cache - Last modified: " . gmdate( 'D, d M Y H:i:s', $modified_time ) . " GMT -->\n";
 	}
