@@ -16,12 +16,14 @@
  * @return string
  */
 function sc_cache( $buffer, $flags ) {
+	global $post;
+
 	if ( strlen( $buffer ) < 255 ) {
 		return $buffer;
 	}
 
 	// Don't cache search, 404, or password protected
-	if ( is_404() || is_search() || post_password_required() ) {
+	if ( is_404() || is_search() || ! empty( $post->post_password ) ) {
 		return $buffer;
 	}
 
