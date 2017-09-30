@@ -105,7 +105,7 @@ class SC_Advanced_Cache {
 
 		if ( 'publish' !== get_post_status( $post_id ) ) {
 			return;
-		} elseif ( ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) || 'revision' === $post_type ) {
+		} elseif ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
 			return;
 		} elseif ( ! current_user_can( 'edit_post', $post_id ) && ( ! defined( 'DOING_CRON' ) || ! DOING_CRON ) ) {
 			return;
