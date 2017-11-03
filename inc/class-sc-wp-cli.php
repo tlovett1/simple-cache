@@ -1,9 +1,17 @@
 <?php
 /**
- * The simple-cache-wp-cli.php file.
+ * The class-sc-wp-cli.php file.
  *
  * Adds some WP-CLI commands to perform certain operations with the
- * simple-cache plugin options.
+ * simple-cache plugin options. Enable/disable caching at global level or
+ * enable/disable gzip compression. Default option to work with is 'cache'.
+ *
+ * wp wimple-cache on
+ * wp simple-cache off
+ * wp simple-cache on --option=compression
+ * wp simple-cache off --option=compression
+ * wp simple-cache on --option=cache
+ * wp simple-cache off --option=cache
  */
 
 if ( ! class_exists( 'WP_CLI' ) ) {
@@ -14,7 +22,7 @@ if ( ! class_exists( 'WP_CLI' ) ) {
 /**
  * Implements example command.
  */
-class Simple_Cache_WP_CLI extends WP_CLI_Command {
+class SC_WP_CLI extends WP_CLI_Command {
 
 	/**
 	 * Used to toggle either the cache or gzip compression options for
@@ -149,4 +157,4 @@ class Simple_Cache_WP_CLI extends WP_CLI_Command {
 	}
 }
 
-WP_CLI::add_command( 'simple-cache', 'Simple_Cache_WP_CLI' );
+WP_CLI::add_command( 'simple-cache', 'SC_WP_CLI' );
