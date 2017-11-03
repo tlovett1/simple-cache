@@ -252,6 +252,12 @@ class SC_Advanced_Cache {
 
 		global $wp_filesystem;
 
+		// when calling from WP-CLI $wp_filesystem is not defined. If nothing
+		// is in $wp_filesystem then instatiate it.
+		if ( ! $wp_filesystem ) {
+			WP_Filesystem();
+		}
+
 		if ( defined( 'WP_CACHE' ) && WP_CACHE === $status ) {
 			return;
 		}
