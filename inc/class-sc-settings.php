@@ -113,11 +113,10 @@ class SC_Settings {
 
 			if ( defined( WP_DEBUG ) && WP_DEBUG ) {
 				$js_path = '/assets/js/src/settings.js';
-				$css_path = '/assets/css/settings.css';
 			} else {
 				$js_path = '/assets/js/settings.min.js';
-				$css_path = '/assets/css/settings.css';
 			}
+			$css_path = '/assets/css/settings.css';
 
 			wp_enqueue_script( 'sc-settings', plugins_url( $js_path, dirname( __FILE__ ) ), array( 'jquery' ), SC_VERSION, true );
 			wp_enqueue_style( 'sc-settings', plugins_url( $css_path, dirname( __FILE__ ) ), array(), SC_VERSION );
