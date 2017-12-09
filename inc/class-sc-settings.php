@@ -68,7 +68,7 @@ class SC_Settings {
 		}
 
 		?>
-		<div class="notice notice-warning">
+		<div class="notice notice-warning is-dismissible">
 			<p>
 				<?php esc_html_e( "Simple Cache won't work until you turn it on.", 'simple-cache' ); ?>
 				<a href="options-general.php?page=simple-cache&amp;wp_http_referer=<?php echo esc_url( wp_unslash( $_SERVER['REQUEST_URI'] ) ); ?>&amp;action=sc_update&amp;sc_settings_nonce=<?php echo wp_create_nonce( 'sc_update_settings' ); ?>&amp;sc_simple_cache[enable_page_caching]=1" class="button button-primary" style="margin-left: 5px;"><?php esc_html_e( 'Turn On Caching', 'simple-cache' ); ?></a>
