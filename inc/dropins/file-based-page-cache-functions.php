@@ -81,6 +81,14 @@ function sc_cache( $buffer, $flags ) {
 
 	$modified_time = time(); // Make sure modified time is consistent.
 
+	// Prevent mixed content when there's an http request but the site URL uses https
+	$home_url = get_home_url();
+	if ( ! is_ssl() && 'https' === strtolower( parse_url( $home_url, PHP_URL_SCHEME ) ) ) {
+		$https_home_url = $home_url;
+		$http_home_url  = str_replace( 'https://', 'http://', $https_home_url );
+		$buffer         = str_replace( esc_url( $http_home_url ), esc_url( $https_home_url ), $buffer );
+	}
+
 	if ( preg_match( '#</html>#i', $buffer ) ) {
 		$buffer .= "\n<!-- Cache served by Simple Cache - Last modified: " . gmdate( 'D, d M Y H:i:s', $modified_time ) . " GMT -->\n";
 	}
