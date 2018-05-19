@@ -4,7 +4,7 @@
  * Plugin URI: http://taylorlovett.com
  * Description: A simple caching plugin that just works.
  * Author: Taylor Lovett
- * Version: 1.6.4
+ * Version: 1.6.3
  * Text Domain: simple-cache
  * Domain Path: /languages
  * Author URI: http://taylorlovett.com
@@ -14,7 +14,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'SC_VERSION', '1.6.4' );
+define( 'SC_VERSION', '1.6.3' );
 
 require_once dirname( __FILE__ ) . '/inc/functions.php';
 require_once dirname( __FILE__ ) . '/inc/class-sc-settings.php';
@@ -22,6 +22,7 @@ require_once dirname( __FILE__ ) . '/inc/class-sc-config.php';
 require_once dirname( __FILE__ ) . '/inc/class-sc-advanced-cache.php';
 require_once dirname( __FILE__ ) . '/inc/class-sc-object-cache.php';
 require_once dirname( __FILE__ ) . '/inc/class-sc-cron.php';
+require_once dirname( __FILE__ ) . '/inc/class-sc-wp-cli.php';
 
 SC_Settings::factory();
 SC_Advanced_Cache::factory();
@@ -77,5 +78,3 @@ function sc_clean_up() {
 	SC_Config::factory()->clean_up();
 }
 register_deactivation_hook( __FILE__, 'sc_clean_up' );
-
-
