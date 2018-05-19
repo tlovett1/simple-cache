@@ -7,6 +7,9 @@
 
 defined( 'ABSPATH' ) || exit;
 
+/**
+ * Wrapper for advanced cache functionality
+ */
 class SC_Advanced_Cache {
 
 	/**
@@ -20,21 +23,20 @@ class SC_Advanced_Cache {
 		add_action( 'pre_post_update', array( $this, 'purge_post_on_update' ), 10, 1 );
 		add_action( 'save_post', array( $this, 'purge_post_on_update' ), 10, 1 );
 		add_action( 'wp_trash_post', array( $this, 'purge_post_on_update' ), 10, 1 );
-		add_action( 'wp_set_comment_status', array( $this, 'purge_post_on_comment_status_change' ), 10, 2 );
-		add_action( 'set_comment_cookies', array( $this, 'set_comment_cookie_exceptions' ), 10, 2 );
+		add_action( 'wp_set_comment_status', array( $this, 'purge_post_on_comment_status_change' ), 10 );
+		add_action( 'set_comment_cookies', array( $this, 'set_comment_cookie_exceptions' ), 10 );
 	}
 
 	/**
 	 * When user posts a comment, set a cookie so we don't show them page cache
 	 *
-	 * @param  WP_Comment $comment
-	 * @param  WP_User    $user
+	 * @param  WP_Comment $comment Comment to check.
 	 * @since  1.3
 	 */
-	public function set_comment_cookie_exceptions( $comment, $user ) {
+	public function set_comment_cookie_exceptions( $comment ) {
 		$config = SC_Config::factory()->get();
 
-		// File based caching only
+		// File based caching only.
 		if ( ! empty( $config['enable_page_caching'] ) && empty( $config['enable_in_memory_object_caching'] ) ) {
 			$post_id = $comment->comment_post_ID;
 
@@ -45,18 +47,17 @@ class SC_Advanced_Cache {
 	/**
 	 * Every time a comments status changes, purge it's parent posts cache
 	 *
-	 * @param  int $comment_ID
-	 * @param  int $comment_status
+	 * @param  int $comment_id Comment ID.
 	 * @since  1.3
 	 */
-	public function purge_post_on_comment_status_change( $comment_ID, $comment_status ) {
+	public function purge_post_on_comment_status_change( $comment_id ) {
 		$config = SC_Config::factory()->get();
 
-		// File based caching only
+		// File based caching only.
 		if ( ! empty( $config['enable_page_caching'] ) && empty( $config['enable_in_memory_object_caching'] ) ) {
 			require_once( ABSPATH . 'wp-admin/includes/file.php' );
 
-			$comment = get_comment( $comment_ID );
+			$comment = get_comment( $comment_id );
 			$post_id = $comment->comment_post_ID;
 
 			global $wp_filesystem;
@@ -73,19 +74,19 @@ class SC_Advanced_Cache {
 	/**
 	 * Purge post cache when there is a new approved comment
 	 *
-	 * @param  int   $comment_ID
-	 * @param  int   $approved
-	 * @param  array $commentdata
+	 * @param  int   $comment_id Comment ID.
+	 * @param  int   $approved Comment approved status.
+	 * @param  array $commentdata Comment data array.
 	 * @since  1.3
 	 */
-	public function purge_post_on_comment( $comment_ID, $approved, $commentdata ) {
+	public function purge_post_on_comment( $comment_id, $approved, $commentdata ) {
 		if ( empty( $approved ) ) {
 			return;
 		}
 
 		$config = SC_Config::factory()->get();
 
-		// File based caching only
+		// File based caching only.
 		if ( ! empty( $config['enable_page_caching'] ) && empty( $config['enable_in_memory_object_caching'] ) ) {
 			$post_id = $commentdata['comment_post_ID'];
 
@@ -103,7 +104,7 @@ class SC_Advanced_Cache {
 	/**
 	 * Automatically purge all file based page cache on post changes
 	 *
-	 * @param  int $post_id
+	 * @param  int $post_id Post id.
 	 * @since  1.3
 	 */
 	public function purge_post_on_update( $post_id ) {
@@ -117,7 +118,7 @@ class SC_Advanced_Cache {
 
 		$config = SC_Config::factory()->get();
 
-		// File based caching only
+		// File based caching only.
 		if ( ! empty( $config['enable_page_caching'] ) && empty( $config['enable_in_memory_object_caching'] ) ) {
 			sc_cache_flush();
 		}
@@ -139,7 +140,7 @@ class SC_Advanced_Cache {
 		$config = SC_Config::factory()->get();
 
 		if ( empty( $config['enable_page_caching'] ) ) {
-			// Not turned on do nothing
+			// Not turned on do nothing.
 			return;
 		}
 
@@ -250,7 +251,7 @@ class SC_Advanced_Cache {
 	/**
 	 * Toggle WP_CACHE on or off in wp-config.php
 	 *
-	 * @param  boolean $status
+	 * @param  boolean $status Status of cache.
 	 * @since  1.0
 	 * @return boolean
 	 */
@@ -276,7 +277,7 @@ class SC_Advanced_Cache {
 			}
 		}
 
-		// Couldn't find wp-config.php
+		// Couldn't find wp-config.php.
 		if ( ! $config_path ) {
 			return false;
 		}
@@ -296,12 +297,12 @@ class SC_Advanced_Cache {
 				continue;
 			}
 
-			if ( $match[2] == 'WP_CACHE' ) {
+			if ( 'WP_CACHE' === $match[2] ) {
 				$line_key = $key;
 			}
 		}
 
-		if ( $line_key !== false ) {
+		if ( false !== $line_key ) {
 			unset( $config_file[ $line_key ] );
 		}
 

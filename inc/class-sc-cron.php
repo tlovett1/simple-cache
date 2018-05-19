@@ -7,11 +7,10 @@
 
 defined( 'ABSPATH' ) || exit;
 
+/**
+ * Wrap cron functionality
+ */
 class SC_Cron {
-
-	public function __construct() {
-
-	}
 
 	/**
 	 * Setup actions and filters
@@ -28,7 +27,7 @@ class SC_Cron {
 	/**
 	 * Add custom cron schedule
 	 *
-	 * @param  array $schedules
+	 * @param  array $schedules Current cron schedules.
 	 * @since  1.0
 	 * @return array
 	 */
@@ -80,14 +79,14 @@ class SC_Cron {
 
 		$timestamp = wp_next_scheduled( 'sc_purge_cache' );
 
-		// Do nothing if we are using the object cache
+		// Do nothing if we are using the object cache.
 		if ( ! empty( $config['advanced_mode'] ) && ! empty( $config['enable_in_memory_object_caching'] ) ) {
 			wp_unschedule_event( $timestamp, 'sc_purge_cache' );
 			return;
 		}
 
-		// Expire cache never
-		if ( isset( $config['page_cache_length'] ) && $config['page_cache_length'] === 0 ) {
+		// Expire cache never.
+		if ( isset( $config['page_cache_length'] ) && 0 === $config['page_cache_length'] ) {
 			wp_unschedule_event( $timestamp, 'sc_purge_cache' );
 			return;
 		}
@@ -105,12 +104,12 @@ class SC_Cron {
 	public function purge_cache() {
 		$config = SC_Config::factory()->get();
 
-		// Do nothing, caching is turned off
+		// Do nothing, caching is turned off.
 		if ( empty( $config['enable_page_caching'] ) ) {
 			return;
 		}
 
-		// Do nothing if we are using the object cache
+		// Do nothing if we are using the object cache.
 		if ( ! empty( $config['advanced_mode'] ) && ! empty( $config['enable_in_memory_object_caching'] ) ) {
 			return;
 		}

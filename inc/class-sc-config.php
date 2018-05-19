@@ -7,16 +7,25 @@
 
 defined( 'ABSPATH' ) || exit;
 
+/**
+ * Class wrapping config functionality
+ */
 class SC_Config {
 
 	/**
 	 * Setup object
 	 *
 	 * @since 1.0.1
+	 * @var   array
 	 */
 	public $defaults = array();
 
 
+	/**
+	 * Set config defaults
+	 *
+	 * @since 1.0
+	 */
 	public function __construct() {
 
 		$this->defaults = array(
@@ -62,19 +71,18 @@ class SC_Config {
 	/**
 	 * Make sure we support old PHP with boolval
 	 *
-	 * @param  string $value
+	 * @param  string $value Value to check.
 	 * @since  1.0
 	 * @return boolean
 	 */
 	public function boolval( $value ) {
-
 		return (bool) $value;
 	}
 
 	/**
 	 * Make sure the length unit has an expected value
 	 *
-	 * @param  string $value
+	 * @param  string $value Value to sanitize.
 	 * @return string
 	 */
 	public function sanitize_length_unit( $value ) {
@@ -108,7 +116,7 @@ class SC_Config {
 	 * Write config to file
 	 *
 	 * @since  1.0
-	 * @param  array $config
+	 * @param  array $config Configuration array.
 	 * @return bool
 	 */
 	public function write( $config ) {
@@ -150,7 +158,7 @@ class SC_Config {
 	/**
 	 * Check if a directory is writable and we can create files as the same user as the current file
 	 *
-	 * @param  string $dir
+	 * @param  string $dir Directory path.
 	 * @since  1.2.3
 	 * @return boolean
 	 */
@@ -160,8 +168,9 @@ class SC_Config {
 
 		if ( $temp_handle ) {
 
-			// Attempt to determine the file owner of the WordPress files, and that of newly created files
-			$wp_file_owner = $temp_file_owner = false;
+			// Attempt to determine the file owner of the WordPress files, and that of newly created files.
+			$wp_file_owner   = false;
+			$temp_file_owner = false;
 
 			if ( function_exists( 'fileowner' ) ) {
 				$wp_file_owner = @fileowner( __FILE__ );
@@ -173,7 +182,7 @@ class SC_Config {
 				@unlink( $temp_file_name );
 
 				// Return if we cannot determine the file owner, or if the owner IDs do not match.
-				if ( $wp_file_owner === false || $wp_file_owner !== $temp_file_owner ) {
+				if ( false === $wp_file_owner || $wp_file_owner !== $temp_file_owner ) {
 					return false;
 				}
 			} else {
@@ -199,17 +208,17 @@ class SC_Config {
 			@clearstatcache();
 		}
 
-		// First check wp-config.php
+		// First check wp-config.php.
 		if ( ! @is_writable( ABSPATH . 'wp-config.php' ) && ! @is_writable( ABSPATH . '../wp-config.php' ) ) {
 			return false;
 		}
 
-		// Now check wp-content. We need to be able to create files of the same user as this file
+		// Now check wp-content. We need to be able to create files of the same user as this file.
 		if ( ! $this->_is_dir_writable( untrailingslashit( WP_CONTENT_DIR ) ) ) {
 			return false;
 		}
 
-		// If the cache and/or cache/simple-cache directories exist, make sure it's writeable
+		// If the cache and/or cache/simple-cache directories exist, make sure it's writeable.
 		if ( @file_exists( untrailingslashit( WP_CONTENT_DIR ) . '/cache' ) ) {
 			if ( ! $this->_is_dir_writable( untrailingslashit( WP_CONTENT_DIR ) . '/cache' ) ) {
 				return false;
@@ -222,7 +231,7 @@ class SC_Config {
 			}
 		}
 
-		// If the sc-config directory exists, make sure it's writeable
+		// If the sc-config directory exists, make sure it's writeable.
 		if ( @file_exists( untrailingslashit( WP_CONTENT_DIR ) . '/sc-config' ) ) {
 			if ( ! $this->_is_dir_writable( untrailingslashit( WP_CONTENT_DIR ) . '/sc-config' ) ) {
 				return false;

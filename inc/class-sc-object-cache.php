@@ -7,6 +7,9 @@
 
 defined( 'ABSPATH' ) || exit;
 
+/**
+ * Wrap object caching functionality
+ */
 class SC_Object_Cache {
 
 	/**

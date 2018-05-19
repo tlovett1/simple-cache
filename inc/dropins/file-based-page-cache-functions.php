@@ -81,7 +81,7 @@ function sc_cache( $buffer, $flags ) {
 
 	$modified_time = time(); // Make sure modified time is consistent.
 
-	// Prevent mixed content when there's an http request but the site URL uses https
+	// Prevent mixed content when there's an http request but the site URL uses https.
 	$home_url = get_home_url();
 	if ( ! is_ssl() && 'https' === strtolower( parse_url( $home_url, PHP_URL_SCHEME ) ) ) {
 		$https_home_url = $home_url;
