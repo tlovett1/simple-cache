@@ -8,4 +8,4 @@
 require_once dirname( __FILE__ ) . '/../vendor/autoload.php';
 require_once dirname( __FILE__ ) . '/../inc/dropins/file-based-page-cache-functions.php';
 
-WP_Mock::bootstrap();
+\WP_Mock::bootstrap();

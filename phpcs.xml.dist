@@ -21,7 +21,7 @@
 	<rule ref="Generic.CodeAnalysis.UnusedFunctionParameter"/>
 	<rule ref="Generic.Commenting.Todo"/>
 
-	<config name="testVersion" value="5.2"/>
+	<config name="testVersion" value="5.4"/>
 	<rule ref="PHPCompatibility"/>
 
 	<config name="minimum_supported_wp_version" value="3.9"/>

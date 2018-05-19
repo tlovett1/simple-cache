@@ -5,10 +5,12 @@
  * @package  simple-cache
  */
 
+use \WP_Mock as WP_Mock;
+
 /**
  * Class containing file tests
  */
-class FileBasedPageCacheTest extends PHPUnit_Framework_TestCase {
+class FileBasedPageCacheTest extends \PHPUnit\Framework\TestCase {
 	/**
 	 * Set up with WP_Mock
 	 *
