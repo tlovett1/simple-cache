@@ -25,4 +25,5 @@
 	<rule ref="PHPCompatibility"/>
 
 	<config name="minimum_supported_wp_version" value="3.9"/>
+	<config name="ignore_warnings_on_exit" value="1"/>
 </ruleset>
