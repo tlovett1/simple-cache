@@ -39,6 +39,8 @@ For full documentation, questions, feature requests, and support concerning the 
 
 = 1.6.4 =
 * Fix undefined `$blog_id` warning in redis object cache.
+* Prevent mixed content. Props [benoitchantre](https://github.com/benoitchantre).
+* Added WP_CACHE_KEY_SALT constant with a random value. Props [gagan0123](https://github.com/gagan0123 ).
 
 = 1.6.3 =
 * Fix missing `FS_CHMOD_DIR` and `FS_CHMOD_MODE` in `sc_cache()`. Props [chesio](https://github.com/chesio)
