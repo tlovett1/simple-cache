@@ -6,9 +6,14 @@
 	<file>./tests</file>
 	<file>./simple-cache.php</file>
 
+	<exclude-pattern>./inc/dropins/batcache.php</exclude-pattern>
+	<exclude-pattern>./inc/dropins/memcached-object-cache.php</exclude-pattern>
+	<exclude-pattern>./inc/dropins/redis-object-cache.php</exclude-pattern>
+
 	<!-- Include the WordPress-Extra standard. -->
 	<rule ref="WordPress-Core">
 		<exclude name="WordPress.Files.FileName"/>
+		<exclude name="Squiz.ControlStructures.ControlSignature.NewlineAfterOpenBrace"/>
 	</rule>
 
 	<rule ref="WordPress-Docs"/>

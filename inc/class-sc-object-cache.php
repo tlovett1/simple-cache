@@ -1,4 +1,10 @@
 <?php
+/**
+ * Object cache functionality
+ *
+ * @package  simple-cache
+ */
+
 defined( 'ABSPATH' ) || exit;
 
 class SC_Object_Cache {

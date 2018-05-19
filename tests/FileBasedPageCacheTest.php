@@ -1,13 +1,21 @@
 <?php
+/**
+ * Test file based page cache
+ *
+ * @package  simple-cache
+ */
 
-class FileBasedPageCacheTest extends \PHPUnit_Framework_TestCase {
+/**
+ * Class containing file tests
+ */
+class FileBasedPageCacheTest extends PHPUnit_Framework_TestCase {
 	/**
 	 * Set up with WP_Mock
 	 *
 	 * @since  1.6
 	 */
 	public function setUp() {
-		\WP_Mock::setUp();
+		WP_Mock::setUp();
 	}
 
 	/**
@@ -16,7 +24,7 @@ class FileBasedPageCacheTest extends \PHPUnit_Framework_TestCase {
 	 * @since  1.6
 	 */
 	public function tearDown() {
-		\WP_Mock::tearDown();
+		WP_Mock::tearDown();
 	}
 
 	/**
@@ -25,94 +33,94 @@ class FileBasedPageCacheTest extends \PHPUnit_Framework_TestCase {
 	 * @since  1.6
 	 */
 	public function test_url_exception_match() {
-		// Test simple correct url path
+		// Test simple correct url path.
 		$_SERVER['REQUEST_URI'] = '/test/url';
 		$exception              = '/test/url';
 
 		$this->assertTrue( sc_url_exception_match( $exception ) );
-		$_SERVER = [];
+		$_SERVER = array();
 
-		// Test simple incorrect url path
+		// Test simple incorrect url path.
 		$_SERVER['REQUEST_URI'] = '/test/url';
 		$exception              = '/tesat/url';
 
 		$this->assertFalse( sc_url_exception_match( $exception ) );
-		$_SERVER = [];
+		$_SERVER = array();
 
-		// Test that trailing slash doesnt matter with path
+		// Test that trailing slash doesnt matter with path.
 		$_SERVER['REQUEST_URI'] = '/test/url';
 		$exception              = '/test/url/';
 
 		$this->assertTrue( sc_url_exception_match( $exception ) );
-		$_SERVER = [];
+		$_SERVER = array();
 
-		// Test full url exception
+		// Test full url exception.
 		$_SERVER['REQUEST_URI'] = '/test/url';
 		$exception              = 'http://test.com/test/url';
 		$_SERVER['HTTP_HOST']   = 'test.com';
 
 		$this->assertTrue( sc_url_exception_match( $exception ) );
-		$_SERVER = [];
+		$_SERVER = array();
 
-		// Test SSL url counts
+		// Test SSL url counts.
 		$_SERVER['REQUEST_URI'] = '/test/url';
 		$exception              = 'https://test.com/test/url';
 		$_SERVER['HTTP_HOST']   = 'test.com';
 
 		$this->assertFalse( sc_url_exception_match( $exception ) );
-		$_SERVER = [];
+		$_SERVER = array();
 
-		// Test correct ssl url
+		// Test correct ssl url.
 		$_SERVER['REQUEST_URI'] = '/test/url';
 		$exception              = 'https://test.com/test/url';
 		$_SERVER['HTTP_HOST']   = 'test.com';
 		$_SERVER['HTTPS']       = true;
 
 		$this->assertTrue( sc_url_exception_match( $exception ) );
-		$_SERVER = [];
+		$_SERVER = array();
 
-		// Test good wildcard path
+		// Test good wildcard path.
 		$_SERVER['REQUEST_URI'] = '/test/url';
 		$exception              = '/test/*';
 
 		$this->assertTrue( sc_url_exception_match( $exception ) );
-		$_SERVER = [];
+		$_SERVER = array();
 
-		// Test good wildcard path
+		// Test good wildcard path.
 		$_SERVER['REQUEST_URI'] = '/test';
 		$exception              = '/test/*';
 
 		$this->assertTrue( sc_url_exception_match( $exception ) );
-		$_SERVER = [];
+		$_SERVER = array();
 
-		// Test bad wildcard path
+		// Test bad wildcard path.
 		$_SERVER['REQUEST_URI'] = '/sdf/sdfsdf';
 		$exception              = '/test/*';
 
 		$this->assertFalse( sc_url_exception_match( $exception ) );
-		$_SERVER = [];
+		$_SERVER = array();
 
-		// Test bad wildcard path with required trailing slash
+		// Test bad wildcard path with required trailing slash.
 		$_SERVER['REQUEST_URI'] = '/tester';
 		$exception              = '/test/*';
 
 		$this->assertTrue( sc_url_exception_match( $exception ) );
-		$_SERVER = [];
+		$_SERVER = array();
 
-		// Test good wildcard path
+		// Test good wildcard path.
 		$_SERVER['REQUEST_URI'] = '/tester/here';
 		$exception              = '/test*';
 
 		$this->assertTrue( sc_url_exception_match( $exception ) );
-		$_SERVER = [];
+		$_SERVER = array();
 
-		// Test full url exception
+		// Test full url exception.
 		$_SERVER['REQUEST_URI'] = '/test/url';
 		$exception              = 'http://test.com/test/*';
 		$_SERVER['HTTP_HOST']   = 'test.com';
 
 		$this->assertTrue( sc_url_exception_match( $exception ) );
-		$_SERVER = [];
+		$_SERVER = array();
 	}
 
 	/**
@@ -121,35 +129,35 @@ class FileBasedPageCacheTest extends \PHPUnit_Framework_TestCase {
 	 * @since  1.6
 	 */
 	public function test_url_exception_match_regex() {
-		// Test simple correct url path
+		// Test simple correct url path.
 		$_SERVER['REQUEST_URI'] = '/test/url';
 		$exception              = '/[a-z]+/[a-z]+';
 
 		$this->assertTrue( sc_url_exception_match( $exception, true ) );
-		$_SERVER = [];
+		$_SERVER = array();
 
-		// Test simple incorrect url path
+		// Test simple incorrect url path.
 		$_SERVER['REQUEST_URI'] = '/test/url';
 		$exception              = '/[a-z]+/[0-9]+';
 
 		$this->assertFalse( sc_url_exception_match( $exception, true ) );
-		$_SERVER = [];
+		$_SERVER = array();
 
-		// Test full url exception
+		// Test full url exception.
 		$_SERVER['REQUEST_URI'] = '/test/url';
 		$exception              = 'https?://test\.com/[a-z]+/[a-z]+';
 		$_SERVER['HTTP_HOST']   = 'test.com';
 
 		$this->assertTrue( sc_url_exception_match( $exception, true ) );
-		$_SERVER = [];
+		$_SERVER = array();
 
-		// Test full url exception
+		// Test full url exception.
 		$_SERVER['REQUEST_URI'] = '/test/url';
 		$exception              = 'https?://test\.com/[a-z]+';
 		$_SERVER['HTTP_HOST']   = 'test.com';
 
 		$this->assertFalse( sc_url_exception_match( $exception, true ) );
-		$_SERVER = [];
+		$_SERVER = array();
 	}
 
 }

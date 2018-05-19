@@ -1,4 +1,10 @@
 <?php
+/**
+ * Memcached drop in
+ *
+ * @package  simple-cache
+ */
+
 defined( 'ABSPATH' ) || exit;
 
 // We need Memcache to continue

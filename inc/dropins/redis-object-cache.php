@@ -1,4 +1,10 @@
 <?php
+/**
+ * Redis cache drop in
+ *
+ * @package  simple-cache
+ */
+
 defined( 'ABSPATH' ) || exit;
 
 // We need Redis to continue

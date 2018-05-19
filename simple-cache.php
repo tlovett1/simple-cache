@@ -8,6 +8,8 @@
  * Text Domain: simple-cache
  * Domain Path: /languages
  * Author URI: http://taylorlovett.com
+ *
+ * @package  simple-cache
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -42,8 +44,8 @@ add_action( 'plugins_loaded', 'sc_load_textdomain' );
 /**
  * Add settings link to plugin actions
  *
- * @param  array  $plugin_actions
- * @param  string $plugin_file
+ * @param  array  $plugin_actions Each action is HTML.
+ * @param  string $plugin_file Path to plugin file.
  * @since  1.0
  * @return array
  */
@@ -52,6 +54,7 @@ function sc_filter_plugin_action_links( $plugin_actions, $plugin_file ) {
 	$new_actions = array();
 
 	if ( basename( dirname( __FILE__ ) ) . '/simple-cache.php' === $plugin_file ) {
+		/* translators: Param 1 is link to settings page. */
 		$new_actions['sc_settings'] = sprintf( __( '<a href="%s">Settings</a>', 'simple-cache' ), esc_url( admin_url( 'options-general.php?page=simple-cache' ) ) );
 	}
 

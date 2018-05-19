@@ -1,17 +1,16 @@
 <?php
-
 /**
  * Holds functions used by file based cache
  *
  * @since  1.6
+ * @package  simple-cache
  */
-
 
 /**
  * Cache output before it goes to the browser
  *
- * @param  string $buffer
- * @param  int    $flags
+ * @param  string $buffer Page HTML.
+ * @param  int    $flags OB flags to be passed through.
  * @since  1.0
  * @return string
  */
@@ -22,14 +21,16 @@ function sc_cache( $buffer, $flags ) {
 		return $buffer;
 	}
 
-	// Don't cache search, 404, or password protected
+	// Don't cache search, 404, or password protected.
 	if ( is_404() || is_search() || ! empty( $post->post_password ) ) {
 		return $buffer;
 	}
 
-	// Set the permission constants if not already set.
-	// Normally, this is taken care of in WP_Filesystem constructor, but it is
-	// not invoked here, because WP_Filesystem_Direct is instantiated directly.
+	/**
+	 * Set the permission constants if not already set. Normally, this is taken care of in
+	 * WP_Filesystem constructor, but it is not invoked here, because WP_Filesystem_Direct
+	 * is instantiated directly.
+	 */
 	if ( ! defined( 'FS_CHMOD_DIR' ) ) {
 		define( 'FS_CHMOD_DIR', ( fileperms( ABSPATH ) & 0777 | 0755 ) );
 	}
@@ -42,7 +43,7 @@ function sc_cache( $buffer, $flags ) {
 
 	$filesystem = new WP_Filesystem_Direct( new StdClass() );
 
-	// Make sure we can read/write files and that proper folders exist
+	// Make sure we can read/write files and that proper folders exist.
 	if ( ! $filesystem->exists( untrailingslashit( WP_CONTENT_DIR ) . '/cache' ) ) {
 		if ( ! $filesystem->mkdir( untrailingslashit( WP_CONTENT_DIR ) . '/cache' ) ) {
 			// Can not cache!
@@ -78,7 +79,7 @@ function sc_cache( $buffer, $flags ) {
 		}
 	}
 
-	$modified_time = time(); // Make sure modified time is consistent
+	$modified_time = time(); // Make sure modified time is consistent.
 
 	if ( preg_match( '#</html>#i', $buffer ) ) {
 		$buffer .= "\n<!-- Cache served by Simple Cache - Last modified: " . gmdate( 'D, d M Y H:i:s', $modified_time ) . " GMT -->\n";
@@ -92,7 +93,7 @@ function sc_cache( $buffer, $flags ) {
 		$filesystem->touch( $path . '/index.html', $modified_time );
 	}
 
-	header( 'Cache-Control: no-cache' ); // Check back every time to see if re-download is necessary
+	header( 'Cache-Control: no-cache' ); // Check back every time to see if re-download is necessary.
 
 	header( 'Last-Modified: ' . gmdate( 'D, d M Y H:i:s', $modified_time ) . ' GMT' );
 
@@ -132,7 +133,7 @@ function sc_serve_cache() {
 
 	$modified_time = (int) @filemtime( $path );
 
-	header( 'Cache-Control: no-cache' ); // Check back in an hour
+	header( 'Cache-Control: no-cache' ); // Check back in an hour.
 
 	if ( ! empty( $modified_time ) && ! empty( $_SERVER['HTTP_IF_MODIFIED_SINCE'] ) && strtotime( $_SERVER['HTTP_IF_MODIFIED_SINCE'] ) === $modified_time ) {
 		if ( function_exists( 'gzencode' ) && ! empty( $GLOBALS['sc_config']['enable_gzip_compression'] ) ) {
@@ -157,8 +158,8 @@ function sc_serve_cache() {
 /**
  * Return true of exception url matches current url
  *
- * @param  string $exception
- * @param  bool   $regex
+ * @param  string $exception Exceptions to check URL against.
+ * @param  bool   $regex Whether to check with regex or not.
  * @since  1.6
  * @return boolean
  */

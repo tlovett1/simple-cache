@@ -1,4 +1,10 @@
 <?php
+/**
+ * Page caching functionality
+ *
+ * @package  simple-cache
+ */
+
 defined( 'ABSPATH' ) || exit;
 
 class SC_Advanced_Cache {

@@ -1,4 +1,10 @@
 <?php
+/**
+ * Handle plugin config
+ *
+ * @package  simple-cache
+ */
+
 defined( 'ABSPATH' ) || exit;
 
 class SC_Config {

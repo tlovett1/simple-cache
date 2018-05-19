@@ -1,4 +1,10 @@
 <?php
+/**
+ * Batcache dropin
+ *
+ * @package  simple-cache
+ */
+
 defined( 'ABSPATH' ) || exit;
 
 /**

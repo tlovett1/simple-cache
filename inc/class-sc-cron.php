@@ -1,4 +1,10 @@
 <?php
+/**
+ * Cron functionality
+ *
+ * @package  simple-cache
+ */
+
 defined( 'ABSPATH' ) || exit;
 
 class SC_Cron {

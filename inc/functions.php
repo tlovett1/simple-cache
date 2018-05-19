@@ -1,4 +1,9 @@
 <?php
+/**
+ * Utility functions for plugin
+ *
+ * @package  simple-cache
+ */
 
 /**
  * Clear the cache
