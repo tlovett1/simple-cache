@@ -43,13 +43,13 @@ class SC_Object_Cache {
 		}
 
 		?>
-	 <div class="error">
-	  <p>
-		<?php esc_html_e( 'wp-content/object-cache.php was edited or deleted. Simple Cache is not able to utilize object caching.' ); ?>
+		<div class="error">
+			<p>
+				<?php esc_html_e( 'wp-content/object-cache.php was edited or deleted. Simple Cache is not able to utilize object caching.' ); ?>
 
 				<a href="options-general.php?page=simple-cache&amp;wp_http_referer=<?php echo esc_url( wp_unslash( $_SERVER['REQUEST_URI'] ) ); ?>&amp;action=sc_update&amp;sc_settings_nonce=<?php echo wp_create_nonce( 'sc_update_settings' ); ?>" class="button button-primary" style="margin-left: 5px;"><?php esc_html_e( 'Fix', 'simple-cache' ); ?></a>
-	  </p>
-	 </div>
+			</p>
+		</div>
 		<?php
 	}
 
