@@ -149,7 +149,7 @@ class SC_Settings {
 
 		if ( ! empty( $_REQUEST['action'] ) && 'sc_purge_cache' === $_REQUEST['action'] ) {
 			if ( ! current_user_can( 'manage_options' ) || empty( $_REQUEST['sc_cache_nonce'] ) || ! wp_verify_nonce( $_REQUEST['sc_cache_nonce'], 'sc_purge_cache' ) ) {
-				wp_die( esc_html__( 'Cheatin, eh?', 'simple-cache' ) );
+				wp_die( esc_html__( 'You need a higher level of permission.', 'simple-cache' ) );
 			}
 
 			sc_cache_flush();
@@ -171,7 +171,7 @@ class SC_Settings {
 		if ( ! empty( $_REQUEST['action'] ) && 'sc_update' === $_REQUEST['action'] ) {
 
 			if ( ! current_user_can( 'manage_options' ) || empty( $_REQUEST['sc_settings_nonce'] ) || ! wp_verify_nonce( $_REQUEST['sc_settings_nonce'], 'sc_update_settings' ) ) {
-				wp_die( esc_html__( 'Cheatin, eh?', 'simple-cache' ) );
+				wp_die( esc_html__( 'You need a higher level of permission.', 'simple-cache' ) );
 			}
 
 			if ( ! SC_Config::factory()->verify_file_access() ) {
