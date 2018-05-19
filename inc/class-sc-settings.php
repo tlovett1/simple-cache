@@ -36,12 +36,14 @@ class SC_Settings {
 			return;
 		}
 
-		$wp_admin_bar->add_menu( array(
-			'id'     => 'sc-purge-cache',
-			'parent' => 'top-secondary',
-			'href' => esc_url( admin_url( 'options-general.php?page=simple-cache&amp;wp_http_referer=' . esc_url( wp_unslash( $_SERVER['REQUEST_URI'] ) ) . '&amp;action=sc_purge_cache&amp;sc_cache_nonce=' . wp_create_nonce( 'sc_purge_cache' ) ) ),
-			'title'  => esc_html__( 'Purge Cache', 'simple-cache' ),
-		) );
+		$wp_admin_bar->add_menu(
+			array(
+				'id'     => 'sc-purge-cache',
+				'parent' => 'top-secondary',
+				'href'   => esc_url( admin_url( 'options-general.php?page=simple-cache&amp;wp_http_referer=' . esc_url( wp_unslash( $_SERVER['REQUEST_URI'] ) ) . '&amp;action=sc_purge_cache&amp;sc_cache_nonce=' . wp_create_nonce( 'sc_purge_cache' ) ) ),
+				'title'  => esc_html__( 'Purge Cache', 'simple-cache' ),
+			)
+		);
 	}
 
 	/**
@@ -52,7 +54,7 @@ class SC_Settings {
 	public function setup_notice() {
 
 		if ( ! current_user_can( 'manage_options' ) ) {
-	        return;
+			return;
 		}
 
 		$cant_write = get_option( 'sc_cant_write', false );
@@ -175,7 +177,7 @@ class SC_Settings {
 
 			delete_option( 'sc_cant_write' );
 
-			$defaults = SC_Config::factory()->defaults;
+			$defaults       = SC_Config::factory()->defaults;
 			$current_config = SC_Config::factory()->get();
 
 			foreach ( $defaults as $key => $default ) {
@@ -259,12 +261,20 @@ class SC_Settings {
 					</select>
 				</div>
 
-				<table class="form-table sc-simple-mode-table <?php if ( empty( $config['advanced_mode'] ) ) : ?>show<?php endif; ?>">
+				<table class="form-table sc-simple-mode-table 
+				<?php
+				if ( empty( $config['advanced_mode'] ) ) :
+?>
+show<?php endif; ?>">
 					<tbody>
 						<tr>
 							<th scope="row"><label for="sc_enable_page_caching_simple"><span class="setting-highlight">*</span><?php _e( 'Enable Caching', 'simple-cache' ); ?></label></th>
 							<td>
-								<select <?php if ( ! empty( $config['advanced_mode'] ) ) : ?>disabled<?php endif; ?> name="sc_simple_cache[enable_page_caching]" id="sc_enable_page_caching_simple">
+								<select 
+								<?php
+								if ( ! empty( $config['advanced_mode'] ) ) :
+?>
+disabled<?php endif; ?> name="sc_simple_cache[enable_page_caching]" id="sc_enable_page_caching_simple">
 									<option value="0"><?php esc_html_e( 'No', 'simple-cache' ); ?></option>
 									<option <?php selected( $config['enable_page_caching'], true ); ?> value="1"><?php esc_html_e( 'Yes', 'simple-cache' ); ?></option>
 								</select>
@@ -275,8 +285,16 @@ class SC_Settings {
 						<tr>
 							<th scope="row"><label for="sc_page_cache_length_simple"><?php esc_html_e( 'Expire the cache after', 'simple-cache' ); ?></label></th>
 							<td>
-								<input <?php if ( ! empty( $config['advanced_mode'] ) ) : ?>disabled<?php endif; ?> size="5" id="sc_page_cache_length_simple" type="text" value="<?php echo (float) $config['page_cache_length']; ?>" name="sc_simple_cache[page_cache_length]">
-								<select <?php if ( ! empty( $config['advanced_mode'] ) ) : ?>disabled<?php endif; ?> name="sc_simple_cache[page_cache_length_unit]" id="sc_page_cache_length_unit_simple">
+								<input 
+								<?php
+								if ( ! empty( $config['advanced_mode'] ) ) :
+?>
+disabled<?php endif; ?> size="5" id="sc_page_cache_length_simple" type="text" value="<?php echo (float) $config['page_cache_length']; ?>" name="sc_simple_cache[page_cache_length]">
+								<select 
+								<?php
+								if ( ! empty( $config['advanced_mode'] ) ) :
+?>
+disabled<?php endif; ?> name="sc_simple_cache[page_cache_length_unit]" id="sc_page_cache_length_unit_simple">
 									<option <?php selected( $config['page_cache_length_unit'], 'minutes' ); ?> value="minutes"><?php esc_html_e( 'minutes', 'simple-cache' ); ?></option>
 									<option <?php selected( $config['page_cache_length_unit'], 'hours' ); ?> value="hours"><?php esc_html_e( 'hours', 'simple-cache' ); ?></option>
 									<option <?php selected( $config['page_cache_length_unit'], 'days' ); ?> value="days"><?php esc_html_e( 'days', 'simple-cache' ); ?></option>
@@ -289,7 +307,11 @@ class SC_Settings {
 							<tr>
 								<th scope="row"><label for="sc_enable_gzip_compression_simple"><?php _e( 'Enable Compression', 'simple-cache' ); ?></label></th>
 								<td>
-									<select <?php if ( ! empty( $config['advanced_mode'] ) ) : ?>disabled<?php endif; ?> name="sc_simple_cache[enable_gzip_compression]" id="sc_enable_gzip_compression_simple">
+									<select 
+									<?php
+									if ( ! empty( $config['advanced_mode'] ) ) :
+?>
+disabled<?php endif; ?> name="sc_simple_cache[enable_gzip_compression]" id="sc_enable_gzip_compression_simple">
 										<option value="0"><?php esc_html_e( 'No', 'simple-cache' ); ?></option>
 										<option <?php selected( $config['enable_gzip_compression'], true ); ?> value="1"><?php esc_html_e( 'Yes', 'simple-cache' ); ?></option>
 									</select>
@@ -301,7 +323,11 @@ class SC_Settings {
 					</tbody>
 				</table>
 
-				<table class="form-table sc-advanced-mode-table <?php if ( ! empty( $config['advanced_mode'] ) ) : ?>show<?php endif; ?>">
+				<table class="form-table sc-advanced-mode-table 
+				<?php
+				if ( ! empty( $config['advanced_mode'] ) ) :
+?>
+show<?php endif; ?>">
 					<tbody>
 						<tr>
 							<th scope="row" colspan="2">
@@ -312,7 +338,11 @@ class SC_Settings {
 						<tr>
 							<th scope="row"><label for="sc_enable_page_caching_advanced"><?php _e( 'Enable Page Caching', 'simple-cache' ); ?></label></th>
 							<td>
-								<select <?php if ( empty( $config['advanced_mode'] ) ) : ?>disabled<?php endif; ?> name="sc_simple_cache[enable_page_caching]" id="sc_enable_page_caching_advanced">
+								<select 
+								<?php
+								if ( empty( $config['advanced_mode'] ) ) :
+?>
+disabled<?php endif; ?> name="sc_simple_cache[enable_page_caching]" id="sc_enable_page_caching_advanced">
 									<option value="0"><?php esc_html_e( 'No', 'simple-cache' ); ?></option>
 									<option <?php selected( $config['enable_page_caching'], true ); ?> value="1"><?php esc_html_e( 'Yes', 'simple-cache' ); ?></option>
 								</select>
@@ -341,8 +371,16 @@ class SC_Settings {
 						<tr>
 							<th scope="row"><label for="sc_page_cache_length_advanced"><?php esc_html_e( 'Expire page cache after', 'simple-cache' ); ?></label></th>
 							<td>
-								<input <?php if ( empty( $config['advanced_mode'] ) ) : ?>disabled<?php endif; ?> size="5" id="sc_page_cache_length_advanced" type="text" value="<?php echo (float) $config['page_cache_length']; ?>" name="sc_simple_cache[page_cache_length]">
-								<select <?php if ( empty( $config['advanced_mode'] ) ) : ?>disabled<?php endif; ?> name="sc_simple_cache[page_cache_length_unit]" id="sc_page_cache_length_unit_advanced">
+								<input 
+								<?php
+								if ( empty( $config['advanced_mode'] ) ) :
+?>
+disabled<?php endif; ?> size="5" id="sc_page_cache_length_advanced" type="text" value="<?php echo (float) $config['page_cache_length']; ?>" name="sc_simple_cache[page_cache_length]">
+								<select 
+								<?php
+								if ( empty( $config['advanced_mode'] ) ) :
+?>
+disabled<?php endif; ?> name="sc_simple_cache[page_cache_length_unit]" id="sc_page_cache_length_unit_advanced">
 									<option <?php selected( $config['page_cache_length_unit'], 'minutes' ); ?> value="minutes"><?php esc_html_e( 'minutes', 'simple-cache' ); ?></option>
 									<option <?php selected( $config['page_cache_length_unit'], 'hours' ); ?> value="hours"><?php esc_html_e( 'hours', 'simple-cache' ); ?></option>
 									<option <?php selected( $config['page_cache_length_unit'], 'days' ); ?> value="days"><?php esc_html_e( 'days', 'simple-cache' ); ?></option>
@@ -369,8 +407,16 @@ class SC_Settings {
 								</td>
 							</tr>
 							<tr>
-								<th class="in-memory-cache <?php if ( ! empty( $config['enable_in_memory_object_caching'] ) ) : ?>show<?php endif; ?>" scope="row"><label for="sc_in_memory_cache"><?php _e( 'In Memory Cache', 'simple-cache' ); ?></label></th>
-								<td class="in-memory-cache <?php if ( ! empty( $config['enable_in_memory_object_caching'] ) ) : ?>show<?php endif; ?>">
+								<th class="in-memory-cache 
+								<?php
+								if ( ! empty( $config['enable_in_memory_object_caching'] ) ) :
+?>
+show<?php endif; ?>" scope="row"><label for="sc_in_memory_cache"><?php _e( 'In Memory Cache', 'simple-cache' ); ?></label></th>
+								<td class="in-memory-cache 
+								<?php
+								if ( ! empty( $config['enable_in_memory_object_caching'] ) ) :
+?>
+show<?php endif; ?>">
 									<select name="sc_simple_cache[in_memory_cache]" id="sc_in_memory_cache">
 										<?php if ( class_exists( 'Memcache' ) ) : ?>
 											<option <?php selected( $config['in_memory_cache'], 'memcached' ); ?> value="memcached">Memcache</option>
@@ -399,7 +445,11 @@ class SC_Settings {
 							<tr>
 								<th scope="row"><label for="sc_enable_gzip_compression_advanced"><?php _e( 'Enable gzip Compression', 'simple-cache' ); ?></label></th>
 								<td>
-									<select <?php if ( empty( $config['advanced_mode'] ) ) : ?>disabled<?php endif; ?> name="sc_simple_cache[enable_gzip_compression]" id="sc_enable_gzip_compression_advanced">
+									<select 
+									<?php
+									if ( empty( $config['advanced_mode'] ) ) :
+?>
+disabled<?php endif; ?> name="sc_simple_cache[enable_gzip_compression]" id="sc_enable_gzip_compression_advanced">
 										<option value="0"><?php esc_html_e( 'No', 'simple-cache' ); ?></option>
 										<option <?php selected( $config['enable_gzip_compression'], true ); ?> value="1"><?php esc_html_e( 'Yes', 'simple-cache' ); ?></option>
 									</select>

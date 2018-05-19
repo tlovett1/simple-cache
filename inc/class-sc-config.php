@@ -14,39 +14,39 @@ class SC_Config {
 	public function __construct() {
 
 		$this->defaults = array(
-			'enable_page_caching' => array(
-				'default'         => false,
-				'sanitizer'       => array( $this, 'boolval' ),
+			'enable_page_caching'             => array(
+				'default'   => false,
+				'sanitizer' => array( $this, 'boolval' ),
 			),
-			'advanced_mode' => array(
+			'advanced_mode'                   => array(
 				'default'   => false,
 				'sanitizer' => array( $this, 'boolval' ),
 			),
 			'enable_in_memory_object_caching' => array(
-				'default'                     => false,
-				'sanitizer'                   => array( $this, 'boolval' ),
+				'default'   => false,
+				'sanitizer' => array( $this, 'boolval' ),
 			),
-			'enable_gzip_compression' => array(
-				'default'             => false,
-				'sanitizer'           => array( $this, 'boolval' ),
+			'enable_gzip_compression'         => array(
+				'default'   => false,
+				'sanitizer' => array( $this, 'boolval' ),
 			),
-			'in_memory_cache' => array(
-				'default'     => 'memcached',
-				'sanitizer'   => 'sanitize_text_field',
+			'in_memory_cache'                 => array(
+				'default'   => 'memcached',
+				'sanitizer' => 'sanitize_text_field',
 			),
-			'page_cache_length' => array(
-				'default'       => 24,
-				'sanitizer'     => 'floatval',
+			'page_cache_length'               => array(
+				'default'   => 24,
+				'sanitizer' => 'floatval',
 			),
-			'page_cache_length_unit' => array(
-				'default'            => 'hours',
-				'sanitizer'          => array( $this, 'sanitize_length_unit' ),
+			'page_cache_length_unit'          => array(
+				'default'   => 'hours',
+				'sanitizer' => array( $this, 'sanitize_length_unit' ),
 			),
-			'cache_exception_urls' => array(
-				'default'       => '',
-				'sanitizer'     => 'wp_kses_post',
+			'cache_exception_urls'            => array(
+				'default'   => '',
+				'sanitizer' => 'wp_kses_post',
 			),
-			'enable_url_exemption_regex' => array(
+			'enable_url_exemption_regex'      => array(
 				'default'   => false,
 				'sanitizer' => array( $this, 'boolval' ),
 			),
@@ -150,7 +150,7 @@ class SC_Config {
 	 */
 	private function _is_dir_writable( $dir ) {
 		$temp_file_name = untrailingslashit( $dir ) . '/temp-write-test-' . time();
-		$temp_handle = fopen( $temp_file_name, 'w' );
+		$temp_handle    = fopen( $temp_file_name, 'w' );
 
 		if ( $temp_handle ) {
 

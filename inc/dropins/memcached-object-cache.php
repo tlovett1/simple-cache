@@ -114,12 +114,12 @@ class WP_Object_Cache {
 
 	var $no_mc_groups = array();
 
-	var $cache = array();
-	var $mc = array();
-	var $stats = array();
+	var $cache     = array();
+	var $mc        = array();
+	var $stats     = array();
 	var $group_ops = array();
 
-	var $cache_enabled = true;
+	var $cache_enabled      = true;
 	var $default_expiration = 0;
 
 	function add( $id, $data, $group = 'default', $expire = 0 ) {
@@ -137,14 +137,14 @@ class WP_Object_Cache {
 			return false;
 		}
 
-		$mc =& $this->get_mc( $group );
-		$expire = ($expire == 0) ? $this->default_expiration : $expire;
+		$mc     =& $this->get_mc( $group );
+		$expire = ( $expire == 0 ) ? $this->default_expiration : $expire;
 		$result = $mc->add( $key, $data, false, $expire );
 
 		if ( false !== $result ) {
 			@ ++$this->stats['add'];
 			$this->group_ops[ $group ][] = "add $id";
-			$this->cache[ $key ] = $data;
+			$this->cache[ $key ]         = $data;
 		}
 
 		return $result;
@@ -172,16 +172,16 @@ class WP_Object_Cache {
 
 	function incr( $id, $n = 1, $group = 'default' ) {
 
-		$key = $this->key( $id, $group );
-		$mc =& $this->get_mc( $group );
+		$key                 = $this->key( $id, $group );
+		$mc                  =& $this->get_mc( $group );
 		$this->cache[ $key ] = $mc->increment( $key, $n );
 		return $this->cache[ $key ];
 	}
 
 	function decr( $id, $n = 1, $group = 'default' ) {
 
-		$key = $this->key( $id, $group );
-		$mc =& $this->get_mc( $group );
+		$key                 = $this->key( $id, $group );
+		$mc                  =& $this->get_mc( $group );
 		$this->cache[ $key ] = $mc->decrement( $key, $n );
 		return $this->cache[ $key ];
 	}
@@ -227,7 +227,7 @@ class WP_Object_Cache {
 	function get( $id, $group = 'default', $force = false ) {
 
 		$key = $this->key( $id, $group );
-		$mc =& $this->get_mc( $group );
+		$mc  =& $this->get_mc( $group );
 
 		if ( isset( $this->cache[ $key ] ) && ( ! $force || in_array( $group, $this->no_mc_groups ) ) ) {
 			if ( is_object( $this->cache[ $key ] ) ) {
@@ -259,8 +259,8 @@ class WP_Object_Cache {
 	function get_multi( $groups ) {
 
 		/*
-        format: $get['group-name'] = array( 'key1', 'key2' );
-        */
+		format: $get['group-name'] = array( 'key1', 'key2' );
+		*/
 		$return = array();
 		foreach ( $groups as $group => $ids ) {
 			$mc =& $this->get_mc( $group );
@@ -281,13 +281,13 @@ class WP_Object_Cache {
 				}
 			}
 			if ( $to_get ) {
-				$vals = $mc->get_multi( $to_get );
+				$vals   = $mc->get_multi( $to_get );
 				$return = array_merge( $return, $vals );
 			}
 		}
 		@ ++$this->stats['get_multi'];
 		$this->group_ops[ $group ][] = "get_multi $id";
-		$this->cache = array_merge( $this->cache, $return );
+		$this->cache                 = array_merge( $this->cache, $return );
 		return $return;
 	}
 
@@ -308,9 +308,9 @@ class WP_Object_Cache {
 
 	function replace( $id, $data, $group = 'default', $expire = 0 ) {
 
-		$key = $this->key( $id, $group );
-		$expire = ($expire == 0) ? $this->default_expiration : $expire;
-		$mc =& $this->get_mc( $group );
+		$key    = $this->key( $id, $group );
+		$expire = ( $expire == 0 ) ? $this->default_expiration : $expire;
+		$mc     =& $this->get_mc( $group );
 
 		if ( is_object( $data ) ) {
 			$data = clone $data;
@@ -326,7 +326,7 @@ class WP_Object_Cache {
 	function set( $id, $data, $group = 'default', $expire = 0 ) {
 
 		$key = $this->key( $id, $group );
-		if ( isset( $this->cache[ $key ] ) && ('checkthedatabaseplease' === $this->cache[ $key ]) ) {
+		if ( isset( $this->cache[ $key ] ) && ( 'checkthedatabaseplease' === $this->cache[ $key ] ) ) {
 			return false;
 		}
 
@@ -340,8 +340,8 @@ class WP_Object_Cache {
 			return true;
 		}
 
-		$expire = ($expire == 0) ? $this->default_expiration : $expire;
-		$mc =& $this->get_mc( $group );
+		$expire = ( $expire == 0 ) ? $this->default_expiration : $expire;
+		$mc     =& $this->get_mc( $group );
 		$result = $mc->set( $key, $data, false, $expire );
 
 		return $result;
@@ -351,17 +351,17 @@ class WP_Object_Cache {
 
 		global $table_prefix;
 
-		$blog_id = (int) $blog_id;
+		$blog_id           = (int) $blog_id;
 		$this->blog_prefix = ( is_multisite() ? $blog_id : $table_prefix ) . ':';
 	}
 
 	function colorize_debug_line( $line ) {
 
 		$colors = array(
-		'get' => 'green',
-		'set' => 'purple',
-		'add' => 'blue',
-		'delete' => 'red',
+			'get'    => 'green',
+			'set'    => 'purple',
+			'add'    => 'blue',
+			'delete' => 'red',
 		);
 
 		$cmd = substr( $line, 0, strpos( $line, ' ' ) );
@@ -426,7 +426,7 @@ class WP_Object_Cache {
 
 		foreach ( $buckets as $bucket => $servers ) {
 			$this->mc[ $bucket ] = new Memcache();
-			foreach ( $servers as $server  ) {
+			foreach ( $servers as $server ) {
 				if ( 'unix://' == substr( $server, 0, 7 ) ) {
 					$node = $server;
 					$port = 0;
@@ -447,13 +447,13 @@ class WP_Object_Cache {
 
 		global $blog_id, $table_prefix;
 		$this->global_prefix = '';
-		$this->blog_prefix = '';
+		$this->blog_prefix   = '';
 		if ( function_exists( 'is_multisite' ) ) {
 			$this->global_prefix = ( is_multisite() || defined( 'CUSTOM_USER_TABLE' ) && defined( 'CUSTOM_USER_META_TABLE' ) ) ? '' : $table_prefix;
-			$this->blog_prefix = ( is_multisite() ? $blog_id : $table_prefix ) . ':';
+			$this->blog_prefix   = ( is_multisite() ? $blog_id : $table_prefix ) . ':';
 		}
 
-		$this->cache_hits =& $this->stats['get'];
+		$this->cache_hits   =& $this->stats['get'];
 		$this->cache_misses =& $this->stats['add'];
 	}
 }

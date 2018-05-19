@@ -2,9 +2,9 @@
 <ruleset name="Distributor">
 	<description>PHPCS rules for Simple Cache</description>
 
-	<file>./includes</file>
+	<file>./inc</file>
 	<file>./tests</file>
-	<file>./distributor.php</file>
+	<file>./simple-cache.php</file>
 
 	<!-- Include the WordPress-Extra standard. -->
 	<rule ref="WordPress-Core">

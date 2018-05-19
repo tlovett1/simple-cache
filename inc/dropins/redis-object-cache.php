@@ -394,7 +394,7 @@ class WP_Object_Cache {
 
 		$groups = (array) $groups;
 
-		$groups = array_fill_keys( $groups, true );
+		$groups              = array_fill_keys( $groups, true );
 		$this->global_groups = array_merge( $this->global_groups, $groups );
 	}
 
@@ -407,7 +407,7 @@ class WP_Object_Cache {
 
 		$groups = (array) $groups;
 
-		$groups = array_fill_keys( $groups, true );
+		$groups                      = array_fill_keys( $groups, true );
 		$this->non_persistent_groups = array_merge( $this->non_persistent_groups, $groups );
 	}
 
@@ -449,13 +449,13 @@ class WP_Object_Cache {
 
 		if ( self::USE_GROUPS ) {
 			$redis_safe_group = $this->_key( '', $group );
-			$result = $this->_call_redis( 'hIncrBy', $redis_safe_group, $key, -$offset, $group );
+			$result           = $this->_call_redis( 'hIncrBy', $redis_safe_group, $key, -$offset, $group );
 			if ( $result < 0 ) {
 				$result = 0;
 				$this->_call_redis( 'hSet', $redis_safe_group, $key, $result );
 			}
 		} else {
-			$id = $this->_key( $key, $group );
+			$id     = $this->_key( $key, $group );
 			$result = $this->_call_redis( 'decrBy', $id, $offset );
 			if ( $result < 0 ) {
 				$result = 0;
@@ -495,9 +495,9 @@ class WP_Object_Cache {
 		if ( $this->_should_persist( $group ) ) {
 			if ( self::USE_GROUPS ) {
 				$redis_safe_group = $this->_key( '', $group );
-				$result = $this->_call_redis( 'hDel', $redis_safe_group, $key );
+				$result           = $this->_call_redis( 'hDel', $redis_safe_group, $key );
 			} else {
-				$id = $this->_key( $key, $group );
+				$id     = $this->_key( $key, $group );
 				$result = $this->_call_redis( 'delete', $id );
 			}
 			if ( 1 !== $result ) {
@@ -522,7 +522,7 @@ class WP_Object_Cache {
 		}
 
 		$multisite_safe_group = $this->multisite && ! isset( $this->global_groups[ $group ] ) ? $this->blog_prefix . $group : $group;
-		$redis_safe_group = $this->_key( '', $group );
+		$redis_safe_group     = $this->_key( '', $group );
 		if ( $this->_should_persist( $group ) ) {
 			$result = $this->_call_redis( 'delete', $redis_safe_group );
 			if ( 1 !== $result ) {
@@ -587,9 +587,9 @@ class WP_Object_Cache {
 		if ( $this->_should_persist( $group ) && ( $force || ! $this->_isset_internal( $key, $group ) ) ) {
 			if ( self::USE_GROUPS ) {
 				$redis_safe_group = $this->_key( '', $group );
-				$value = $this->_call_redis( 'hGet', $redis_safe_group, $key );
+				$value            = $this->_call_redis( 'hGet', $redis_safe_group, $key );
 			} else {
-				$id = $this->_key( $key, $group );
+				$id    = $this->_key( $key, $group );
 				$value = $this->_call_redis( 'get', $id );
 			}
 			if ( ! is_numeric( $value ) ) {
@@ -638,13 +638,13 @@ class WP_Object_Cache {
 
 		if ( self::USE_GROUPS ) {
 			$redis_safe_group = $this->_key( '', $group );
-			$result = $this->_call_redis( 'hIncrBy', $redis_safe_group, $key, $offset, $group );
+			$result           = $this->_call_redis( 'hIncrBy', $redis_safe_group, $key, $offset, $group );
 			if ( $result < 0 ) {
 				$result = 0;
 				$this->_call_redis( 'hSet', $redis_safe_group, $key, $result );
 			}
 		} else {
-			$id = $this->_key( $key, $group );
+			$id     = $this->_key( $key, $group );
 			$result = $this->_call_redis( 'incrBy', $id, $offset );
 			if ( $result < 0 ) {
 				$result = 0;
@@ -775,7 +775,7 @@ class WP_Object_Cache {
 	 */
 	public function switch_to_blog( $blog_id ) {
 
-		$blog_id = (int) $blog_id;
+		$blog_id           = (int) $blog_id;
 		$this->blog_prefix = $this->multisite ? $blog_id . ':' : '';
 	}
 
@@ -862,7 +862,7 @@ class WP_Object_Cache {
 			}
 			$this->cache[ $multisite_safe_group ][ $key ] = $value;
 		} else {
-			$key = $this->_key( $key, $group );
+			$key                 = $this->_key( $key, $group );
 			$this->cache[ $key ] = $value;
 		}
 	}
@@ -937,14 +937,14 @@ class WP_Object_Cache {
 			// Attempt to automatically load Pantheon's Redis config from the env.
 			if ( isset( $_SERVER['CACHE_HOST'] ) ) {
 				$redis_server = array(
-				'host' => $_SERVER['CACHE_HOST'],
-				'port' => $_SERVER['CACHE_PORT'],
-				'auth' => $_SERVER['CACHE_PASSWORD'],
+					'host' => $_SERVER['CACHE_HOST'],
+					'port' => $_SERVER['CACHE_PORT'],
+					'auth' => $_SERVER['CACHE_PASSWORD'],
 				);
 			} else {
 				$redis_server = array(
-				'host' => '127.0.0.1',
-				'port' => 6379,
+					'host' => '127.0.0.1',
+					'port' => 6379,
 				);
 			}
 		}
@@ -1030,26 +1030,26 @@ class WP_Object_Cache {
 		switch ( $method ) {
 			case 'incr':
 			case 'incrBy':
-				$val = $this->cache[ $arguments[0] ];
+				$val    = $this->cache[ $arguments[0] ];
 				$offset = isset( $arguments[1] ) && 'incrBy' === $method ? $arguments[1] : 1;
-				$val = $val + $offset;
-			return $val;
+				$val    = $val + $offset;
+				return $val;
 			case 'hIncrBy':
 				$val = $this->_get_internal( $arguments[1], $group );
-			return $val + $arguments[2];
+				return $val + $arguments[2];
 			case 'decrBy':
 			case 'decr':
-				$val = $this->cache[ $arguments[0] ];
+				$val    = $this->cache[ $arguments[0] ];
 				$offset = isset( $arguments[1] ) && 'decrBy' === $method ? $arguments[1] : 1;
-				$val = $val - $offset;
-			return $val;
+				$val    = $val - $offset;
+				return $val;
 			case 'delete':
 			case 'hDel':
-			return 1;
+				return 1;
 			case 'flushAll':
 			case 'IsConnected':
 			case 'exists':
-			return false;
+				return false;
 		}
 
 	}
@@ -1062,7 +1062,7 @@ class WP_Object_Cache {
 	public function __construct() {
 		global $table_prefix, $blog_id;
 
-		$this->multisite = is_multisite();
+		$this->multisite   = is_multisite();
 		$this->blog_prefix = $this->multisite ? $blog_id . ':' : '';
 
 		$this->global_prefix = ( $this->multisite || defined( 'CUSTOM_USER_TABLE' ) && defined( 'CUSTOM_USER_META_TABLE' ) ) ? '' : $table_prefix;

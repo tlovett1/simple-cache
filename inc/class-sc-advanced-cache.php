@@ -137,7 +137,7 @@ class SC_Advanced_Cache {
 			return;
 		}
 
-		$config_file_bad = true;
+		$config_file_bad         = true;
 		$advanced_cache_file_bad = true;
 
 		if ( defined( 'SC_ADVANCED_CACHE' ) && SC_ADVANCED_CACHE ) {
@@ -256,7 +256,7 @@ class SC_Advanced_Cache {
 			return;
 		}
 
-		$file = '/wp-config.php';
+		$file        = '/wp-config.php';
 		$config_path = false;
 
 		for ( $i = 1; $i <= 3; $i++ ) {
@@ -283,7 +283,7 @@ class SC_Advanced_Cache {
 		}
 
 		$config_file = preg_split( "#(\n|\r)#", $config_file_string );
-		$line_key = false;
+		$line_key    = false;
 
 		foreach ( $config_file as $key => $line ) {
 			if ( ! preg_match( '/^\s*define\(\s*(\'|")([A-Z_]+)(\'|")(.*)/', $line, $match ) ) {
