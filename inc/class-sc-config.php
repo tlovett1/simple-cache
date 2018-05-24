@@ -50,11 +50,11 @@ class SC_Config {
 				'sanitizer' => 'sanitize_text_field',
 			),
 			'page_cache_length'               => array(
-				'default'   => 24,
+				'default'   => 1440,
 				'sanitizer' => 'floatval',
 			),
 			'page_cache_length_unit'          => array(
-				'default'   => 'hours',
+				'default'   => 'minutes',
 				'sanitizer' => array( $this, 'sanitize_length_unit' ),
 			),
 			'cache_exception_urls'            => array(
