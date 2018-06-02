@@ -250,7 +250,7 @@ class SC_Settings {
 		$config = SC_Config::factory()->get();
 
 		?>
-		<div class="wrap">
+		<div class="wrap" id="simple-cache">
 			<h1><?php esc_html_e( 'Simple Cache Settings', 'simple-cache' ); ?></h1>
 
 			<form action="" method="post">
