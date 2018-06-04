@@ -16,12 +16,14 @@ defined( 'ABSPATH' ) || exit;
 
 define( 'SC_VERSION', '1.6.4' );
 
-require_once dirname( __FILE__ ) . '/inc/functions.php';
-require_once dirname( __FILE__ ) . '/inc/class-sc-settings.php';
-require_once dirname( __FILE__ ) . '/inc/class-sc-config.php';
-require_once dirname( __FILE__ ) . '/inc/class-sc-advanced-cache.php';
-require_once dirname( __FILE__ ) . '/inc/class-sc-object-cache.php';
-require_once dirname( __FILE__ ) . '/inc/class-sc-cron.php';
+define( 'SC_DIR_PATH', plugin_dir_path( __FILE__ ) );
+
+require_once SC_DIR_PATH . 'inc/functions.php';
+require_once SC_DIR_PATH . 'inc/class-sc-settings.php';
+require_once SC_DIR_PATH . 'inc/class-sc-config.php';
+require_once SC_DIR_PATH . 'inc/class-sc-advanced-cache.php';
+require_once SC_DIR_PATH . 'inc/class-sc-object-cache.php';
+require_once SC_DIR_PATH . 'inc/class-sc-cron.php';
 
 SC_Settings::factory();
 SC_Advanced_Cache::factory();
