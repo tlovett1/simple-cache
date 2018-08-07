@@ -963,7 +963,12 @@ class WP_Object_Cache {
 		} else { // tcp connection
 			$port = ! empty( $redis_server['port'] ) ? $redis_server['port'] : 6379;
 		}
-		$this->redis->connect( $redis_server['host'], $port, 1, null, 100 ); // 1s timeout, 100ms delay between reconnections
+		try {
+			$this->redis->connect( $redis_server['host'], $port, 1, null, 100 ); // 1s timeout, 100ms delay between reconnections
+		} catch ( RedisException $e ) {
+			$this->last_triggered_error = 'WP Redis: ' . $e->getMessage();
+			trigger_error( $this->last_triggered_error, E_USER_WARNING );
+		}
 		if ( ! empty( $redis_server['auth'] ) ) {
 			try {
 				$this->redis->auth( $redis_server['auth'] );
