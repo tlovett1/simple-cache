@@ -23,3 +23,21 @@ function sc_cache_flush() {
 		wp_cache_flush();
 	}
 }
+
+/**
+ * Get cache directory
+ *
+ * @return string
+ */
+function sc_get_cache_dir() {
+	return ( defined( 'SC_CACHE_DIR') ) ? rtrim( SC_CACHE_DIR, '/' ) : rtrim( WP_CONTENT_DIR, '/' ) . '/cache/simple-cache';
+}
+
+/**
+ * Get config directory
+ *
+ * @return string
+ */
+function sc_get_config_dir() {
+
+}

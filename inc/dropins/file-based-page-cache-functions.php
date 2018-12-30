@@ -17,6 +17,8 @@
 function sc_cache( $buffer, $flags ) {
 	global $post;
 
+	$cache_dir = sc_get_cache_dir();
+
 	if ( strlen( $buffer ) < 255 ) {
 		return $buffer;
 	}
@@ -44,15 +46,15 @@ function sc_cache( $buffer, $flags ) {
 	$filesystem = new WP_Filesystem_Direct( new StdClass() );
 
 	// Make sure we can read/write files and that proper folders exist.
-	if ( ! $filesystem->exists( untrailingslashit( WP_CONTENT_DIR ) . '/cache' ) ) {
+	/*if ( ! $filesystem->exists( untrailingslashit( WP_CONTENT_DIR ) . '/cache' ) ) {
 		if ( ! $filesystem->mkdir( untrailingslashit( WP_CONTENT_DIR ) . '/cache' ) ) {
 			// Can not cache!
 			return $buffer;
 		}
-	}
+	}*/
 
-	if ( ! $filesystem->exists( untrailingslashit( WP_CONTENT_DIR ) . '/cache/simple-cache' ) ) {
-		if ( ! $filesystem->mkdir( untrailingslashit( WP_CONTENT_DIR ) . '/cache/simple-cache' ) ) {
+	if ( ! $filesystem->exists( $cache_dir ) ) {
+		if ( ! $filesystem->mkdir( $cache_dir ) ) {
 			// Can not cache!
 			return $buffer;
 		}
@@ -64,7 +66,7 @@ function sc_cache( $buffer, $flags ) {
 
 	$dirs = explode( '/', $url_path );
 
-	$path = untrailingslashit( WP_CONTENT_DIR ) . '/cache/simple-cache';
+	$path = $cache_dir;
 
 	foreach ( $dirs as $dir ) {
 		if ( ! empty( $dir ) ) {
@@ -131,13 +133,15 @@ function sc_get_url_path() {
  * @since 1.0
  */
 function sc_serve_cache() {
+	$cache_dir = ( defined( 'SC_CACHE_DIR') ) ? rtrim( SC_CACHE_DIR, '/' ) : rtrim( WP_CONTENT_DIR, '/' ) . '/cache/simple-cache';
+
 	$file_name = 'index.html';
 
 	if ( function_exists( 'gzencode' ) && ! empty( $GLOBALS['sc_config']['enable_gzip_compression'] ) ) {
 		$file_name = 'index.gzip.html';
 	}
 
-	$path = rtrim( WP_CONTENT_DIR, '/' ) . '/cache/simple-cache/' . rtrim( sc_get_url_path(), '/' ) . '/' . $file_name;
+	$path = $cache_dir . '/' . rtrim( sc_get_url_path(), '/' ) . '/' . $file_name;
 
 	$modified_time = (int) @filemtime( $path );
 

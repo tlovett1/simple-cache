@@ -113,6 +113,18 @@ class SC_Config {
 	}
 
 	/**
+	 * Get config file name
+	 *
+	 * @since  1.7
+	 * @return string
+	 */
+	private function get_config_file_name() {
+		$site_url_parts = parse_url( site_url() );
+
+		return 'config-' . $site_url_parts['host'] . '.php';
+	}
+
+	/**
 	 * Write config to file
 	 *
 	 * @since  1.0
@@ -123,21 +135,15 @@ class SC_Config {
 
 		global $wp_filesystem;
 
-		$config_dir = WP_CONTENT_DIR . '/sc-config';
-
-		$site_url_parts = parse_url( site_url() );
-
-		$config_file = $config_dir . '/config-' . $site_url_parts['host'] . '.php';
+		$config_dir = sc_get_config_dir();
 
 		$this->config = wp_parse_args( $config, $this->get_defaults() );
 
 		$wp_filesystem->mkdir( $config_dir );
 
-		// phpcs:disable
 		$config_file_string = '<?php ' . "\n\r" . "defined( 'ABSPATH' ) || exit;" . "\n\r" . 'return ' . var_export( $this->config, true ) . '; ' . "\n\r";
-		// phpcs:enable
 
-		if ( ! $wp_filesystem->put_contents( $config_file, $config_file_string, FS_CHMOD_FILE ) ) {
+		if ( ! $wp_filesystem->put_contents( $config_dir . '/' . $this->get_config_file_name(), $config_file_string, FS_CHMOD_FILE ) ) {
 			return false;
 		}
 
@@ -253,11 +259,13 @@ class SC_Config {
 
 		global $wp_filesystem;
 
-		$folder = untrailingslashit( WP_CONTENT_DIR ) . '/sc-config';
+		$config_dir = sc_get_config_dir();
+
+		$path = $config_dir . '/' . $this->get_config_file_name();
 
 		delete_option( 'sc_simple_cache' );
 
-		if ( ! $wp_filesystem->delete( $folder, true ) ) {
+		if ( ! $wp_filesystem->delete( $path, true ) ) {
 			return false;
 		}
 
