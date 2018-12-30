@@ -55,7 +55,7 @@ class SC_Advanced_Cache {
 
 		// File based caching only.
 		if ( ! empty( $config['enable_page_caching'] ) && empty( $config['enable_in_memory_object_caching'] ) ) {
-			require_once( ABSPATH . 'wp-admin/includes/file.php' );
+			require_once ABSPATH . 'wp-admin/includes/file.php';
 
 			$comment = get_comment( $comment_id );
 			$post_id = $comment->comment_post_ID;
@@ -173,7 +173,7 @@ class SC_Advanced_Cache {
 
 				<?php esc_html_e( 'Simple Cache is not able to utilize page caching.', 'simple-cache' ); ?>
 
-				<a href="options-general.php?page=simple-cache&amp;wp_http_referer=<?php echo esc_url( wp_unslash( $_SERVER['REQUEST_URI'] ) ); ?>&amp;action=sc_update&amp;sc_settings_nonce=<?php echo wp_create_nonce( 'sc_update_settings' ); ?>" class="button button-primary" style="margin-left: 5px;"><?php esc_html_e( 'Fix', 'simple-cache' ); ?></a>
+				<a href="options-general.php?page=simple-cache&amp;wp_http_referer=<?php echo esc_url( wp_unslash( $_SERVER['REQUEST_URI'] ) ); ?>&amp;action=sc_update&amp;sc_settings_nonce=<?php echo esc_attr( wp_create_nonce( 'sc_update_settings' ) ); ?>" class="button button-primary" style="margin-left: 5px;"><?php esc_html_e( 'Fix', 'simple-cache' ); ?></a>
 			</p>
 		</div>
 
@@ -230,6 +230,7 @@ class SC_Advanced_Cache {
 				$cache_file = 'batcache.php';
 			}
 
+			// phpcs:disable
 			$file_string = '<?php ' .
 			"\n\r" . "defined( 'ABSPATH' ) || exit;" .
 			"\n\r" . "define( 'SC_ADVANCED_CACHE', true );" .
@@ -238,7 +239,7 @@ class SC_Advanced_Cache {
 			"\n\r" . "\$GLOBALS['sc_config'] = include( WP_CONTENT_DIR . '/sc-config/config-' . \$_SERVER['HTTP_HOST'] . '.php' );" .
 			"\n\r" . "if ( empty( \$GLOBALS['sc_config'] ) || empty( \$GLOBALS['sc_config']['enable_page_caching'] ) ) { return; }" .
 			"\n\r" . "if ( @file_exists( '" . untrailingslashit( plugin_dir_path( __FILE__ ) ) . '/dropins/' . $cache_file . "' ) ) { include_once( '" . untrailingslashit( plugin_dir_path( __FILE__ ) ) . '/dropins/' . $cache_file . "' ); }" . "\n\r";
-
+			// phpcs:enable
 		}
 
 		if ( ! $wp_filesystem->put_contents( $file, $file_string, FS_CHMOD_FILE ) ) {

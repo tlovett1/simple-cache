@@ -78,7 +78,7 @@ class SC_Settings {
 		<div class="notice notice-warning">
 			<p>
 				<?php esc_html_e( "Simple Cache won't work until you turn it on.", 'simple-cache' ); ?>
-				<a href="options-general.php?page=simple-cache&amp;wp_http_referer=<?php echo esc_url( wp_unslash( $_SERVER['REQUEST_URI'] ) ); ?>&amp;action=sc_update&amp;sc_settings_nonce=<?php echo wp_create_nonce( 'sc_update_settings' ); ?>&amp;sc_simple_cache[enable_page_caching]=1" class="button button-primary" style="margin-left: 5px;"><?php esc_html_e( 'Turn On Caching', 'simple-cache' ); ?></a>
+				<a href="options-general.php?page=simple-cache&amp;wp_http_referer=<?php echo esc_url( wp_unslash( $_SERVER['REQUEST_URI'] ) ); ?>&amp;action=sc_update&amp;sc_settings_nonce=<?php echo esc_attr( wp_create_nonce( 'sc_update_settings' ) ); ?>&amp;sc_simple_cache[enable_page_caching]=1" class="button button-primary" style="margin-left: 5px;"><?php esc_html_e( 'Turn On Caching', 'simple-cache' ); ?></a>
 			</p>
 		</div>
 		<?php
@@ -101,7 +101,7 @@ class SC_Settings {
 		<div class="notice notice-error">
 			<p>
 				<?php esc_html_e( "Simple Cache can't create or modify needed files on your system. Specifically, Simple Cache needs to write to wp-config.php and /wp-content using PHP's fopen() function. Contact your host.", 'simple-cache' ); ?>
-				<a href="options-general.php?page=simple-cache&amp;wp_http_referer=<?php echo esc_url( wp_unslash( $_SERVER['REQUEST_URI'] ) ); ?>&amp;action=sc_update&amp;sc_settings_nonce=<?php echo wp_create_nonce( 'sc_update_settings' ); ?>" class="button button-primary" style="margin-left: 5px;"><?php esc_html_e( 'Try Again', 'simple-cache' ); ?></a>
+				<a href="options-general.php?page=simple-cache&amp;wp_http_referer=<?php echo esc_url( wp_unslash( $_SERVER['REQUEST_URI'] ) ); ?>&amp;action=sc_update&amp;sc_settings_nonce=<?php echo esc_attr( wp_create_nonce( 'sc_update_settings' ) ); ?>" class="button button-primary" style="margin-left: 5px;"><?php esc_html_e( 'Try Again', 'simple-cache' ); ?></a>
 			</p>
 		</div>
 		<?php
@@ -269,7 +269,7 @@ class SC_Settings {
 				<table class="form-table sc-simple-mode-table <?php if ( empty( $config['advanced_mode'] ) ) : ?>show<?php endif; ?>">
 					<tbody>
 						<tr>
-							<th scope="row"><label for="sc_enable_page_caching_simple"><span class="setting-highlight">*</span><?php _e( 'Enable Caching', 'simple-cache' ); ?></label></th>
+							<th scope="row"><label for="sc_enable_page_caching_simple"><span class="setting-highlight">*</span><?php esc_html_e( 'Enable Caching', 'simple-cache' ); ?></label></th>
 							<td>
 								<select <?php if ( ! empty( $config['advanced_mode'] ) ) : ?>disabled<?php endif; ?> name="sc_simple_cache[enable_page_caching]" id="sc_enable_page_caching_simple">
 									<option value="0"><?php esc_html_e( 'No', 'simple-cache' ); ?></option>
@@ -294,7 +294,7 @@ class SC_Settings {
 
 						<?php if ( function_exists( 'gzencode' ) ) : ?>
 							<tr>
-								<th scope="row"><label for="sc_enable_gzip_compression_simple"><?php _e( 'Enable Compression', 'simple-cache' ); ?></label></th>
+								<th scope="row"><label for="sc_enable_gzip_compression_simple"><?php esc_html_e( 'Enable Compression', 'simple-cache' ); ?></label></th>
 								<td>
 									<select <?php if ( ! empty( $config['advanced_mode'] ) ) : ?>disabled<?php endif; ?> name="sc_simple_cache[enable_gzip_compression]" id="sc_enable_gzip_compression_simple">
 										<option value="0"><?php esc_html_e( 'No', 'simple-cache' ); ?></option>
@@ -317,7 +317,7 @@ class SC_Settings {
 						</tr>
 
 						<tr>
-							<th scope="row"><label for="sc_enable_page_caching_advanced"><?php _e( 'Enable Page Caching', 'simple-cache' ); ?></label></th>
+							<th scope="row"><label for="sc_enable_page_caching_advanced"><?php esc_html_e( 'Enable Page Caching', 'simple-cache' ); ?></label></th>
 							<td>
 								<select <?php if ( empty( $config['advanced_mode'] ) ) : ?>disabled<?php endif; ?> name="sc_simple_cache[enable_page_caching]" id="sc_enable_page_caching_advanced">
 									<option value="0"><?php esc_html_e( 'No', 'simple-cache' ); ?></option>
@@ -329,7 +329,7 @@ class SC_Settings {
 						</tr>
 
 						<tr>
-							<th scope="row"><label for="sc_cache_exception_urls"><?php _e( 'Exception URL(s)', 'simple-cache' ); ?></label></th>
+							<th scope="row"><label for="sc_cache_exception_urls"><?php esc_html_e( 'Exception URL(s)', 'simple-cache' ); ?></label></th>
 							<td>
 								<textarea name="sc_simple_cache[cache_exception_urls]" class="widefat" id="sc_cache_exception_urls"><?php echo esc_html( $config['cache_exception_urls'] ); ?></textarea>
 
@@ -366,22 +366,22 @@ class SC_Settings {
 
 						<?php if ( class_exists( 'Memcache' ) || class_exists( 'Redis' ) ) : ?>
 							<tr>
-								<th scope="row"><label for="sc_enable_in_memory_object_caching"><?php _e( 'Enable In-Memory Object Caching', 'simple-cache' ); ?></label></th>
+								<th scope="row"><label for="sc_enable_in_memory_object_caching"><?php esc_html_e( 'Enable In-Memory Object Caching', 'simple-cache' ); ?></label></th>
 								<td>
 									<select name="sc_simple_cache[enable_in_memory_object_caching]" id="sc_enable_in_memory_object_caching">
 										<option value="0"><?php esc_html_e( 'No', 'simple-cache' ); ?></option>
 										<option <?php selected( $config['enable_in_memory_object_caching'], true ); ?> value="1"><?php esc_html_e( 'Yes', 'simple-cache' ); ?></option>
 									</select>
 
-									<p class="description"><?php _e( "When enabled, things like database query results will be stored in memory. Right now Memcache and Redis are suppported. Note that if the proper <a href='https://pecl.php.net/package/memcache'>Memcache</a> (NOT Memcached) or <a href='https://pecl.php.net/package/redis'>Redis</a> PHP extensions aren't loaded, they won't show as options below.", 'simple-cache' ); ?></p>
+									<p class="description"><?php esc_html_e( "When enabled, things like database query results will be stored in memory. Right now Memcache and Redis are suppported. Note that if the proper <a href='https://pecl.php.net/package/memcache'>Memcache</a> (NOT Memcached) or <a href='https://pecl.php.net/package/redis'>Redis</a> PHP extensions aren't loaded, they won't show as options below.", 'simple-cache' ); ?></p>
 								</td>
 							</tr>
 							<tr>
 								<th class="in-memory-cache
 								<?php
 								if ( ! empty( $config['enable_in_memory_object_caching'] ) ) :
-								?>
-								show<?php endif; ?>" scope="row"><label for="sc_in_memory_cache"><?php _e( 'In Memory Cache', 'simple-cache' ); ?></label></th>
+									?>
+								show<?php endif; ?>" scope="row"><label for="sc_in_memory_cache"><?php esc_html_e( 'In Memory Cache', 'simple-cache' ); ?></label></th>
 								<td class="in-memory-cache <?php if ( ! empty( $config['enable_in_memory_object_caching'] ) ) : ?>show<?php endif; ?>">
 									<select name="sc_simple_cache[in_memory_cache]" id="sc_in_memory_cache">
 										<?php if ( class_exists( 'Memcache' ) ) : ?>
@@ -409,7 +409,7 @@ class SC_Settings {
 
 						<?php if ( function_exists( 'gzencode' ) ) : ?>
 							<tr>
-								<th scope="row"><label for="sc_enable_gzip_compression_advanced"><?php _e( 'Enable gzip Compression', 'simple-cache' ); ?></label></th>
+								<th scope="row"><label for="sc_enable_gzip_compression_advanced"><?php esc_html_e( 'Enable gzip Compression', 'simple-cache' ); ?></label></th>
 								<td>
 									<select <?php if ( empty( $config['advanced_mode'] ) ) : ?>disabled<?php endif; ?> name="sc_simple_cache[enable_gzip_compression]" id="sc_enable_gzip_compression_advanced">
 										<option value="0"><?php esc_html_e( 'No', 'simple-cache' ); ?></option>

@@ -50,7 +50,7 @@ class SC_Object_Cache {
 			<p>
 				<?php esc_html_e( 'wp-content/object-cache.php was edited or deleted. Simple Cache is not able to utilize object caching.' ); ?>
 
-				<a href="options-general.php?page=simple-cache&amp;wp_http_referer=<?php echo esc_url( wp_unslash( $_SERVER['REQUEST_URI'] ) ); ?>&amp;action=sc_update&amp;sc_settings_nonce=<?php echo wp_create_nonce( 'sc_update_settings' ); ?>" class="button button-primary" style="margin-left: 5px;"><?php esc_html_e( 'Fix', 'simple-cache' ); ?></a>
+				<a href="options-general.php?page=simple-cache&amp;wp_http_referer=<?php echo esc_url( wp_unslash( $_SERVER['REQUEST_URI'] ) ); ?>&amp;action=sc_update&amp;sc_settings_nonce=<?php echo esc_attr( wp_create_nonce( 'sc_update_settings' ) ); ?>" class="button button-primary" style="margin-left: 5px;"><?php esc_html_e( 'Fix', 'simple-cache' ); ?></a>
 			</p>
 		</div>
 		<?php
@@ -108,6 +108,7 @@ class SC_Object_Cache {
 			 */
 			$cache_key_salt = wp_generate_password( 10, false );
 
+			// phpcs:disable
 			$file_string = '<?php ' .
 			"\n\r" . "defined( 'ABSPATH' ) || exit;" .
 			"\n\r" . "define( 'SC_OBJECT_CACHE', true );" .
@@ -116,7 +117,7 @@ class SC_Object_Cache {
 			"\n\r" . "\$GLOBALS['sc_config'] = include( WP_CONTENT_DIR . '/sc-config/config-' . \$_SERVER['HTTP_HOST'] . '.php' );" .
 			"\n\r" . "if ( empty( \$GLOBALS['sc_config'] ) || empty( \$GLOBALS['sc_config']['enable_in_memory_object_caching'] ) ) { return; }" .
 			"\n\r" . "if ( @file_exists( '" . untrailingslashit( plugin_dir_path( __FILE__ ) ) . '/dropins/' . $cache_file . "' ) ) { require_once( '" . untrailingslashit( plugin_dir_path( __FILE__ ) ) . '/dropins/' . $cache_file . "' ); }" . "\n\r";
-
+			// phpcs:enable
 		}
 
 		if ( ! $wp_filesystem->put_contents( $file, $file_string, FS_CHMOD_FILE ) ) {

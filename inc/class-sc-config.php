@@ -133,7 +133,9 @@ class SC_Config {
 
 		$wp_filesystem->mkdir( $config_dir );
 
+		// phpcs:disable
 		$config_file_string = '<?php ' . "\n\r" . "defined( 'ABSPATH' ) || exit;" . "\n\r" . 'return ' . var_export( $this->config, true ) . '; ' . "\n\r";
+		// phpcs:enable
 
 		if ( ! $wp_filesystem->put_contents( $config_file, $config_file_string, FS_CHMOD_FILE ) ) {
 			return false;
