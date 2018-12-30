@@ -39,5 +39,5 @@ function sc_get_cache_dir() {
  * @return string
  */
 function sc_get_config_dir() {
-
+	return ( defined( 'SC_CONFIG_DIR') ) ? untrailingslashit( SC_CONFIG_DIR ) : untrailingslashit( WP_CONTENT_DIR ) . '/sc-config';
 }
