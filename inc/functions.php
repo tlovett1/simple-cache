@@ -17,27 +17,17 @@ function sc_cache_flush() {
 
 	WP_Filesystem();
 
-	$wp_filesystem->rmdir( untrailingslashit( WP_CONTENT_DIR ) . '/cache/simple-cache', true );
+	$url_parts = parse_url( home_url() );
+
+	$path = sc_get_cache_dir() . '/' . untrailingslashit( $url_parts['host'] );
+
+	if ( ! empty( $url_parts['path'] ) && '/' !== $url_parts['path'] ) {
+		$path .= trim( $url_parts['path'], '/' );
+	}
+
+	$wp_filesystem->rmdir( $path, true );
 
 	if ( function_exists( 'wp_cache_flush' ) ) {
 		wp_cache_flush();
 	}
-}
-
-/**
- * Get cache directory
- *
- * @return string
- */
-function sc_get_cache_dir() {
-	return ( defined( 'SC_CACHE_DIR') ) ? rtrim( SC_CACHE_DIR, '/' ) : rtrim( WP_CONTENT_DIR, '/' ) . '/cache/simple-cache';
-}
-
-/**
- * Get config directory
- *
- * @return string
- */
-function sc_get_config_dir() {
-	return ( defined( 'SC_CONFIG_DIR') ) ? untrailingslashit( SC_CONFIG_DIR ) : untrailingslashit( WP_CONTENT_DIR ) . '/sc-config';
 }

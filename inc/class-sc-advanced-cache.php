@@ -64,7 +64,7 @@ class SC_Advanced_Cache {
 
 			WP_Filesystem();
 
-			$path = untrailingslashit( WP_CONTENT_DIR ) . '/cache/simple-cache/' . preg_replace( '#https?://#i', '', get_permalink( $post_id ) );
+			$path = sc_get_cache_path() . '/' . preg_replace( '#https?://#i', '', get_permalink( $post_id ) );
 
 			$wp_filesystem->delete( untrailingslashit( $path ) . '/index.html' );
 			$wp_filesystem->delete( untrailingslashit( $path ) . '/index.gzip.html' );
@@ -94,7 +94,7 @@ class SC_Advanced_Cache {
 
 			WP_Filesystem();
 
-			$path = untrailingslashit( WP_CONTENT_DIR ) . '/cache/simple-cache/' . preg_replace( '#https?://#i', '', get_permalink( $post_id ) );
+			$path = sc_get_cache_path() . '/' . preg_replace( '#https?://#i', '', get_permalink( $post_id ) );
 
 			$wp_filesystem->delete( untrailingslashit( $path ) . '/index.html' );
 			$wp_filesystem->delete( untrailingslashit( $path ) . '/index.gzip.html' );
@@ -235,8 +235,9 @@ class SC_Advanced_Cache {
 			"\n\r" . "defined( 'ABSPATH' ) || exit;" .
 			"\n\r" . "define( 'SC_ADVANCED_CACHE', true );" .
 			"\n\r" . 'if ( is_admin() ) { return; }' .
-			"\n\r" . "if ( ! @file_exists( WP_CONTENT_DIR . '/sc-config/config-' . \$_SERVER['HTTP_HOST'] . '.php' ) ) { return; }" .
-			"\n\r" . "\$GLOBALS['sc_config'] = include( WP_CONTENT_DIR . '/sc-config/config-' . \$_SERVER['HTTP_HOST'] . '.php' );" .
+			"\n\r" . "include_once( '" . dirname( __FILE__ ) . "/pre-wp-functions.php' );" .
+			"\n\r" . "if ( ! @file_exists( sc_get_config_dir() . '/' . sc_get_config_file_name() ) ) { return; }" .
+			"\n\r" . "\$GLOBALS['sc_config'] = include( sc_get_config_dir() . '/' . sc_get_config_file_name() );" .
 			"\n\r" . "if ( empty( \$GLOBALS['sc_config'] ) || empty( \$GLOBALS['sc_config']['enable_page_caching'] ) ) { return; }" .
 			"\n\r" . "if ( @file_exists( '" . untrailingslashit( plugin_dir_path( __FILE__ ) ) . '/dropins/' . $cache_file . "' ) ) { include_once( '" . untrailingslashit( plugin_dir_path( __FILE__ ) ) . '/dropins/' . $cache_file . "' ); }" . "\n\r";
 			// phpcs:enable

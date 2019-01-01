@@ -4,7 +4,7 @@
  * Plugin URI: http://taylorlovett.com
  * Description: A simple caching plugin that just works.
  * Author: Taylor Lovett
- * Version: 1.6.4
+ * Version: 1.7
  * Text Domain: simple-cache
  * Domain Path: /languages
  * Author URI: http://taylorlovett.com
@@ -14,8 +14,9 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'SC_VERSION', '1.6.4' );
+define( 'SC_VERSION', '1.7' );
 
+require_once dirname( __FILE__ ) . '/inc/pre-wp-functions.php';
 require_once dirname( __FILE__ ) . '/inc/functions.php';
 require_once dirname( __FILE__ ) . '/inc/class-sc-settings.php';
 require_once dirname( __FILE__ ) . '/inc/class-sc-config.php';
@@ -27,7 +28,6 @@ SC_Settings::factory();
 SC_Advanced_Cache::factory();
 SC_Object_Cache::factory();
 SC_Cron::factory();
-
 
 /**
  * Load text domain
@@ -55,7 +55,7 @@ function sc_filter_plugin_action_links( $plugin_actions, $plugin_file ) {
 
 	if ( basename( dirname( __FILE__ ) ) . '/simple-cache.php' === $plugin_file ) {
 		/* translators: Param 1 is link to settings page. */
-		$new_actions['sc_settings'] = sprintf( __( '<a href="%s">Settings</a>', 'simple-cache' ), esc_url( admin_url( 'options-general.php?page=simple-cache' ) ) );
+		$new_actions['sc_settings'] = '<a href="' . esc_url( admin_url( 'options-general.php?page=simple-cache' ) ) . '">' . esc_html__( 'Settings', 'simple-cache' ) . '</a>';
 	}
 
 	return array_merge( $new_actions, $plugin_actions );

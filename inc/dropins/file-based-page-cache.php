@@ -7,8 +7,6 @@
 
 defined( 'ABSPATH' ) || exit;
 
-require_once dirname( __FILE__ ) . '/file-based-page-cache-functions.php';
-
 // Don't cache robots.txt or htacesss.
 if ( strpos( $_SERVER['REQUEST_URI'], 'robots.txt' ) !== false || strpos( $_SERVER['REQUEST_URI'], '.htaccess' ) !== false ) {
 	return;
@@ -65,7 +63,6 @@ if ( ! empty( $GLOBALS['sc_config']['advanced_mode'] ) && ! empty( $GLOBALS['sc_
 	}
 }
 
-sc_serve_cache();
+sc_serve_file_cache();
 
-ob_start( 'sc_cache' );
-
+ob_start( 'sc_file_cache' );

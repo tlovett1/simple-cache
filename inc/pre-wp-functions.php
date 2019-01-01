@@ -1,8 +1,8 @@
 <?php
 /**
- * Holds functions used by file based cache
+ * Holds functions that can be loaded in advanced-cache.php
  *
- * @since  1.6
+ * @since  1.7
  * @package  simple-cache
  */
 
@@ -11,10 +11,10 @@
  *
  * @param  string $buffer Page HTML.
  * @param  int    $flags OB flags to be passed through.
- * @since  1.0
+ * @since  1.7
  * @return string
  */
-function sc_cache( $buffer, $flags ) {
+function sc_file_cache( $buffer, $flags ) {
 	global $post;
 
 	$cache_dir = sc_get_cache_dir();
@@ -45,14 +45,15 @@ function sc_cache( $buffer, $flags ) {
 
 	$filesystem = new WP_Filesystem_Direct( new StdClass() );
 
-	// Make sure we can read/write files and that proper folders exist.
-	/*if ( ! $filesystem->exists( untrailingslashit( WP_CONTENT_DIR ) . '/cache' ) ) {
-		if ( ! $filesystem->mkdir( untrailingslashit( WP_CONTENT_DIR ) . '/cache' ) ) {
+	// Make sure we can read/write files to wp-content/cache/
+	if ( ! $filesystem->exists( dirname( $cache_dir ) ) ) {
+		if ( ! $filesystem->mkdir( dirname( $cache_dir ) ) ) {
 			// Can not cache!
 			return $buffer;
 		}
-	}*/
+	}
 
+	// Make sure we can read/write files to cache dir
 	if ( ! $filesystem->exists( $cache_dir ) ) {
 		if ( ! $filesystem->mkdir( $cache_dir ) ) {
 			// Can not cache!
@@ -132,7 +133,7 @@ function sc_get_url_path() {
  *
  * @since 1.0
  */
-function sc_serve_cache() {
+function sc_serve_file_cache() {
 	$cache_dir = ( defined( 'SC_CACHE_DIR') ) ? rtrim( SC_CACHE_DIR, '/' ) : rtrim( WP_CONTENT_DIR, '/' ) . '/cache/simple-cache';
 
 	$file_name = 'index.html';
@@ -165,6 +166,36 @@ function sc_serve_cache() {
 
 		exit;
 	}
+}
+
+/**
+ * Get cache directory
+ *
+ * @since  1.7
+ * @return string
+ */
+function sc_get_cache_dir() {
+	return ( defined( 'SC_CACHE_DIR') ) ? rtrim( SC_CACHE_DIR, '/' ) : rtrim( WP_CONTENT_DIR, '/' ) . '/cache/simple-cache';
+}
+
+/**
+ * Get config directory
+ *
+ * @since 1.7
+ * @return string
+ */
+function sc_get_config_dir() {
+	return ( defined( 'SC_CONFIG_DIR') ) ? rtrim( SC_CONFIG_DIR, '/' ) : rtrim( WP_CONTENT_DIR, '/' ) . '/sc-config';
+}
+
+/**
+ * Gets name of the config file. Should only be called on front end.
+ *
+ * @since  1.7
+ * @return string
+ */
+function sc_get_config_file_name() {
+	return 'config-' . $_SERVER['HTTP_HOST'] . '.php';
 }
 
 /**

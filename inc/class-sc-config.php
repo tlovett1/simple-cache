@@ -119,9 +119,9 @@ class SC_Config {
 	 * @return string
 	 */
 	private function get_config_file_name() {
-		$site_url_parts = parse_url( site_url() );
+		$home_url_parts = parse_url( home_url() );
 
-		return 'config-' . $site_url_parts['host'] . '.php';
+		return 'config-' . $home_url_parts['host'] . '.php';
 	}
 
 	/**
@@ -226,22 +226,29 @@ class SC_Config {
 			return false;
 		}
 
-		// If the cache and/or cache/simple-cache directories exist, make sure it's writeable.
-		if ( @file_exists( untrailingslashit( WP_CONTENT_DIR ) . '/cache' ) ) {
-			if ( ! $this->_is_dir_writable( untrailingslashit( WP_CONTENT_DIR ) . '/cache' ) ) {
+		// Make sure cache parent directory is writeable as well as cache directory
+		if ( @file_exists( sc_get_cache_dir() . '/../' ) ) {
+			if ( ! $this->_is_dir_writable( sc_get_cache_dir() . '/../' ) ) {
 				return false;
-			}
-
-			if ( @file_exists( untrailingslashit( WP_CONTENT_DIR ) . '/cache/simple-cache' ) ) {
-				if ( ! $this->_is_dir_writable( untrailingslashit( WP_CONTENT_DIR ) . '/cache/simple-cache' ) ) {
-					return false;
-				}
 			}
 		}
 
-		// If the sc-config directory exists, make sure it's writeable.
-		if ( @file_exists( untrailingslashit( WP_CONTENT_DIR ) . '/sc-config' ) ) {
-			if ( ! $this->_is_dir_writable( untrailingslashit( WP_CONTENT_DIR ) . '/sc-config' ) ) {
+		if ( @file_exists( sc_get_cache_dir() ) ) {
+			if ( ! $this->_is_dir_writable( sc_get_cache_dir() ) ) {
+				return false;
+			}
+		}
+
+		// Check config parent directory is writeable
+		if ( @file_exists( sc_get_config_dir() . '/../' ) ) {
+			if ( ! $this->_is_dir_writable( sc_get_config_dir() . '/../' ) ) {
+				return false;
+			}
+		}
+
+		// Check the config directory is writeable
+		if ( @file_exists( sc_get_config_dir() ) ) {
+			if ( ! $this->_is_dir_writable( sc_get_config_dir() ) ) {
 				return false;
 			}
 		}
