@@ -119,9 +119,13 @@ class SC_Config {
 	 * @return string
 	 */
 	private function get_config_file_name() {
-		$home_url_parts = parse_url( home_url() );
+		if ( SC_IS_NETWORK ) {
+			return 'config-network.php';
+		} else {
+			$home_url_parts = parse_url( home_url() );
 
-		return 'config-' . $home_url_parts['host'] . '.php';
+			return 'config-' . $home_url_parts['host'] . '.php';
+		}
 	}
 
 	/**
@@ -129,13 +133,16 @@ class SC_Config {
 	 *
 	 * @since  1.0
 	 * @param  array $config Configuration array.
+	 * @param  bool  $force_network Force network wide style write
 	 * @return bool
 	 */
-	public function write( $config ) {
+	public function write( $config, $force_network = false ) {
 
 		global $wp_filesystem;
 
 		$config_dir = sc_get_config_dir();
+
+		$file_name = ( $force_network ) ? 'config-network.php' : $this->get_config_file_name();
 
 		$this->config = wp_parse_args( $config, $this->get_defaults() );
 
@@ -143,8 +150,13 @@ class SC_Config {
 
 		$config_file_string = '<?php ' . "\n\r" . "defined( 'ABSPATH' ) || exit;" . "\n\r" . 'return ' . var_export( $this->config, true ) . '; ' . "\n\r";
 
-		if ( ! $wp_filesystem->put_contents( $config_dir . '/' . $this->get_config_file_name(), $config_file_string, FS_CHMOD_FILE ) ) {
+		if ( ! $wp_filesystem->put_contents( $config_dir . '/' . $file_name, $config_file_string, FS_CHMOD_FILE ) ) {
 			return false;
+		}
+
+		// Delete network config if not network activated
+		if ( ! $force_network && ! SC_IS_NETWORK ) {
+			$wp_filesystem->delete( $config_dir . '/config-network.php', true );
 		}
 
 		return true;
@@ -157,8 +169,11 @@ class SC_Config {
 	 * @return array
 	 */
 	public function get() {
-
-		$config = get_option( 'sc_simple_cache', $this->get_defaults() );
+		if ( SC_IS_NETWORK ) {
+			$config = get_site_option( 'sc_simple_cache', $this->get_defaults() );
+		} else {
+			$config = get_option( 'sc_simple_cache', $this->get_defaults() );
+		}
 
 		return wp_parse_args( $config, $this->get_defaults() );
 	}
@@ -270,7 +285,13 @@ class SC_Config {
 
 		$path = $config_dir . '/' . $this->get_config_file_name();
 
-		delete_option( 'sc_simple_cache' );
+		if ( SC_IS_NETWORK ) {
+			delete_site_option( 'sc_simple_cache' );
+		} else {
+			delete_option( 'sc_simple_cache' );
+		}
+
+		$wp_filesystem->delete( $config_dir . '/config-network.php', true );
 
 		if ( ! $wp_filesystem->delete( $path, true ) ) {
 			return false;

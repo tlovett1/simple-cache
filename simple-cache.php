@@ -16,6 +16,14 @@ defined( 'ABSPATH' ) || exit;
 
 define( 'SC_VERSION', '1.7' );
 
+$active_plugins = get_site_option( 'active_sitewide_plugins' );
+
+if ( is_multisite() && isset( $active_plugins[ plugin_basename( __FILE__ ) ] ) ) {
+	define( 'SC_IS_NETWORK', true );
+} else {
+	define( 'SC_IS_NETWORK', false );
+}
+
 require_once dirname( __FILE__ ) . '/inc/pre-wp-functions.php';
 require_once dirname( __FILE__ ) . '/inc/functions.php';
 require_once dirname( __FILE__ ) . '/inc/class-sc-settings.php';
@@ -77,5 +85,23 @@ function sc_clean_up() {
 	SC_Config::factory()->clean_up();
 }
 register_deactivation_hook( __FILE__, 'sc_clean_up' );
+
+/**
+ * Create config file
+ *
+ * @param  string $plugin Plugin file name
+ * @param  bool   $network Whether the plugin is network wide
+ * @since 1.0
+ */
+function sc_setup( $plugin, $network ) {
+	WP_Filesystem();
+
+	if ( $network ) {
+		SC_Config::factory()->write( array(), true );
+	} else {
+		SC_Config::factory()->write( array() );
+	}
+}
+add_action( 'activate_plugin', 'sc_setup', 10, 2 );
 
 

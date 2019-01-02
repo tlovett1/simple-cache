@@ -189,13 +189,29 @@ function sc_get_config_dir() {
 }
 
 /**
- * Gets name of the config file. Should only be called on front end.
+ * Gets name of the config file.
  *
  * @since  1.7
  * @return string
  */
 function sc_get_config_file_name() {
 	return 'config-' . $_SERVER['HTTP_HOST'] . '.php';
+}
+
+/**
+ * Load config. Use network if it exists. Only intended to be used pre-wp.
+ *
+ * @since  1.7
+ * @return bool|array
+ */
+function sc_load_config() {
+	if ( @file_exists( sc_get_config_dir() . '/config-network.php' ) ) {
+		return  include( sc_get_config_dir() . '/config-network.php' );
+	} elseif ( @file_exists( sc_get_config_dir() . '/' . sc_get_config_file_name() ) ) {
+		return  include( sc_get_config_dir() . '/' . sc_get_config_file_name() );
+	}
+
+	return false;
 }
 
 /**

@@ -18,15 +18,31 @@ class SC_Settings {
 	 * @since 1.0
 	 */
 	public function setup() {
+		add_action( 'admin_enqueue_scripts', array( $this, 'action_admin_enqueue_scripts_styles' ) );
 
-		add_action( 'admin_menu', array( $this, 'action_admin_menu' ) );
 		add_action( 'load-settings_page_simple-cache', array( $this, 'update' ) );
 		add_action( 'load-settings_page_simple-cache', array( $this, 'purge_cache' ) );
-		add_action( 'admin_notices', array( $this, 'setup_notice' ) );
-		add_action( 'admin_notices', array( $this, 'cant_write_notice' ) );
-		add_action( 'admin_enqueue_scripts', array( $this, 'action_admin_enqueue_scripts_styles' ) );
-		add_action( 'admin_bar_menu', array( $this, 'admin_bar_menu' ) );
 
+		if ( SC_IS_NETWORK ) {
+			add_action( 'network_admin_menu', array( $this, 'network_admin_menu' ) );
+			add_action( 'network_admin_notices', array( $this, 'setup_notice' ) );
+			add_action( 'network_admin_notices', array( $this, 'cant_write_notice' ) );
+		} else {
+			add_action( 'admin_menu', array( $this, 'action_admin_menu' ) );
+			add_action( 'admin_notices', array( $this, 'setup_notice' ) );
+			add_action( 'admin_notices', array( $this, 'cant_write_notice' ) );
+			add_action( 'admin_bar_menu', array( $this, 'admin_bar_menu' ) );
+		}
+
+	}
+
+	/**
+	 * Output network setting menu option
+	 *
+	 * @since  1.7
+	 */
+	public function network_admin_menu() {
+		add_submenu_page( 'settings.php', esc_html__( 'Simple Cache', 'simple-cache' ), esc_html__( 'Simple Cache', 'simple-cache' ), 'manage_options', 'simple-cache', array( $this, 'screen_options' ) );
 	}
 
 	/**
@@ -62,7 +78,11 @@ class SC_Settings {
 			return;
 		}
 
-		$cant_write = get_option( 'sc_cant_write', false );
+		if ( SC_IS_NETWORK ) {
+			$cant_write = get_site_option( 'sc_cant_write', false );
+		} else {
+			$cant_write = get_option( 'sc_cant_write', false );
+		}
 
 		if ( $cant_write ) {
 			return;
@@ -74,11 +94,13 @@ class SC_Settings {
 			return;
 		}
 
+		$file_name = ( SC_IS_NETWORK ) ? 'settings.php' : 'options-general.php';
+
 		?>
 		<div class="notice notice-warning">
 			<p>
 				<?php esc_html_e( "Simple Cache won't work until you turn it on.", 'simple-cache' ); ?>
-				<a href="options-general.php?page=simple-cache&amp;wp_http_referer=<?php echo esc_url( wp_unslash( $_SERVER['REQUEST_URI'] ) ); ?>&amp;action=sc_update&amp;sc_settings_nonce=<?php echo esc_attr( wp_create_nonce( 'sc_update_settings' ) ); ?>&amp;sc_simple_cache[enable_page_caching]=1" class="button button-primary" style="margin-left: 5px;"><?php esc_html_e( 'Turn On Caching', 'simple-cache' ); ?></a>
+				<a href="<?php echo esc_attr( $file_name ); ?>?page=simple-cache&amp;wp_http_referer=<?php echo esc_url( wp_unslash( $_SERVER['REQUEST_URI'] ) ); ?>&amp;action=sc_update&amp;sc_settings_nonce=<?php echo esc_attr( wp_create_nonce( 'sc_update_settings' ) ); ?>&amp;sc_simple_cache[enable_page_caching]=1" class="button button-primary" style="margin-left: 5px;"><?php esc_html_e( 'Turn On Caching', 'simple-cache' ); ?></a>
 			</p>
 		</div>
 		<?php
@@ -91,17 +113,23 @@ class SC_Settings {
 	 */
 	public function cant_write_notice() {
 
-		$cant_write = get_option( 'sc_cant_write', false );
+		if ( SC_IS_NETWORK ) {
+			$cant_write = get_site_option( 'sc_cant_write', false );
+		} else {
+			$cant_write = get_option( 'sc_cant_write', false );
+		}
 
 		if ( ! $cant_write ) {
 			return;
 		}
 
+		$file_name = ( SC_IS_NETWORK ) ? 'settings.php' : 'options-general.php';
+
 		?>
 		<div class="notice notice-error">
 			<p>
 				<?php esc_html_e( "Simple Cache can't create or modify needed files on your system. Specifically, Simple Cache needs to write to wp-config.php and /wp-content using PHP's fopen() function. Contact your host.", 'simple-cache' ); ?>
-				<a href="options-general.php?page=simple-cache&amp;wp_http_referer=<?php echo esc_url( wp_unslash( $_SERVER['REQUEST_URI'] ) ); ?>&amp;action=sc_update&amp;sc_settings_nonce=<?php echo esc_attr( wp_create_nonce( 'sc_update_settings' ) ); ?>" class="button button-primary" style="margin-left: 5px;"><?php esc_html_e( 'Try Again', 'simple-cache' ); ?></a>
+				<a href="<?php echo esc_attr( $file_name ); ?>?page=simple-cache&amp;wp_http_referer=<?php echo esc_url( wp_unslash( $_SERVER['REQUEST_URI'] ) ); ?>&amp;action=sc_update&amp;sc_settings_nonce=<?php echo esc_attr( wp_create_nonce( 'sc_update_settings' ) ); ?>" class="button button-primary" style="margin-left: 5px;"><?php esc_html_e( 'Try Again', 'simple-cache' ); ?></a>
 			</p>
 		</div>
 		<?php
@@ -116,9 +144,9 @@ class SC_Settings {
 
 		global $pagenow;
 
-		if ( 'options-general.php' == $pagenow && ! empty( $_GET['page'] ) && 'simple-cache' == $_GET['page'] ) {
+		if ( ( 'options-general.php' === $pagenow || 'settings.php' === $pagenow ) && ! empty( $_GET['page'] ) && 'simple-cache' === $_GET['page'] ) {
 
-			if ( defined( WP_DEBUG ) && WP_DEBUG ) {
+			if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
 				$js_path = '/assets/js/src/settings.js';
 			} else {
 				$js_path = '/assets/js/settings.min.js';
@@ -136,7 +164,6 @@ class SC_Settings {
 	 * @since 1.0
 	 */
 	public function action_admin_menu() {
-
 		add_submenu_page( 'options-general.php', esc_html__( 'Simple Cache', 'simple-cache' ), esc_html__( 'Simple Cache', 'simple-cache' ), 'manage_options', 'simple-cache', array( $this, 'screen_options' ) );
 	}
 
@@ -175,12 +202,21 @@ class SC_Settings {
 			}
 
 			if ( ! SC_Config::factory()->verify_file_access() ) {
-				update_option( 'sc_cant_write', true );
+				if ( SC_IS_NETWORK ) {
+					update_site_option( 'sc_cant_write', true );
+				} else {
+					update_option( 'sc_cant_write', true );
+				}
+
 				wp_redirect( $_REQUEST['wp_http_referer'] );
 				exit;
 			}
 
-			delete_option( 'sc_cant_write' );
+			if ( SC_IS_NETWORK ) {
+				delete_site_option( 'sc_cant_write' );
+			} else {
+				delete_option( 'sc_cant_write' );
+			}
 
 			$defaults       = SC_Config::factory()->defaults;
 			$current_config = SC_Config::factory()->get();
@@ -194,7 +230,11 @@ class SC_Settings {
 			}
 
 			// Back up configration in options.
-			update_option( 'sc_simple_cache', $clean_config );
+			if ( SC_IS_NETWORK ) {
+				update_site_option( 'sc_simple_cache', $clean_config );
+			} else {
+				update_option( 'sc_simple_cache', $clean_config );
+			}
 
 			WP_Filesystem();
 
@@ -218,26 +258,6 @@ class SC_Settings {
 				exit;
 			}
 		}
-	}
-
-	/**
-	 * Sanitize options
-	 *
-	 * @param  array $option Array of options to sanitize.
-	 * @since  1.0
-	 * @return array
-	 */
-	public function sanitize_options( $option ) {
-
-		$new_option = array();
-
-		if ( ! empty( $option['enable_page_caching'] ) ) {
-			$new_option['enable_page_caching'] = true;
-		} else {
-			$new_option['enable_page_caching'] = false;
-		}
-
-		return $new_option;
 	}
 
 	/**
