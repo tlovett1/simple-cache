@@ -179,7 +179,11 @@ class SC_Settings {
 				wp_die( esc_html__( 'Cheatin, eh?', 'simple-cache' ) );
 			}
 
-			sc_cache_flush();
+			if ( SC_IS_NETWORK ) {
+				sc_cache_flush( true );
+			} else {
+				sc_cache_flush();
+			}
 
 			if ( ! empty( $_REQUEST['wp_http_referer'] ) ) {
 				wp_redirect( $_REQUEST['wp_http_referer'] );
