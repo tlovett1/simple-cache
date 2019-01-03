@@ -138,25 +138,23 @@ class SC_Config {
 	 */
 	public function write( $config, $force_network = false ) {
 
-		global $wp_filesystem;
-
 		$config_dir = sc_get_config_dir();
 
 		$file_name = ( $force_network ) ? 'config-network.php' : $this->get_config_file_name();
 
 		$this->config = wp_parse_args( $config, $this->get_defaults() );
 
-		$wp_filesystem->mkdir( $config_dir );
+		@mkdir( $config_dir );
 
 		$config_file_string = '<?php ' . "\n\r" . "defined( 'ABSPATH' ) || exit;" . "\n\r" . 'return ' . var_export( $this->config, true ) . '; ' . "\n\r";
 
-		if ( ! $wp_filesystem->put_contents( $config_dir . '/' . $file_name, $config_file_string, FS_CHMOD_FILE ) ) {
+		if ( ! file_put_contents( $config_dir . '/' . $file_name, $config_file_string ) ) {
 			return false;
 		}
 
 		// Delete network config if not network activated
 		if ( ! $force_network && ! SC_IS_NETWORK ) {
-			$wp_filesystem->delete( $config_dir . '/config-network.php', true );
+			@unlink( $config_dir . '/config-network.php', true );
 		}
 
 		return true;
@@ -179,107 +177,12 @@ class SC_Config {
 	}
 
 	/**
-	 * Check if a directory is writable and we can create files as the same user as the current file
-	 *
-	 * @param  string $dir Directory path.
-	 * @since  1.2.3
-	 * @return boolean
-	 */
-	private function _is_dir_writable( $dir ) {
-		$temp_file_name = untrailingslashit( $dir ) . '/temp-write-test-' . time();
-		$temp_handle    = fopen( $temp_file_name, 'w' );
-
-		if ( $temp_handle ) {
-
-			// Attempt to determine the file owner of the WordPress files, and that of newly created files.
-			$wp_file_owner   = false;
-			$temp_file_owner = false;
-
-			if ( function_exists( 'fileowner' ) ) {
-				$wp_file_owner = @fileowner( __FILE__ );
-				// Pass in the temporary handle to determine the file owner.
-				$temp_file_owner = @fileowner( $temp_file_name );
-
-				// Close and remove the temporary file.
-				@fclose( $temp_handle );
-				@unlink( $temp_file_name );
-
-				// Return if we cannot determine the file owner, or if the owner IDs do not match.
-				if ( false === $wp_file_owner || $wp_file_owner !== $temp_file_owner ) {
-					return false;
-				}
-			} else {
-				if ( ! @is_writable( $dir ) ) {
-					return false;
-				}
-			}
-		} else {
-			return false;
-		}
-
-		return true;
-	}
-
-	/**
-	 * Verify we can write to the file system
-	 *
-	 * @since  1.0
-	 * @return boolean
-	 */
-	public function verify_file_access() {
-		if ( function_exists( 'clearstatcache' ) ) {
-			@clearstatcache();
-		}
-
-		// First check wp-config.php.
-		if ( ! @is_writable( ABSPATH . 'wp-config.php' ) && ! @is_writable( ABSPATH . '../wp-config.php' ) ) {
-			return false;
-		}
-
-		// Now check wp-content. We need to be able to create files of the same user as this file.
-		if ( ! $this->_is_dir_writable( untrailingslashit( WP_CONTENT_DIR ) ) ) {
-			return false;
-		}
-
-		// Make sure cache parent directory is writeable as well as cache directory
-		if ( @file_exists( sc_get_cache_dir() . '/../' ) ) {
-			if ( ! $this->_is_dir_writable( sc_get_cache_dir() . '/../' ) ) {
-				return false;
-			}
-		}
-
-		if ( @file_exists( sc_get_cache_dir() ) ) {
-			if ( ! $this->_is_dir_writable( sc_get_cache_dir() ) ) {
-				return false;
-			}
-		}
-
-		// Check config parent directory is writeable
-		if ( @file_exists( sc_get_config_dir() . '/../' ) ) {
-			if ( ! $this->_is_dir_writable( sc_get_config_dir() . '/../' ) ) {
-				return false;
-			}
-		}
-
-		// Check the config directory is writeable
-		if ( @file_exists( sc_get_config_dir() ) ) {
-			if ( ! $this->_is_dir_writable( sc_get_config_dir() ) ) {
-				return false;
-			}
-		}
-
-		return true;
-	}
-
-	/**
 	 * Delete files and option for clean up
 	 *
 	 * @since  1.2.2
 	 * @return bool
 	 */
 	public function clean_up() {
-
-		global $wp_filesystem;
 
 		$config_dir = sc_get_config_dir();
 
@@ -291,9 +194,9 @@ class SC_Config {
 			delete_option( 'sc_simple_cache' );
 		}
 
-		$wp_filesystem->delete( $config_dir . '/config-network.php', true );
+		@unlink( $config_dir . '/config-network.php', true );
 
-		if ( ! $wp_filesystem->delete( $path, true ) ) {
+		if ( ! @unlink( $path ) ) {
 			return false;
 		}
 

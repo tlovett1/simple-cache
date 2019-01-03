@@ -28,38 +28,21 @@ function sc_file_cache( $buffer, $flags ) {
 		return $buffer;
 	}
 
-	/**
-	 * Set the permission constants if not already set. Normally, this is taken care of in
-	 * WP_Filesystem constructor, but it is not invoked here, because WP_Filesystem_Direct
-	 * is instantiated directly.
-	 */
-	if ( ! defined( 'FS_CHMOD_DIR' ) ) {
-		define( 'FS_CHMOD_DIR', ( fileperms( ABSPATH ) & 0777 | 0755 ) );
-	}
-	if ( ! defined( 'FS_CHMOD_FILE' ) ) {
-		define( 'FS_CHMOD_FILE', ( fileperms( ABSPATH . 'index.php' ) & 0777 | 0644 ) );
-	}
-
-	include_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php';
-	include_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php';
-
-	$filesystem = new WP_Filesystem_Direct( new StdClass() );
-
-	// Make sure we can read/write files to wp-content/cache/
-	if ( ! $filesystem->exists( dirname( $cache_dir ) ) ) {
-		if ( ! $filesystem->mkdir( dirname( $cache_dir ) ) ) {
+	// Make sure we can read/write files to cache dir parent
+	if ( ! file_exists( dirname( $cache_dir ) ) ) {
+		if ( ! @mkdir( dirname( $cache_dir ) ) ) {
 			// Can not cache!
 			return $buffer;
 		}
 	}
 
 	// Make sure we can read/write files to cache dir
-	if ( ! $filesystem->exists( $cache_dir ) ) {
-		if ( ! $filesystem->mkdir( $cache_dir ) ) {
+	if ( ! file_exists( $cache_dir ) ) {
+		if ( ! @mkdir( $cache_dir ) ) {
 			// Can not cache!
 			return $buffer;
 		}
-	}
+	} else
 
 	$buffer = apply_filters( 'sc_pre_cache_buffer', $buffer );
 
@@ -73,8 +56,8 @@ function sc_file_cache( $buffer, $flags ) {
 		if ( ! empty( $dir ) ) {
 			$path .= '/' . $dir;
 
-			if ( ! $filesystem->exists( $path ) ) {
-				if ( ! $filesystem->mkdir( $path ) ) {
+			if ( ! file_exists( $path ) ) {
+				if ( ! @mkdir( $path ) ) {
 					// Can not cache!
 					return $buffer;
 				}
@@ -97,11 +80,11 @@ function sc_file_cache( $buffer, $flags ) {
 	}
 
 	if ( ! empty( $GLOBALS['sc_config']['enable_gzip_compression'] ) && function_exists( 'gzencode' ) ) {
-		$filesystem->put_contents( $path . '/index.gzip.html', gzencode( $buffer, 3 ), FS_CHMOD_FILE );
-		$filesystem->touch( $path . '/index.gzip.html', $modified_time );
+		file_put_contents( $path . '/index.gzip.html', gzencode( $buffer, 3 ) );
+		touch( $path . '/index.gzip.html', $modified_time );
 	} else {
-		$filesystem->put_contents( $path . '/index.html', $buffer, FS_CHMOD_FILE );
-		$filesystem->touch( $path . '/index.html', $modified_time );
+		file_put_contents( $path . '/index.html', $buffer );
+		touch( $path . '/index.html', $modified_time );
 	}
 
 	header( 'Cache-Control: no-cache' ); // Check back every time to see if re-download is necessary.

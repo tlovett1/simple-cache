@@ -12,12 +12,6 @@
  * @since  1.4
  */
 function sc_cache_flush( $network_wide = false ) {
-	global $wp_filesystem;
-
-	require_once ABSPATH . 'wp-admin/includes/file.php';
-
-	WP_Filesystem();
-
 	$paths = array();
 
 	if ( $network_wide && SC_IS_NETWORK ) {
@@ -52,10 +46,95 @@ function sc_cache_flush( $network_wide = false ) {
 	}
 
 	foreach ( $paths as $rm_path ) {
-		$wp_filesystem->rmdir( $rm_path, true );
+		sc_rrmdir( $rm_path );
 	}
 
 	if ( function_exists( 'wp_cache_flush' ) ) {
 		wp_cache_flush();
+	}
+}
+
+/**
+ * Verify we can write to the file system
+ *
+ * @since  1.7
+ * @return boolean
+ */
+function sc_verify_file_access() {
+	if ( function_exists( 'clearstatcache' ) ) {
+		@clearstatcache();
+	}
+
+	if ( ! apply_filters( 'sc_disable_auto_edits', false ) ) {
+		// First check wp-config.php.
+		if ( ! @is_writable( ABSPATH . 'wp-config.php' ) && ! @is_writable( ABSPATH . '../wp-config.php' ) ) {
+			echo 1; exit;
+			return false;
+		}
+
+		// Now check wp-content
+		if ( ! @is_writable( untrailingslashit( WP_CONTENT_DIR ) ) ) {
+			echo 2; exit;
+			return false;
+		}
+	}
+
+	// Make sure cache directory or parent is writeable
+	if ( file_exists( sc_get_cache_dir() ) ) {
+		if ( ! @is_writable( sc_get_cache_dir() ) ) {
+			echo 3; exit;
+			return false;
+		}
+	} else {
+		if ( file_exists( dirname( sc_get_cache_dir() ) ) ) {
+			if ( ! @is_writable( dirname( sc_get_cache_dir() ) ) ) {
+				echo 4; exit;
+				return false;
+			}
+		} else {
+			return false;
+		}
+	}
+
+	// Make sure config directory or parent is writeable
+	if ( file_exists( sc_get_config_dir() ) ) {
+		if ( ! @is_writable( sc_get_config_dir() ) ) {
+			echo 6; exit;
+			return false;
+		}
+	} else {
+		if ( file_exists( dirname( sc_get_config_dir() ) ) ) {
+			if ( ! @is_writable( dirname( sc_get_config_dir() ) ) ) {
+				return false;
+			}
+		} else {
+			return false;
+		}
+	}
+
+	return true;
+}
+
+/**
+ * Remove directory and all it's contents
+ *
+ * @param  string $dir Directory
+ * @since  1.7
+ */
+function sc_rrmdir( $dir ) {
+	if ( is_dir( $dir ) ) {
+		$objects = scandir( $dir );
+
+		foreach ( $objects as $object ) {
+			if ( '.' !== $object && '..' !== $object) {
+				if ( is_dir( $dir . "/" . $object ) ) {
+					rrmdir( $dir . "/" . $object );
+				} else {
+					unlink( $dir . "/" . $object );
+				}
+			}
+		}
+
+		rmdir($dir);
 	}
 }

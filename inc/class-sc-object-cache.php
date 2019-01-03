@@ -64,11 +64,9 @@ class SC_Object_Cache {
 	 */
 	public function clean_up() {
 
-		global $wp_filesystem;
-
 		$file = untrailingslashit( WP_CONTENT_DIR ) . '/object-cache.php';
 
-		if ( ! $wp_filesystem->delete( $file ) ) {
+		if ( ! @unlink( $file ) ) {
 			return false;
 		}
 
@@ -82,8 +80,6 @@ class SC_Object_Cache {
 	 * @return bool
 	 */
 	public function write() {
-
-		global $wp_filesystem;
 
 		$file = untrailingslashit( WP_CONTENT_DIR ) . '/object-cache.php';
 
@@ -120,7 +116,7 @@ class SC_Object_Cache {
 			// phpcs:enable
 		}
 
-		if ( ! $wp_filesystem->put_contents( $file, $file_string, FS_CHMOD_FILE ) ) {
+		if ( ! file_put_contents( $file, $file_string ) ) {
 			return false;
 		}
 
