@@ -129,6 +129,20 @@ class SC_Config {
 	}
 
 	/**
+	 * Get contents of config file
+	 *
+	 * @since  1.7
+	 * @return string
+	 */
+	public function get_file_code( $config = null ) {
+		if ( empty( $config ) ) {
+			$config = $this->get();
+		}
+
+		return '<?php ' . "\n\r" . "defined( 'ABSPATH' ) || exit;" . "\n\r" . 'return ' . var_export( wp_parse_args( $config, $this->get_defaults() ), true ) . '; ' . "\n\r";
+	}
+
+	/**
 	 * Write config to file
 	 *
 	 * @since  1.0
@@ -142,11 +156,11 @@ class SC_Config {
 
 		$file_name = ( $force_network ) ? 'config-network.php' : $this->get_config_file_name();
 
-		$this->config = wp_parse_args( $config, $this->get_defaults() );
+		$config = wp_parse_args( $config, $this->get_defaults() );
 
 		@mkdir( $config_dir );
 
-		$config_file_string = '<?php ' . "\n\r" . "defined( 'ABSPATH' ) || exit;" . "\n\r" . 'return ' . var_export( $this->config, true ) . '; ' . "\n\r";
+		$config_file_string = $this->get_file_code( $config );
 
 		if ( ! file_put_contents( $config_dir . '/' . $file_name, $config_file_string ) ) {
 			return false;

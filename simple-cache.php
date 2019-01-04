@@ -26,6 +26,7 @@ if ( is_multisite() && isset( $active_plugins[ plugin_basename( __FILE__ ) ] ) )
 
 require_once dirname( __FILE__ ) . '/inc/pre-wp-functions.php';
 require_once dirname( __FILE__ ) . '/inc/functions.php';
+require_once dirname( __FILE__ ) . '/inc/class-sc-notices.php';
 require_once dirname( __FILE__ ) . '/inc/class-sc-settings.php';
 require_once dirname( __FILE__ ) . '/inc/class-sc-config.php';
 require_once dirname( __FILE__ ) . '/inc/class-sc-advanced-cache.php';
@@ -36,6 +37,7 @@ SC_Settings::factory();
 SC_Advanced_Cache::factory();
 SC_Object_Cache::factory();
 SC_Cron::factory();
+SC_Notices::factory();
 
 /**
  * Load text domain

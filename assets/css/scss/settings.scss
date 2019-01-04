@@ -49,3 +49,9 @@
 #sc_cache_exception_urls {
 	min-height: 120px;
 }
+
+.sc-notice pre {
+	background-color: #ededed;
+	padding: 6px 10px;
+	overflow: scroll;
+}

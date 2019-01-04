@@ -18,8 +18,6 @@ class SC_Advanced_Cache {
 	 * @since 1.0
 	 */
 	public function setup() {
-
-		add_action( 'admin_notices', array( $this, 'print_notice' ) );
 		add_action( 'pre_post_update', array( $this, 'purge_post_on_update' ), 10, 1 );
 		add_action( 'save_post', array( $this, 'purge_post_on_update' ), 10, 1 );
 		add_action( 'wp_trash_post', array( $this, 'purge_post_on_update' ), 10, 1 );
@@ -115,62 +113,6 @@ class SC_Advanced_Cache {
 	}
 
 	/**
-	 * Print out a warning if WP_CACHE is off when it should be on or if advanced-cache.php is messed up
-	 *
-	 * @since 1.0
-	 */
-	public function print_notice() {
-
-		$cant_write = get_option( 'sc_cant_write', false );
-
-		if ( $cant_write ) {
-			return;
-		}
-
-		$config = SC_Config::factory()->get();
-
-		if ( empty( $config['enable_page_caching'] ) ) {
-			// Not turned on do nothing.
-			return;
-		}
-
-		$config_file_bad         = true;
-		$advanced_cache_file_bad = true;
-
-		if ( defined( 'SC_ADVANCED_CACHE' ) && SC_ADVANCED_CACHE ) {
-			$advanced_cache_file_bad = false;
-		}
-
-		if ( defined( 'WP_CACHE' ) && WP_CACHE ) {
-			$config_file_bad = false;
-		}
-
-		if ( ! $config_file_bad && ! $advanced_cache_file_bad ) {
-			return;
-		}
-
-		?>
-
-		<div class="error">
-			<p>
-				<?php if ( $config_file_bad ) : ?>
-					<?php esc_html_e( 'define("WP_CACHE", true); is not in wp-config.php.', 'simple-cache' ); ?>
-				<?php endif; ?>
-
-				<?php if ( $advanced_cache_file_bad ) : ?>
-					<?php esc_html_e( 'wp-content/advanced-cache.php was edited or deleted.', 'simple-cache' ); ?>
-				<?php endif; ?>
-
-				<?php esc_html_e( 'Simple Cache is not able to utilize page caching.', 'simple-cache' ); ?>
-
-				<a href="options-general.php?page=simple-cache&amp;wp_http_referer=<?php echo esc_url( wp_unslash( $_SERVER['REQUEST_URI'] ) ); ?>&amp;action=sc_update&amp;sc_settings_nonce=<?php echo esc_attr( wp_create_nonce( 'sc_update_settings' ) ); ?>" class="button button-primary" style="margin-left: 5px;"><?php esc_html_e( 'Fix', 'simple-cache' ); ?></a>
-			</p>
-		</div>
-
-		<?php
-	}
-
-	/**
 	 * Delete file for clean up
 	 *
 	 * @since  1.0
@@ -210,22 +152,7 @@ class SC_Advanced_Cache {
 		$file_string = '';
 
 		if ( ! empty( $config['enable_page_caching'] ) ) {
-			$cache_file = 'file-based-page-cache.php';
-
-			if ( ! empty( $config['enable_in_memory_object_caching'] ) && ! empty( $config['advanced_mode'] ) ) {
-				$cache_file = 'batcache.php';
-			}
-
-			// phpcs:disable
-			$file_string = '<?php ' .
-			"\n\r" . "defined( 'ABSPATH' ) || exit;" .
-			"\n\r" . "define( 'SC_ADVANCED_CACHE', true );" .
-			"\n\r" . 'if ( is_admin() ) { return; }' .
-			"\n\r" . "include_once( '" . dirname( __FILE__ ) . "/pre-wp-functions.php' );" .
-			"\n\r" . "\$GLOBALS['sc_config'] = sc_load_config();" .
-			"\n\r" . "if ( empty( \$GLOBALS['sc_config'] ) || empty( \$GLOBALS['sc_config']['enable_page_caching'] ) ) { return; }" .
-			"\n\r" . "if ( @file_exists( '" . untrailingslashit( plugin_dir_path( __FILE__ ) ) . '/dropins/' . $cache_file . "' ) ) { include_once( '" . untrailingslashit( plugin_dir_path( __FILE__ ) ) . '/dropins/' . $cache_file . "' ); }" . "\n\r";
-			// phpcs:enable
+			$file_string = $this->get_file_code();
 		}
 
 		if ( ! file_put_contents( $file, $file_string ) ) {
@@ -233,6 +160,33 @@ class SC_Advanced_Cache {
 		}
 
 		return true;
+	}
+
+	/**
+	 * Get contents of advanced cache file
+	 *
+	 * @since  1.7
+	 * @return string
+	 */
+	public function get_file_code() {
+		$config = SC_Config::factory()->get();
+
+		$cache_file = 'file-based-page-cache.php';
+
+		if ( ! empty( $config['enable_in_memory_object_caching'] ) && ! empty( $config['advanced_mode'] ) ) {
+			$cache_file = 'batcache.php';
+		}
+
+		// phpcs:disable
+		return '<?php ' .
+		"\n\r" . "defined( 'ABSPATH' ) || exit;" .
+		"\n\r" . "define( 'SC_ADVANCED_CACHE', true );" .
+		"\n\r" . 'if ( is_admin() ) { return; }' .
+		"\n\r" . "include_once( '" . dirname( __FILE__ ) . "/pre-wp-functions.php' );" .
+		"\n\r" . "\$GLOBALS['sc_config'] = sc_load_config();" .
+		"\n\r" . "if ( empty( \$GLOBALS['sc_config'] ) || empty( \$GLOBALS['sc_config']['enable_page_caching'] ) ) { return; }" .
+		"\n\r" . "if ( @file_exists( '" . untrailingslashit( plugin_dir_path( __FILE__ ) ) . '/dropins/' . $cache_file . "' ) ) { include_once( '" . untrailingslashit( plugin_dir_path( __FILE__ ) ) . '/dropins/' . $cache_file . "' ); }" . "\n\r";
+		// phpcs:enable
 	}
 
 	/**

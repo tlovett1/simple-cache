@@ -58,58 +58,59 @@ function sc_cache_flush( $network_wide = false ) {
  * Verify we can write to the file system
  *
  * @since  1.7
- * @return boolean
+ * @return array|boolean
  */
 function sc_verify_file_access() {
 	if ( function_exists( 'clearstatcache' ) ) {
 		@clearstatcache();
 	}
 
+	$errors = array();
+
 	if ( ! apply_filters( 'sc_disable_auto_edits', false ) ) {
 		// First check wp-config.php.
 		if ( ! @is_writable( ABSPATH . 'wp-config.php' ) && ! @is_writable( ABSPATH . '../wp-config.php' ) ) {
-			echo 1; exit;
-			return false;
+			$errors[] = 'wp-config';
 		}
 
 		// Now check wp-content
 		if ( ! @is_writable( untrailingslashit( WP_CONTENT_DIR ) ) ) {
-			echo 2; exit;
-			return false;
+			$errors[] = 'wp-content';
+		}
+
+		// Make sure config directory or parent is writeable
+		if ( file_exists( sc_get_config_dir() ) ) {
+			if ( ! @is_writable( sc_get_config_dir() ) ) {
+				$errors[] = 'config';
+			}
+		} else {
+			if ( file_exists( dirname( sc_get_config_dir() ) ) ) {
+				if ( ! @is_writable( dirname( sc_get_config_dir() ) ) ) {
+					$errors[] = 'config';
+				}
+			} else {
+				$errors[] = 'config';
+			}
 		}
 	}
 
 	// Make sure cache directory or parent is writeable
 	if ( file_exists( sc_get_cache_dir() ) ) {
 		if ( ! @is_writable( sc_get_cache_dir() ) ) {
-			echo 3; exit;
-			return false;
+			$errors[] = 'cache';
 		}
 	} else {
 		if ( file_exists( dirname( sc_get_cache_dir() ) ) ) {
 			if ( ! @is_writable( dirname( sc_get_cache_dir() ) ) ) {
-				echo 4; exit;
-				return false;
+				$errors[] = 'cache';
 			}
 		} else {
-			return false;
+			$errors[] = 'cache';
 		}
 	}
 
-	// Make sure config directory or parent is writeable
-	if ( file_exists( sc_get_config_dir() ) ) {
-		if ( ! @is_writable( sc_get_config_dir() ) ) {
-			echo 6; exit;
-			return false;
-		}
-	} else {
-		if ( file_exists( dirname( sc_get_config_dir() ) ) ) {
-			if ( ! @is_writable( dirname( sc_get_config_dir() ) ) ) {
-				return false;
-			}
-		} else {
-			return false;
-		}
+	if ( ! empty( $errors ) ) {
+		return $errors;
 	}
 
 	return true;
@@ -127,14 +128,14 @@ function sc_rrmdir( $dir ) {
 
 		foreach ( $objects as $object ) {
 			if ( '.' !== $object && '..' !== $object) {
-				if ( is_dir( $dir . "/" . $object ) ) {
-					rrmdir( $dir . "/" . $object );
+				if ( is_dir( $dir . '/' . $object ) ) {
+					sc_rrmdir( $dir . '/' . $object );
 				} else {
-					unlink( $dir . "/" . $object );
+					unlink( $dir . '/' . $object );
 				}
 			}
 		}
 
-		rmdir($dir);
+		rmdir( $dir );
 	}
 }
