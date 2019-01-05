@@ -174,13 +174,15 @@ class SC_Settings {
 
 			SC_Config::factory()->write( $clean_config );
 
-			SC_Advanced_Cache::factory()->write();
-			SC_Object_Cache::factory()->write();
+			if ( ! apply_filters( 'sc_disable_auto_edits', false ) ) {
+				SC_Advanced_Cache::factory()->write();
+				SC_Object_Cache::factory()->write();
 
-			if ( $clean_config['enable_page_caching'] ) {
-				SC_Advanced_Cache::factory()->toggle_caching( true );
-			} else {
-				SC_Advanced_Cache::factory()->toggle_caching( false );
+				if ( $clean_config['enable_page_caching'] ) {
+					SC_Advanced_Cache::factory()->toggle_caching( true );
+				} else {
+					SC_Advanced_Cache::factory()->toggle_caching( false );
+				}
 			}
 
 			// Reschedule cron events.

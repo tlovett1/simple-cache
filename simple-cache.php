@@ -78,9 +78,12 @@ add_filter( 'plugin_action_links', 'sc_filter_plugin_action_links', 10, 2 );
  * @since 1.0
  */
 function sc_clean_up() {
-	SC_Advanced_Cache::factory()->clean_up();
-	SC_Advanced_Cache::factory()->toggle_caching( false );
-	SC_Object_Cache::factory()->clean_up();
+	if ( ! apply_filters( 'sc_disable_auto_edits', false ) ) {
+		SC_Advanced_Cache::factory()->clean_up();
+		SC_Advanced_Cache::factory()->toggle_caching( false );
+		SC_Object_Cache::factory()->clean_up();
+	}
+
 	SC_Config::factory()->clean_up();
 }
 register_deactivation_hook( __FILE__, 'sc_clean_up' );

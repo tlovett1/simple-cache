@@ -38,7 +38,7 @@ class SC_Advanced_Cache {
 		if ( ! empty( $config['enable_page_caching'] ) && empty( $config['enable_in_memory_object_caching'] ) ) {
 			$post_id = $comment->comment_post_ID;
 
-			setcookie( 'sc_commented_posts[' . $post_id . ']', parse_url( get_permalink( $post_id ), PHP_URL_PATH ), ( time() + HOUR_IN_SECONDS * 24 * 30 ) );
+			setcookie( 'sc_commented_posts[' . $post_id . ']', wp_parse_url( get_permalink( $post_id ), PHP_URL_PATH ), ( time() + HOUR_IN_SECONDS * 24 * 30 ) );
 		}
 	}
 
