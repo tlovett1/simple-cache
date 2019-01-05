@@ -114,7 +114,7 @@ class SC_Settings {
 			}
 
 			if ( ! empty( $_REQUEST['wp_http_referer'] ) ) {
-				wp_redirect( $_REQUEST['wp_http_referer'] );
+				wp_safe_redirect( $_REQUEST['wp_http_referer'] );
 				exit;
 			}
 		}
@@ -143,7 +143,7 @@ class SC_Settings {
 				}
 
 				if ( in_array( 'cache', $verify_file_access, true ) ) {
-					wp_redirect( $_REQUEST['wp_http_referer'] );
+					wp_safe_redirect( $_REQUEST['wp_http_referer'] );
 					exit;
 				}
 			} else {
@@ -188,7 +188,7 @@ class SC_Settings {
 			SC_Cron::factory()->schedule_events();
 
 			if ( ! empty( $_REQUEST['wp_http_referer'] ) ) {
-				wp_redirect( $_REQUEST['wp_http_referer'] );
+				wp_safe_redirect( $_REQUEST['wp_http_referer'] );
 				exit;
 			}
 		}
@@ -331,11 +331,7 @@ class SC_Settings {
 								</td>
 							</tr>
 							<tr>
-								<th class="in-memory-cache
-								<?php
-								if ( ! empty( $config['enable_in_memory_object_caching'] ) ) :
-									?>
-								show<?php endif; ?>" scope="row"><label for="sc_in_memory_cache"><?php esc_html_e( 'In Memory Cache', 'simple-cache' ); ?></label></th>
+								<th class="in-memory-cache <?php if ( ! empty( $config['enable_in_memory_object_caching'] ) ) : ?>show<?php endif; ?>" scope="row"><label for="sc_in_memory_cache"><?php esc_html_e( 'In Memory Cache', 'simple-cache' ); ?></label></th>
 								<td class="in-memory-cache <?php if ( ! empty( $config['enable_in_memory_object_caching'] ) ) : ?>show<?php endif; ?>">
 									<select name="sc_simple_cache[in_memory_cache]" id="sc_in_memory_cache">
 										<?php if ( class_exists( 'Memcache' ) ) : ?>

@@ -74,10 +74,10 @@ class SC_Notices {
 	public function error_notice() {
 		if ( SC_IS_NETWORK ) {
 			$setting_file = 'settings.php';
-			$cant_write = get_site_option( 'sc_cant_write', array() );
+			$cant_write   = get_site_option( 'sc_cant_write', array() );
 		} else {
 			$setting_file = 'options-general.php';
-			$cant_write = get_option( 'sc_cant_write', array() );
+			$cant_write   = get_option( 'sc_cant_write', array() );
 		}
 
 		$config = SC_Config::factory()->get();
@@ -86,7 +86,7 @@ class SC_Notices {
 
 		$wp_cache_broken = ! empty( $config['enable_page_caching'] ) && ( ! defined( 'WP_CACHE' ) || ! WP_CACHE );
 
-		$advanced_cache_broken = ! empty( $config['enable_page_caching'] ) && ( ! defined( 'SC_ADVANCED_CACHE' ) || ! SC_ADVANCED_CACHE );
+		$advanced_cache_broken = ! $wp_cache_broken && ! empty( $config['enable_page_caching'] ) && ( ! defined( 'SC_ADVANCED_CACHE' ) || ! SC_ADVANCED_CACHE );
 
 		if ( empty( $cant_write ) && ! $object_cache_broken && ! $wp_cache_broken && ! $advanced_cache_broken ) {
 			return;

@@ -20,7 +20,7 @@ function sc_cache_flush( $network_wide = false ) {
 		foreach ( $sites as $site ) {
 			switch_to_blog( $site->blog_id );
 
-			$url_parts = parse_url( home_url() );
+			$url_parts = wp_parse_url( home_url() );
 
 			$path = sc_get_cache_dir() . '/' . untrailingslashit( $url_parts['host'] );
 
@@ -32,9 +32,8 @@ function sc_cache_flush( $network_wide = false ) {
 
 			restore_current_blog();
 		}
-
 	} else {
-		$url_parts = parse_url( home_url() );
+		$url_parts = wp_parse_url( home_url() );
 
 		$path = sc_get_cache_dir() . '/' . untrailingslashit( $url_parts['host'] );
 
@@ -127,7 +126,7 @@ function sc_rrmdir( $dir ) {
 		$objects = scandir( $dir );
 
 		foreach ( $objects as $object ) {
-			if ( '.' !== $object && '..' !== $object) {
+			if ( '.' !== $object && '..' !== $object ) {
 				if ( is_dir( $dir . '/' . $object ) ) {
 					sc_rrmdir( $dir . '/' . $object );
 				} else {

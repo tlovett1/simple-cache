@@ -88,7 +88,7 @@ class SC_Config {
 	public function sanitize_length_unit( $value ) {
 		$accepted_values = array( 'minutes', 'hours', 'days', 'weeks' );
 
-		if ( in_array( $value, $accepted_values ) ) {
+		if ( in_array( $value, $accepted_values, true ) ) {
 			return $value;
 		}
 
@@ -122,7 +122,7 @@ class SC_Config {
 		if ( SC_IS_NETWORK ) {
 			return 'config-network.php';
 		} else {
-			$home_url_parts = parse_url( home_url() );
+			$home_url_parts = wp_parse_url( home_url() );
 
 			return 'config-' . $home_url_parts['host'] . '.php';
 		}
@@ -132,6 +132,7 @@ class SC_Config {
 	 * Get contents of config file
 	 *
 	 * @since  1.7
+	 * @param  array $config Config array to use
 	 * @return string
 	 */
 	public function get_file_code( $config = null ) {
@@ -139,7 +140,9 @@ class SC_Config {
 			$config = $this->get();
 		}
 
+		// phpcs:disable
 		return '<?php ' . "\n\r" . "defined( 'ABSPATH' ) || exit;" . "\n\r" . 'return ' . var_export( wp_parse_args( $config, $this->get_defaults() ), true ) . '; ' . "\n\r";
+		// phpcs:enable
 	}
 
 	/**
@@ -167,7 +170,7 @@ class SC_Config {
 		}
 
 		// Delete network config if not network activated
-		if ( ! $force_network && ! SC_IS_NETWORK ) {
+		if ( 'config-network.php' !== $file_name ) {
 			@unlink( $config_dir . '/config-network.php', true );
 		}
 
@@ -200,8 +203,6 @@ class SC_Config {
 
 		$config_dir = sc_get_config_dir();
 
-		$path = $config_dir . '/' . $this->get_config_file_name();
-
 		if ( SC_IS_NETWORK ) {
 			delete_site_option( 'sc_simple_cache' );
 		} else {
@@ -210,7 +211,7 @@ class SC_Config {
 
 		@unlink( $config_dir . '/config-network.php', true );
 
-		if ( ! @unlink( $path ) ) {
+		if ( ! @unlink( $config_dir . '/' . $this->get_config_file_name() ) ) {
 			return false;
 		}
 

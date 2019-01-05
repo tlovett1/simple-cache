@@ -42,9 +42,9 @@ function sc_file_cache( $buffer, $flags ) {
 			// Can not cache!
 			return $buffer;
 		}
-	} else
-
-	$buffer = apply_filters( 'sc_pre_cache_buffer', $buffer );
+	} else {
+		$buffer = apply_filters( 'sc_pre_cache_buffer', $buffer );
+	}
 
 	$url_path = sc_get_url_path();
 
@@ -69,7 +69,10 @@ function sc_file_cache( $buffer, $flags ) {
 
 	// Prevent mixed content when there's an http request but the site URL uses https.
 	$home_url = get_home_url();
+
+	// phpcs:disable
 	if ( ! is_ssl() && 'https' === strtolower( parse_url( $home_url, PHP_URL_SCHEME ) ) ) {
+		// phpcs:enable
 		$https_home_url = $home_url;
 		$http_home_url  = str_replace( 'https://', 'http://', $https_home_url );
 		$buffer         = str_replace( esc_url( $http_home_url ), esc_url( $https_home_url ), $buffer );
@@ -117,7 +120,7 @@ function sc_get_url_path() {
  * @since 1.0
  */
 function sc_serve_file_cache() {
-	$cache_dir = ( defined( 'SC_CACHE_DIR') ) ? rtrim( SC_CACHE_DIR, '/' ) : rtrim( WP_CONTENT_DIR, '/' ) . '/cache/simple-cache';
+	$cache_dir = ( defined( 'SC_CACHE_DIR' ) ) ? rtrim( SC_CACHE_DIR, '/' ) : rtrim( WP_CONTENT_DIR, '/' ) . '/cache/simple-cache';
 
 	$file_name = 'index.html';
 
@@ -158,7 +161,7 @@ function sc_serve_file_cache() {
  * @return string
  */
 function sc_get_cache_dir() {
-	return ( defined( 'SC_CACHE_DIR') ) ? rtrim( SC_CACHE_DIR, '/' ) : rtrim( WP_CONTENT_DIR, '/' ) . '/cache/simple-cache';
+	return ( defined( 'SC_CACHE_DIR' ) ) ? rtrim( SC_CACHE_DIR, '/' ) : rtrim( WP_CONTENT_DIR, '/' ) . '/cache/simple-cache';
 }
 
 /**
@@ -168,7 +171,7 @@ function sc_get_cache_dir() {
  * @return string
  */
 function sc_get_config_dir() {
-	return ( defined( 'SC_CONFIG_DIR') ) ? rtrim( SC_CONFIG_DIR, '/' ) : rtrim( WP_CONTENT_DIR, '/' ) . '/sc-config';
+	return ( defined( 'SC_CONFIG_DIR' ) ) ? rtrim( SC_CONFIG_DIR, '/' ) : rtrim( WP_CONTENT_DIR, '/' ) . '/sc-config';
 }
 
 /**
@@ -189,9 +192,9 @@ function sc_get_config_file_name() {
  */
 function sc_load_config() {
 	if ( @file_exists( sc_get_config_dir() . '/config-network.php' ) ) {
-		return  include( sc_get_config_dir() . '/config-network.php' );
+		return include sc_get_config_dir() . '/config-network.php';
 	} elseif ( @file_exists( sc_get_config_dir() . '/' . sc_get_config_file_name() ) ) {
-		return  include( sc_get_config_dir() . '/' . sc_get_config_file_name() );
+		return include sc_get_config_dir() . '/' . sc_get_config_file_name();
 	}
 
 	return false;
