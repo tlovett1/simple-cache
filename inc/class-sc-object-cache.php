@@ -43,7 +43,7 @@ class SC_Object_Cache {
 		$file_string = '';
 
 		if ( ! empty( $config['enable_in_memory_object_caching'] ) && ! empty( $config['advanced_mode'] ) ) {
-			$file_string = $this->get_code();
+			$file_string = $this->get_file_code();
 		}
 
 		if ( ! file_put_contents( $file, $file_string ) ) {
@@ -83,8 +83,8 @@ class SC_Object_Cache {
 		"\n\r" . "defined( 'ABSPATH' ) || exit;" .
 		"\n\r" . "define( 'SC_OBJECT_CACHE', true );" .
 		"\n\r" . "defined( 'WP_CACHE_KEY_SALT' ) || define( 'WP_CACHE_KEY_SALT', '{$cache_key_salt}' );" .
-		"\n\r" . "if ( ! @file_exists( WP_CONTENT_DIR . '/sc-config/config-' . \$_SERVER['HTTP_HOST'] . '.php' ) ) { return; }" .
-		"\n\r" . "\$GLOBALS['sc_config'] = include( WP_CONTENT_DIR . '/sc-config/config-' . \$_SERVER['HTTP_HOST'] . '.php' );" .
+		"\n\r" . "include_once( '" . dirname( __FILE__ ) . "/pre-wp-functions.php' );" .
+		"\n\r" . "\$GLOBALS['sc_config'] = sc_load_config();" .
 		"\n\r" . "if ( empty( \$GLOBALS['sc_config'] ) || empty( \$GLOBALS['sc_config']['enable_in_memory_object_caching'] ) ) { return; }" .
 		"\n\r" . "if ( @file_exists( '" . untrailingslashit( plugin_dir_path( __FILE__ ) ) . '/dropins/' . $cache_file . "' ) ) { require_once( '" . untrailingslashit( plugin_dir_path( __FILE__ ) ) . '/dropins/' . $cache_file . "' ); }" . "\n\r";
 		// phpcs:enable

@@ -5,6 +5,8 @@
  * @package  simple-cache
  */
 
+// phpcs:ignoreFile
+
 defined( 'ABSPATH' ) || exit;
 
 // We need Redis to continue

@@ -316,11 +316,11 @@ class SC_Settings {
 						</tr>
 						<tr>
 							<th scope="row" colspan="2">
-								<h2 class="cache-title"><?php esc_html_e( 'Object Cache (Redis or Memcache)', 'simple-cache' ); ?></h2>
+								<h2 class="cache-title"><?php esc_html_e( 'Object Cache (Redis or Memcached)', 'simple-cache' ); ?></h2>
 							</th>
 						</tr>
 
-						<?php if ( class_exists( 'Memcache' ) || class_exists( 'Redis' ) ) : ?>
+						<?php if ( class_exists( 'Memcache' ) || class_exists( 'Memcached' ) || class_exists( 'Redis' ) ) : ?>
 							<tr>
 								<th scope="row"><label for="sc_enable_in_memory_object_caching"><?php esc_html_e( 'Enable In-Memory Object Caching', 'simple-cache' ); ?></label></th>
 								<td>
@@ -329,18 +329,21 @@ class SC_Settings {
 										<option <?php selected( $config['enable_in_memory_object_caching'], true ); ?> value="1"><?php esc_html_e( 'Yes', 'simple-cache' ); ?></option>
 									</select>
 
-									<p class="description"><?php esc_html_e( "When enabled, things like database query results will be stored in memory. Right now Memcache and Redis are suppported. Note that if the proper <a href='https://pecl.php.net/package/memcache'>Memcache</a> (NOT Memcached) or <a href='https://pecl.php.net/package/redis'>Redis</a> PHP extensions aren't loaded, they won't show as options below.", 'simple-cache' ); ?></p>
+									<p class="description"><?php _e( "When enabled, things like database query results will be stored in memory. Memcached and Redis are suppported. Note that if the proper <a href='http://pecl.php.net/package/memcached'>Memcached</a>, <a href='http://pecl.php.net/package/memcache'>Memcache</a>, or <a href='https://pecl.php.net/package/redis'>Redis</a> PHP extensions aren't loaded, they won't show as options below.", 'simple-cache' ); ?></p>
 								</td>
 							</tr>
 							<tr>
 								<th class="in-memory-cache <?php if ( ! empty( $config['enable_in_memory_object_caching'] ) ) : ?>show<?php endif; ?>" scope="row"><label for="sc_in_memory_cache"><?php esc_html_e( 'In Memory Cache', 'simple-cache' ); ?></label></th>
 								<td class="in-memory-cache <?php if ( ! empty( $config['enable_in_memory_object_caching'] ) ) : ?>show<?php endif; ?>">
 									<select name="sc_simple_cache[in_memory_cache]" id="sc_in_memory_cache">
-										<?php if ( class_exists( 'Memcache' ) ) : ?>
-											<option <?php selected( $config['in_memory_cache'], 'memcached' ); ?> value="memcached">Memcache</option>
-										<?php endif; ?>
 										<?php if ( class_exists( 'Redis' ) ) : ?>
 											<option <?php selected( $config['in_memory_cache'], 'redis' ); ?> value="redis">Redis</option>
+										<?php endif; ?>
+										<?php if ( class_exists( 'Memcached' ) ) : ?>
+											<option <?php selected( $config['in_memory_cache'], 'memcachedd' ); ?> value="memcachedd">Memcached</option>
+										<?php endif; ?>
+										<?php if ( class_exists( 'Memcache' ) ) : ?>
+											<option <?php selected( $config['in_memory_cache'], 'memcached' ); ?> value="memcached">Memcache (Legacy)</option>
 										<?php endif; ?>
 									</select>
 								</td>
@@ -348,7 +351,7 @@ class SC_Settings {
 						<?php else : ?>
 							<tr>
 								<td colspan="2">
-									<?php _e( 'Neither <a href="https://pecl.php.net/package/memcache">Memcache</a> (NOT Memcached) nor <a href="https://pecl.php.net/package/redis">Redis</a> PHP extensions are set up on your server.', 'simple-cache' ); ?>
+									<?php _e( 'Neither <a href="https://pecl.php.net/package/memcached">Memcached</a>, <a href="https://pecl.php.net/package/memcache">Memcache</a>, nor <a href="https://pecl.php.net/package/redis">Redis</a> PHP extensions are set up on your server.', 'simple-cache' ); ?>
 								</td>
 							</tr>
 						<?php endif; ?>
