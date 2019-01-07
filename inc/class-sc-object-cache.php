@@ -62,10 +62,12 @@ class SC_Object_Cache {
 	public function get_file_code() {
 		$config = SC_Config::factory()->get();
 
-		$cache_file = 'memcached-object-cache.php';
+		$cache_file = 'memcache-object-cache.php';
 
 		if ( 'redis' === $config['in_memory_cache'] ) {
 			$cache_file = 'redis-object-cache.php';
+		} elseif ( 'memcachedd' === $config['in_memory_cache'] )  {
+			$cache_file = 'memcached-object-cache.php';
 		}
 
 		/**
@@ -83,10 +85,10 @@ class SC_Object_Cache {
 		"\n\r" . "defined( 'ABSPATH' ) || exit;" .
 		"\n\r" . "define( 'SC_OBJECT_CACHE', true );" .
 		"\n\r" . "defined( 'WP_CACHE_KEY_SALT' ) || define( 'WP_CACHE_KEY_SALT', '{$cache_key_salt}' );" .
-		"\n\r" . "include_once( '" . dirname( __FILE__ ) . "/pre-wp-functions.php' );" .
+		"\n\r" . "include_once( WP_CONTENT_DIR . '/plugins/" . basename( SC_PATH ) . "/inc/pre-wp-functions.php' );" .
 		"\n\r" . "\$GLOBALS['sc_config'] = sc_load_config();" .
 		"\n\r" . "if ( empty( \$GLOBALS['sc_config'] ) || empty( \$GLOBALS['sc_config']['enable_in_memory_object_caching'] ) ) { return; }" .
-		"\n\r" . "if ( @file_exists( '" . untrailingslashit( plugin_dir_path( __FILE__ ) ) . '/dropins/' . $cache_file . "' ) ) { require_once( '" . untrailingslashit( plugin_dir_path( __FILE__ ) ) . '/dropins/' . $cache_file . "' ); }" . "\n\r";
+		"\n\r" . "if ( @file_exists( WP_CONTENT_DIR . '/plugins/" . basename( SC_PATH ) . "/inc/dropins/" . $cache_file . "' ) ) { require_once( WP_CONTENT_DIR . '/plugins/" . basename( SC_PATH ) . "/inc/dropins/" . $cache_file . "' ); }" . "\n\r";
 		// phpcs:enable
 	}
 

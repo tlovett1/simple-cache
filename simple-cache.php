@@ -15,6 +15,7 @@
 defined( 'ABSPATH' ) || exit;
 
 define( 'SC_VERSION', '1.7' );
+define( 'SC_PATH', dirname( __FILE__ ) );
 
 $active_plugins = get_site_option( 'active_sitewide_plugins' );
 
