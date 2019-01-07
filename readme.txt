@@ -41,6 +41,7 @@ For full documentation, questions, feature requests, and support concerning the 
 * Add support for object cache dropin using Memcached extension
 * Add optional constants for setting the config and caching directories
 * Support network-wide installs. Add multisite settings page
+* Support Memcached PHP extension
 
 = 1.6.4 =
 * Fix undefined `$blog_id` warning in redis object cache.

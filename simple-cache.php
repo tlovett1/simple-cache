@@ -75,9 +75,10 @@ add_filter( 'plugin_action_links', 'sc_filter_plugin_action_links', 10, 2 );
 /**
  * Clean up necessary files
  *
+ * @param  bool $network Whether the plugin is network wide
  * @since 1.0
  */
-function sc_clean_up() {
+function sc_deactivate( $network ) {
 	if ( ! apply_filters( 'sc_disable_auto_edits', false ) ) {
 		SC_Advanced_Cache::factory()->clean_up();
 		SC_Advanced_Cache::factory()->toggle_caching( false );
@@ -85,23 +86,24 @@ function sc_clean_up() {
 	}
 
 	SC_Config::factory()->clean_up();
+
+	sc_cache_flush( $network );
 }
-register_deactivation_hook( __FILE__, 'sc_clean_up' );
+add_action( 'deactivate_' . plugin_basename( __FILE__ ), 'sc_deactivate' );
 
 /**
  * Create config file
  *
- * @param  string $plugin Plugin file name
  * @param  bool   $network Whether the plugin is network wide
  * @since 1.0
  */
-function sc_setup( $plugin, $network ) {
+function sc_activate( $network ) {
 	if ( $network ) {
 		SC_Config::factory()->write( array(), true );
 	} else {
 		SC_Config::factory()->write( array() );
 	}
 }
-add_action( 'activate_plugin', 'sc_setup', 10, 2 );
+add_action( 'activate_' . plugin_basename( __FILE__ ), 'sc_activate' );
 
 
