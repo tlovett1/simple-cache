@@ -88,7 +88,7 @@ class SC_Config {
 	public function sanitize_length_unit( $value ) {
 		$accepted_values = array( 'minutes', 'hours', 'days', 'weeks' );
 
-		if ( in_array( $value, $accepted_values ) ) {
+		if ( in_array( $value, $accepted_values, true ) ) {
 			return $value;
 		}
 
@@ -113,30 +113,65 @@ class SC_Config {
 	}
 
 	/**
+	 * Get config file name
+	 *
+	 * @since  1.7
+	 * @return string
+	 */
+	private function get_config_file_name() {
+		if ( SC_IS_NETWORK ) {
+			return 'config-network.php';
+		} else {
+			$home_url_parts = wp_parse_url( home_url() );
+
+			return 'config-' . $home_url_parts['host'] . '.php';
+		}
+	}
+
+	/**
+	 * Get contents of config file
+	 *
+	 * @since  1.7
+	 * @param  array $config Config array to use
+	 * @return string
+	 */
+	public function get_file_code( $config = null ) {
+		if ( empty( $config ) ) {
+			$config = $this->get();
+		}
+
+		// phpcs:disable
+		return '<?php ' . "\n\r" . "defined( 'ABSPATH' ) || exit;" . "\n\r" . 'return ' . var_export( wp_parse_args( $config, $this->get_defaults() ), true ) . '; ' . "\n\r";
+		// phpcs:enable
+	}
+
+	/**
 	 * Write config to file
 	 *
 	 * @since  1.0
 	 * @param  array $config Configuration array.
+	 * @param  bool  $force_network Force network wide style write
 	 * @return bool
 	 */
-	public function write( $config ) {
+	public function write( $config, $force_network = false ) {
 
-		global $wp_filesystem;
+		$config_dir = sc_get_config_dir();
 
-		$config_dir = WP_CONTENT_DIR . '/sc-config';
+		$file_name = ( $force_network ) ? 'config-network.php' : $this->get_config_file_name();
 
-		$site_url_parts = parse_url( site_url() );
+		$config = wp_parse_args( $config, $this->get_defaults() );
 
-		$config_file = $config_dir . '/config-' . $site_url_parts['host'] . '.php';
+		@mkdir( $config_dir );
 
-		$this->config = wp_parse_args( $config, $this->get_defaults() );
+		$config_file_string = $this->get_file_code( $config );
 
-		$wp_filesystem->mkdir( $config_dir );
-
-		$config_file_string = '<?php ' . "\n\r" . "defined( 'ABSPATH' ) || exit;" . "\n\r" . 'return ' . var_export( $this->config, true ) . '; ' . "\n\r";
-
-		if ( ! $wp_filesystem->put_contents( $config_file, $config_file_string, FS_CHMOD_FILE ) ) {
+		if ( ! file_put_contents( $config_dir . '/' . $file_name, $config_file_string ) ) {
 			return false;
+		}
+
+		// Delete network config if not network activated
+		if ( 'config-network.php' !== $file_name ) {
+			@unlink( $config_dir . '/config-network.php', true );
 		}
 
 		return true;
@@ -149,96 +184,13 @@ class SC_Config {
 	 * @return array
 	 */
 	public function get() {
-
-		$config = get_option( 'sc_simple_cache', $this->get_defaults() );
+		if ( SC_IS_NETWORK ) {
+			$config = get_site_option( 'sc_simple_cache', $this->get_defaults() );
+		} else {
+			$config = get_option( 'sc_simple_cache', $this->get_defaults() );
+		}
 
 		return wp_parse_args( $config, $this->get_defaults() );
-	}
-
-	/**
-	 * Check if a directory is writable and we can create files as the same user as the current file
-	 *
-	 * @param  string $dir Directory path.
-	 * @since  1.2.3
-	 * @return boolean
-	 */
-	private function _is_dir_writable( $dir ) {
-		$temp_file_name = untrailingslashit( $dir ) . '/temp-write-test-' . time();
-		$temp_handle    = fopen( $temp_file_name, 'w' );
-
-		if ( $temp_handle ) {
-
-			// Attempt to determine the file owner of the WordPress files, and that of newly created files.
-			$wp_file_owner   = false;
-			$temp_file_owner = false;
-
-			if ( function_exists( 'fileowner' ) ) {
-				$wp_file_owner = @fileowner( __FILE__ );
-				// Pass in the temporary handle to determine the file owner.
-				$temp_file_owner = @fileowner( $temp_file_name );
-
-				// Close and remove the temporary file.
-				@fclose( $temp_handle );
-				@unlink( $temp_file_name );
-
-				// Return if we cannot determine the file owner, or if the owner IDs do not match.
-				if ( false === $wp_file_owner || $wp_file_owner !== $temp_file_owner ) {
-					return false;
-				}
-			} else {
-				if ( ! @is_writable( $dir ) ) {
-					return false;
-				}
-			}
-		} else {
-			return false;
-		}
-
-		return true;
-	}
-
-	/**
-	 * Verify we can write to the file system
-	 *
-	 * @since  1.0
-	 * @return boolean
-	 */
-	public function verify_file_access() {
-		if ( function_exists( 'clearstatcache' ) ) {
-			@clearstatcache();
-		}
-
-		// First check wp-config.php.
-		if ( ! @is_writable( ABSPATH . 'wp-config.php' ) && ! @is_writable( ABSPATH . '../wp-config.php' ) ) {
-			return false;
-		}
-
-		// Now check wp-content. We need to be able to create files of the same user as this file.
-		if ( ! $this->_is_dir_writable( untrailingslashit( WP_CONTENT_DIR ) ) ) {
-			return false;
-		}
-
-		// If the cache and/or cache/simple-cache directories exist, make sure it's writeable.
-		if ( @file_exists( untrailingslashit( WP_CONTENT_DIR ) . '/cache' ) ) {
-			if ( ! $this->_is_dir_writable( untrailingslashit( WP_CONTENT_DIR ) . '/cache' ) ) {
-				return false;
-			}
-
-			if ( @file_exists( untrailingslashit( WP_CONTENT_DIR ) . '/cache/simple-cache' ) ) {
-				if ( ! $this->_is_dir_writable( untrailingslashit( WP_CONTENT_DIR ) . '/cache/simple-cache' ) ) {
-					return false;
-				}
-			}
-		}
-
-		// If the sc-config directory exists, make sure it's writeable.
-		if ( @file_exists( untrailingslashit( WP_CONTENT_DIR ) . '/sc-config' ) ) {
-			if ( ! $this->_is_dir_writable( untrailingslashit( WP_CONTENT_DIR ) . '/sc-config' ) ) {
-				return false;
-			}
-		}
-
-		return true;
 	}
 
 	/**
@@ -249,13 +201,17 @@ class SC_Config {
 	 */
 	public function clean_up() {
 
-		global $wp_filesystem;
+		$config_dir = sc_get_config_dir();
 
-		$folder = untrailingslashit( WP_CONTENT_DIR ) . '/sc-config';
+		if ( SC_IS_NETWORK ) {
+			delete_site_option( 'sc_simple_cache' );
+		} else {
+			delete_option( 'sc_simple_cache' );
+		}
 
-		delete_option( 'sc_simple_cache' );
+		@unlink( $config_dir . '/config-network.php', true );
 
-		if ( ! $wp_filesystem->delete( $folder, true ) ) {
+		if ( ! @unlink( $config_dir . '/' . $this->get_config_file_name() ) ) {
 			return false;
 		}
 

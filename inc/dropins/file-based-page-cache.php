@@ -7,8 +7,6 @@
 
 defined( 'ABSPATH' ) || exit;
 
-require_once( dirname( __FILE__ ) . '/file-based-page-cache-functions.php' );
-
 // Don't cache robots.txt or htacesss.
 if ( strpos( $_SERVER['REQUEST_URI'], 'robots.txt' ) !== false || strpos( $_SERVER['REQUEST_URI'], '.htaccess' ) !== false ) {
 	return;
@@ -24,7 +22,7 @@ $file_extension = preg_replace( '#^(.*?)\?.*$#', '$1', $file_extension );
 $file_extension = trim( preg_replace( '#^.*\.(.*)$#', '$1', $file_extension ) );
 
 // Don't cache disallowed extensions. Prevents wp-cron.php, xmlrpc.php, etc.
-if ( ! preg_match( '#index\.php$#i', $_SERVER['REQUEST_URI'] ) && in_array( $file_extension, array( 'php', 'xml', 'xsl' ) ) ) {
+if ( ! preg_match( '#index\.php$#i', $_SERVER['REQUEST_URI'] ) && in_array( $file_extension, array( 'php', 'xml', 'xsl' ), true ) ) {
 	return;
 }
 
@@ -65,7 +63,6 @@ if ( ! empty( $GLOBALS['sc_config']['advanced_mode'] ) && ! empty( $GLOBALS['sc_
 	}
 }
 
-sc_serve_cache();
+sc_serve_file_cache();
 
-ob_start( 'sc_cache' );
-
+ob_start( 'sc_file_cache' );

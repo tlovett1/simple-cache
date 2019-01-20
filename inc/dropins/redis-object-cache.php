@@ -5,6 +5,8 @@
  * @package  simple-cache
  */
 
+// phpcs:ignoreFile
+
 defined( 'ABSPATH' ) || exit;
 
 // We need Redis to continue
@@ -955,7 +957,7 @@ class WP_Object_Cache {
 			}
 		}
 
-		$this->redis = new Redis;
+		$this->redis = new Redis();
 
 		if ( file_exists( $redis_server['host'] ) && 'socket' === filetype( $redis_server['host'] ) ) { // unix socket connection
 			// port must be null or socket won't connect

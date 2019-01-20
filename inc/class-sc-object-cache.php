@@ -11,51 +11,6 @@ defined( 'ABSPATH' ) || exit;
  * Wrap object caching functionality
  */
 class SC_Object_Cache {
-
-	/**
-	 * Setup hooks/filters
-	 *
-	 * @since 1.0
-	 */
-	public function setup() {
-
-		add_action( 'admin_notices', array( $this, 'print_notice' ) );
-	}
-
-	/**
-	 * Print out a warning if object-cache.php is messed up
-	 *
-	 * @since 1.0
-	 */
-	public function print_notice() {
-
-		$cant_write = get_option( 'sc_cant_write', false );
-
-		if ( $cant_write ) {
-			return;
-		}
-
-		$config = SC_Config::factory()->get();
-
-		if ( empty( $config['enable_in_memory_object_caching'] ) || empty( $config['advanced_mode'] ) ) {
-			return;
-		}
-
-		if ( defined( 'SC_OBJECT_CACHE' ) && SC_OBJECT_CACHE ) {
-			return;
-		}
-
-		?>
-		<div class="error">
-			<p>
-				<?php esc_html_e( 'wp-content/object-cache.php was edited or deleted. Simple Cache is not able to utilize object caching.' ); ?>
-
-				<a href="options-general.php?page=simple-cache&amp;wp_http_referer=<?php echo esc_url( wp_unslash( $_SERVER['REQUEST_URI'] ) ); ?>&amp;action=sc_update&amp;sc_settings_nonce=<?php echo wp_create_nonce( 'sc_update_settings' ); ?>" class="button button-primary" style="margin-left: 5px;"><?php esc_html_e( 'Fix', 'simple-cache' ); ?></a>
-			</p>
-		</div>
-		<?php
-	}
-
 	/**
 	 * Delete file for clean up
 	 *
@@ -64,11 +19,9 @@ class SC_Object_Cache {
 	 */
 	public function clean_up() {
 
-		global $wp_filesystem;
-
 		$file = untrailingslashit( WP_CONTENT_DIR ) . '/object-cache.php';
 
-		if ( ! $wp_filesystem->delete( $file ) ) {
+		if ( ! @unlink( $file ) ) {
 			return false;
 		}
 
@@ -83,8 +36,6 @@ class SC_Object_Cache {
 	 */
 	public function write() {
 
-		global $wp_filesystem;
-
 		$file = untrailingslashit( WP_CONTENT_DIR ) . '/object-cache.php';
 
 		$config = SC_Config::factory()->get();
@@ -92,38 +43,53 @@ class SC_Object_Cache {
 		$file_string = '';
 
 		if ( ! empty( $config['enable_in_memory_object_caching'] ) && ! empty( $config['advanced_mode'] ) ) {
-			$cache_file = 'memcached-object-cache.php';
-
-			if ( 'redis' === $config['in_memory_cache'] ) {
-				$cache_file = 'redis-object-cache.php';
-			}
-
-			/**
-			 * Salt to be used with the cache keys.
-			 *
-			 * We need a random string not long as cache key size is limited and
-			 * not with special characters as they cause issues with some caches.
-			 *
-			 * @var string
-			 */
-			$cache_key_salt = wp_generate_password( 10, false );
-
-			$file_string = '<?php ' .
-			"\n\r" . "defined( 'ABSPATH' ) || exit;" .
-			"\n\r" . "define( 'SC_OBJECT_CACHE', true );" .
-			"\n\r" . "defined( 'WP_CACHE_KEY_SALT' ) || define( 'WP_CACHE_KEY_SALT', '{$cache_key_salt}' );" .
-			"\n\r" . "if ( ! @file_exists( WP_CONTENT_DIR . '/sc-config/config-' . \$_SERVER['HTTP_HOST'] . '.php' ) ) { return; }" .
-			"\n\r" . "\$GLOBALS['sc_config'] = include( WP_CONTENT_DIR . '/sc-config/config-' . \$_SERVER['HTTP_HOST'] . '.php' );" .
-			"\n\r" . "if ( empty( \$GLOBALS['sc_config'] ) || empty( \$GLOBALS['sc_config']['enable_in_memory_object_caching'] ) ) { return; }" .
-			"\n\r" . "if ( @file_exists( '" . untrailingslashit( plugin_dir_path( __FILE__ ) ) . '/dropins/' . $cache_file . "' ) ) { require_once( '" . untrailingslashit( plugin_dir_path( __FILE__ ) ) . '/dropins/' . $cache_file . "' ); }" . "\n\r";
-
+			$file_string = $this->get_file_code();
 		}
 
-		if ( ! $wp_filesystem->put_contents( $file, $file_string, FS_CHMOD_FILE ) ) {
+		if ( ! file_put_contents( $file, $file_string ) ) {
 			return false;
 		}
 
 		return true;
+	}
+
+	/**
+	 * Get contents of object cache file
+	 *
+	 * @since  1.7
+	 * @return string
+	 */
+	public function get_file_code() {
+		$config = SC_Config::factory()->get();
+
+		$cache_file = 'memcache-object-cache.php';
+
+		if ( 'redis' === $config['in_memory_cache'] ) {
+			$cache_file = 'redis-object-cache.php';
+		} elseif ( 'memcachedd' === $config['in_memory_cache'] ) {
+			$cache_file = 'memcached-object-cache.php';
+		}
+
+		/**
+		 * Salt to be used with the cache keys.
+		 *
+		 * We need a random string not long as cache key size is limited and
+		 * not with special characters as they cause issues with some caches.
+		 *
+		 * @var string
+		 */
+		$cache_key_salt = wp_generate_password( 10, false );
+
+		// phpcs:disable
+		return '<?php ' .
+		"\n\r" . "defined( 'ABSPATH' ) || exit;" .
+		"\n\r" . "define( 'SC_OBJECT_CACHE', true );" .
+		"\n\r" . "defined( 'WP_CACHE_KEY_SALT' ) || define( 'WP_CACHE_KEY_SALT', '{$cache_key_salt}' );" .
+		"\n\r" . "include_once( WP_CONTENT_DIR . '/plugins/" . basename( SC_PATH ) . "/inc/pre-wp-functions.php' );" .
+		"\n\r" . "\$GLOBALS['sc_config'] = sc_load_config();" .
+		"\n\r" . "if ( empty( \$GLOBALS['sc_config'] ) || empty( \$GLOBALS['sc_config']['enable_in_memory_object_caching'] ) ) { return; }" .
+		"\n\r" . "if ( @file_exists( WP_CONTENT_DIR . '/plugins/" . basename( SC_PATH ) . "/inc/dropins/" . $cache_file . "' ) ) { require_once( WP_CONTENT_DIR . '/plugins/" . basename( SC_PATH ) . "/inc/dropins/" . $cache_file . "' ); }" . "\n\r";
+		// phpcs:enable
 	}
 
 	/**
@@ -138,7 +104,6 @@ class SC_Object_Cache {
 
 		if ( ! $instance ) {
 			$instance = new self();
-			$instance->setup();
 		}
 
 		return $instance;

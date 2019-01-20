@@ -1,8 +1,8 @@
 <?php
 /**
- * Holds functions used by file based cache
+ * Holds functions that can be loaded in advanced-cache.php
  *
- * @since  1.6
+ * @since  1.7
  * @package  simple-cache
  */
 
@@ -11,13 +11,13 @@
  *
  * @param  string $buffer Page HTML.
  * @param  int    $flags OB flags to be passed through.
- * @since  1.0
+ * @since  1.7
  * @return string
  */
-function sc_cache( $buffer, $flags ) {
+function sc_file_cache( $buffer, $flags ) {
 	global $post;
 
-	$cache_dir = ( defined( 'SC_CACHE_DIR') ) ? untrailingslashit( SC_CACHE_DIR ) : untrailingslashit( WP_CONTENT_DIR ) . '/cache';
+	$cache_dir = sc_get_cache_dir();
 
 	if ( strlen( $buffer ) < 255 ) {
 		return $buffer;
@@ -28,52 +28,36 @@ function sc_cache( $buffer, $flags ) {
 		return $buffer;
 	}
 
-	/**
-	 * Set the permission constants if not already set. Normally, this is taken care of in
-	 * WP_Filesystem constructor, but it is not invoked here, because WP_Filesystem_Direct
-	 * is instantiated directly.
-	 */
-	if ( ! defined( 'FS_CHMOD_DIR' ) ) {
-		define( 'FS_CHMOD_DIR', ( fileperms( ABSPATH ) & 0777 | 0755 ) );
-	}
-	if ( ! defined( 'FS_CHMOD_FILE' ) ) {
-		define( 'FS_CHMOD_FILE', ( fileperms( ABSPATH . 'index.php' ) & 0777 | 0644 ) );
-	}
-
-	include_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-base.php';
-	include_once ABSPATH . 'wp-admin/includes/class-wp-filesystem-direct.php';
-
-	$filesystem = new WP_Filesystem_Direct( new StdClass() );
-
-	// Make sure we can read/write files and that proper folders exist.
-	if ( ! $filesystem->exists( $cache_dir ) ) {
-		if ( ! $filesystem->mkdir( $cache_dir ) ) {
+	// Make sure we can read/write files to cache dir parent
+	if ( ! file_exists( dirname( $cache_dir ) ) ) {
+		if ( ! @mkdir( dirname( $cache_dir ) ) ) {
 			// Can not cache!
 			return $buffer;
 		}
 	}
 
-	if ( ! $filesystem->exists( $cache_dir . '/simple-cache' ) ) {
-		if ( ! $filesystem->mkdir( $cache_dir . '/simple-cache' ) ) {
+	// Make sure we can read/write files to cache dir
+	if ( ! file_exists( $cache_dir ) ) {
+		if ( ! @mkdir( $cache_dir ) ) {
 			// Can not cache!
 			return $buffer;
 		}
+	} else {
+		$buffer = apply_filters( 'sc_pre_cache_buffer', $buffer );
 	}
-
-	$buffer = apply_filters( 'sc_pre_cache_buffer', $buffer );
 
 	$url_path = sc_get_url_path();
 
 	$dirs = explode( '/', $url_path );
 
-	$path = $cache_dir . '/simple-cache';
+	$path = $cache_dir;
 
 	foreach ( $dirs as $dir ) {
 		if ( ! empty( $dir ) ) {
 			$path .= '/' . $dir;
 
-			if ( ! $filesystem->exists( $path ) ) {
-				if ( ! $filesystem->mkdir( $path ) ) {
+			if ( ! file_exists( $path ) ) {
+				if ( ! @mkdir( $path ) ) {
 					// Can not cache!
 					return $buffer;
 				}
@@ -85,7 +69,10 @@ function sc_cache( $buffer, $flags ) {
 
 	// Prevent mixed content when there's an http request but the site URL uses https.
 	$home_url = get_home_url();
+
+	// phpcs:disable
 	if ( ! is_ssl() && 'https' === strtolower( parse_url( $home_url, PHP_URL_SCHEME ) ) ) {
+		// phpcs:enable
 		$https_home_url = $home_url;
 		$http_home_url  = str_replace( 'https://', 'http://', $https_home_url );
 		$buffer         = str_replace( esc_url( $http_home_url ), esc_url( $https_home_url ), $buffer );
@@ -96,11 +83,11 @@ function sc_cache( $buffer, $flags ) {
 	}
 
 	if ( ! empty( $GLOBALS['sc_config']['enable_gzip_compression'] ) && function_exists( 'gzencode' ) ) {
-		$filesystem->put_contents( $path . '/index.gzip.html', gzencode( $buffer, 3 ), FS_CHMOD_FILE );
-		$filesystem->touch( $path . '/index.gzip.html', $modified_time );
+		file_put_contents( $path . '/index.gzip.html', gzencode( $buffer, 3 ) );
+		touch( $path . '/index.gzip.html', $modified_time );
 	} else {
-		$filesystem->put_contents( $path . '/index.html', $buffer, FS_CHMOD_FILE );
-		$filesystem->touch( $path . '/index.html', $modified_time );
+		file_put_contents( $path . '/index.html', $buffer );
+		touch( $path . '/index.html', $modified_time );
 	}
 
 	header( 'Cache-Control: no-cache' ); // Check back every time to see if re-download is necessary.
@@ -132,17 +119,16 @@ function sc_get_url_path() {
  *
  * @since 1.0
  */
-function sc_serve_cache() {
+function sc_serve_file_cache() {
+	$cache_dir = ( defined( 'SC_CACHE_DIR' ) ) ? rtrim( SC_CACHE_DIR, '/' ) : rtrim( WP_CONTENT_DIR, '/' ) . '/cache/simple-cache';
+
 	$file_name = 'index.html';
 
 	if ( function_exists( 'gzencode' ) && ! empty( $GLOBALS['sc_config']['enable_gzip_compression'] ) ) {
 		$file_name = 'index.gzip.html';
 	}
 
-	$cache_dir = ( defined( 'SC_CACHE_DIR') ) ? rtrim( SC_CACHE_DIR, '/' ) : rtrim( WP_CONTENT_DIR, '/' ) . '/cache';
-
-
-	$path = $cache_dir . '/simple-cache/' . rtrim( sc_get_url_path(), '/' ) . '/' . $file_name;
+	$path = $cache_dir . '/' . rtrim( sc_get_url_path(), '/' ) . '/' . $file_name;
 
 	$modified_time = (int) @filemtime( $path );
 
@@ -166,6 +152,52 @@ function sc_serve_cache() {
 
 		exit;
 	}
+}
+
+/**
+ * Get cache directory
+ *
+ * @since  1.7
+ * @return string
+ */
+function sc_get_cache_dir() {
+	return ( defined( 'SC_CACHE_DIR' ) ) ? rtrim( SC_CACHE_DIR, '/' ) : rtrim( WP_CONTENT_DIR, '/' ) . '/cache/simple-cache';
+}
+
+/**
+ * Get config directory
+ *
+ * @since 1.7
+ * @return string
+ */
+function sc_get_config_dir() {
+	return ( defined( 'SC_CONFIG_DIR' ) ) ? rtrim( SC_CONFIG_DIR, '/' ) : rtrim( WP_CONTENT_DIR, '/' ) . '/sc-config';
+}
+
+/**
+ * Gets name of the config file.
+ *
+ * @since  1.7
+ * @return string
+ */
+function sc_get_config_file_name() {
+	return 'config-' . $_SERVER['HTTP_HOST'] . '.php';
+}
+
+/**
+ * Load config. Use network if it exists. Only intended to be used pre-wp.
+ *
+ * @since  1.7
+ * @return bool|array
+ */
+function sc_load_config() {
+	if ( @file_exists( sc_get_config_dir() . '/config-network.php' ) ) {
+		return include sc_get_config_dir() . '/config-network.php';
+	} elseif ( @file_exists( sc_get_config_dir() . '/' . sc_get_config_file_name() ) ) {
+		return include sc_get_config_dir() . '/' . sc_get_config_file_name();
+	}
+
+	return false;
 }
 
 /**

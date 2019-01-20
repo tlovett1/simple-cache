@@ -18,8 +18,6 @@ class SC_Advanced_Cache {
 	 * @since 1.0
 	 */
 	public function setup() {
-
-		add_action( 'admin_notices', array( $this, 'print_notice' ) );
 		add_action( 'pre_post_update', array( $this, 'purge_post_on_update' ), 10, 1 );
 		add_action( 'save_post', array( $this, 'purge_post_on_update' ), 10, 1 );
 		add_action( 'wp_trash_post', array( $this, 'purge_post_on_update' ), 10, 1 );
@@ -40,7 +38,7 @@ class SC_Advanced_Cache {
 		if ( ! empty( $config['enable_page_caching'] ) && empty( $config['enable_in_memory_object_caching'] ) ) {
 			$post_id = $comment->comment_post_ID;
 
-			setcookie( 'sc_commented_posts[' . $post_id . ']', parse_url( get_permalink( $post_id ), PHP_URL_PATH ), ( time() + HOUR_IN_SECONDS * 24 * 30 ) );
+			setcookie( 'sc_commented_posts[' . $post_id . ']', wp_parse_url( get_permalink( $post_id ), PHP_URL_PATH ), ( time() + HOUR_IN_SECONDS * 24 * 30 ) );
 		}
 	}
 
@@ -55,19 +53,13 @@ class SC_Advanced_Cache {
 
 		// File based caching only.
 		if ( ! empty( $config['enable_page_caching'] ) && empty( $config['enable_in_memory_object_caching'] ) ) {
-			require_once( ABSPATH . 'wp-admin/includes/file.php' );
-
 			$comment = get_comment( $comment_id );
 			$post_id = $comment->comment_post_ID;
 
-			global $wp_filesystem;
+			$path = sc_get_cache_path() . '/' . preg_replace( '#https?://#i', '', get_permalink( $post_id ) );
 
-			WP_Filesystem();
-
-			$path = untrailingslashit( WP_CONTENT_DIR ) . '/cache/simple-cache/' . preg_replace( '#https?://#i', '', get_permalink( $post_id ) );
-
-			$wp_filesystem->delete( untrailingslashit( $path ) . '/index.html' );
-			$wp_filesystem->delete( untrailingslashit( $path ) . '/index.gzip.html' );
+			@unlink( untrailingslashit( $path ) . '/index.html' );
+			@unlink( untrailingslashit( $path ) . '/index.gzip.html' );
 		}
 	}
 
@@ -90,14 +82,10 @@ class SC_Advanced_Cache {
 		if ( ! empty( $config['enable_page_caching'] ) && empty( $config['enable_in_memory_object_caching'] ) ) {
 			$post_id = $commentdata['comment_post_ID'];
 
-			global $wp_filesystem;
+			$path = sc_get_cache_path() . '/' . preg_replace( '#https?://#i', '', get_permalink( $post_id ) );
 
-			WP_Filesystem();
-
-			$path = untrailingslashit( WP_CONTENT_DIR ) . '/cache/simple-cache/' . preg_replace( '#https?://#i', '', get_permalink( $post_id ) );
-
-			$wp_filesystem->delete( untrailingslashit( $path ) . '/index.html' );
-			$wp_filesystem->delete( untrailingslashit( $path ) . '/index.gzip.html' );
+			@unlink( untrailingslashit( $path ) . '/index.html' );
+			@unlink( untrailingslashit( $path ) . '/index.gzip.html' );
 		}
 	}
 
@@ -125,62 +113,6 @@ class SC_Advanced_Cache {
 	}
 
 	/**
-	 * Print out a warning if WP_CACHE is off when it should be on or if advanced-cache.php is messed up
-	 *
-	 * @since 1.0
-	 */
-	public function print_notice() {
-
-		$cant_write = get_option( 'sc_cant_write', false );
-
-		if ( $cant_write ) {
-			return;
-		}
-
-		$config = SC_Config::factory()->get();
-
-		if ( empty( $config['enable_page_caching'] ) ) {
-			// Not turned on do nothing.
-			return;
-		}
-
-		$config_file_bad         = true;
-		$advanced_cache_file_bad = true;
-
-		if ( defined( 'SC_ADVANCED_CACHE' ) && SC_ADVANCED_CACHE ) {
-			$advanced_cache_file_bad = false;
-		}
-
-		if ( defined( 'WP_CACHE' ) && WP_CACHE ) {
-			$config_file_bad = false;
-		}
-
-		if ( ! $config_file_bad && ! $advanced_cache_file_bad ) {
-			return;
-		}
-
-		?>
-
-		<div class="error">
-			<p>
-				<?php if ( $config_file_bad ) : ?>
-					<?php esc_html_e( 'define("WP_CACHE", true); is not in wp-config.php.', 'simple-cache' ); ?>
-				<?php endif; ?>
-
-				<?php if ( $advanced_cache_file_bad ) : ?>
-					<?php esc_html_e( 'wp-content/advanced-cache.php was edited or deleted.', 'simple-cache' ); ?>
-				<?php endif; ?>
-
-				<?php esc_html_e( 'Simple Cache is not able to utilize page caching.', 'simple-cache' ); ?>
-
-				<a href="options-general.php?page=simple-cache&amp;wp_http_referer=<?php echo esc_url( wp_unslash( $_SERVER['REQUEST_URI'] ) ); ?>&amp;action=sc_update&amp;sc_settings_nonce=<?php echo wp_create_nonce( 'sc_update_settings' ); ?>" class="button button-primary" style="margin-left: 5px;"><?php esc_html_e( 'Fix', 'simple-cache' ); ?></a>
-			</p>
-		</div>
-
-		<?php
-	}
-
-	/**
 	 * Delete file for clean up
 	 *
 	 * @since  1.0
@@ -188,19 +120,17 @@ class SC_Advanced_Cache {
 	 */
 	public function clean_up() {
 
-		global $wp_filesystem;
-
 		$file = untrailingslashit( WP_CONTENT_DIR ) . '/advanced-cache.php';
 
 		$ret = true;
 
-		if ( ! $wp_filesystem->delete( $file ) ) {
+		if ( ! @unlink( $file ) ) {
 			$ret = false;
 		}
 
 		$folder = untrailingslashit( WP_CONTENT_DIR ) . '/cache/simple-cache';
 
-		if ( ! $wp_filesystem->delete( $folder, true ) ) {
+		if ( ! @unlink( $folder, true ) ) {
 			$ret = false;
 		}
 
@@ -215,8 +145,6 @@ class SC_Advanced_Cache {
 	 */
 	public function write() {
 
-		global $wp_filesystem;
-
 		$file = untrailingslashit( WP_CONTENT_DIR ) . '/advanced-cache.php';
 
 		$config = SC_Config::factory()->get();
@@ -224,28 +152,41 @@ class SC_Advanced_Cache {
 		$file_string = '';
 
 		if ( ! empty( $config['enable_page_caching'] ) ) {
-			$cache_file = 'file-based-page-cache.php';
-
-			if ( ! empty( $config['enable_in_memory_object_caching'] ) && ! empty( $config['advanced_mode'] ) ) {
-				$cache_file = 'batcache.php';
-			}
-
-			$file_string = '<?php ' .
-			"\n\r" . "defined( 'ABSPATH' ) || exit;" .
-			"\n\r" . "define( 'SC_ADVANCED_CACHE', true );" .
-			"\n\r" . 'if ( is_admin() ) { return; }' .
-			"\n\r" . "if ( ! @file_exists( WP_CONTENT_DIR . '/sc-config/config-' . \$_SERVER['HTTP_HOST'] . '.php' ) ) { return; }" .
-			"\n\r" . "\$GLOBALS['sc_config'] = include( WP_CONTENT_DIR . '/sc-config/config-' . \$_SERVER['HTTP_HOST'] . '.php' );" .
-			"\n\r" . "if ( empty( \$GLOBALS['sc_config'] ) || empty( \$GLOBALS['sc_config']['enable_page_caching'] ) ) { return; }" .
-			"\n\r" . "if ( @file_exists( '" . untrailingslashit( plugin_dir_path( __FILE__ ) ) . '/dropins/' . $cache_file . "' ) ) { include_once( '" . untrailingslashit( plugin_dir_path( __FILE__ ) ) . '/dropins/' . $cache_file . "' ); }" . "\n\r";
-
+			$file_string = $this->get_file_code();
 		}
 
-		if ( ! $wp_filesystem->put_contents( $file, $file_string, FS_CHMOD_FILE ) ) {
+		if ( ! file_put_contents( $file, $file_string ) ) {
 			return false;
 		}
 
 		return true;
+	}
+
+	/**
+	 * Get contents of advanced cache file
+	 *
+	 * @since  1.7
+	 * @return string
+	 */
+	public function get_file_code() {
+		$config = SC_Config::factory()->get();
+
+		$cache_file = 'file-based-page-cache.php';
+
+		if ( ! empty( $config['enable_in_memory_object_caching'] ) && ! empty( $config['advanced_mode'] ) ) {
+			$cache_file = 'batcache.php';
+		}
+
+		// phpcs:disable
+		return '<?php ' .
+		"\n\r" . "defined( 'ABSPATH' ) || exit;" .
+		"\n\r" . "define( 'SC_ADVANCED_CACHE', true );" .
+		"\n\r" . 'if ( is_admin() ) { return; }' .
+		"\n\r" . "include_once( WP_CONTENT_DIR . '/plugins/" . basename( SC_PATH ) . "/inc/pre-wp-functions.php' );" .
+		"\n\r" . "\$GLOBALS['sc_config'] = sc_load_config();" .
+		"\n\r" . "if ( empty( \$GLOBALS['sc_config'] ) || empty( \$GLOBALS['sc_config']['enable_page_caching'] ) ) { return; }" .
+		"\n\r" . "if ( @file_exists( WP_CONTENT_DIR . '/plugins/" . basename( SC_PATH ) . "/inc/dropins/" . $cache_file . "' ) ) { include_once( WP_CONTENT_DIR . '/plugins/" . basename( SC_PATH ) . "/inc/dropins/" . $cache_file . "' ); }" . "\n\r";
+		// phpcs:enable
 	}
 
 	/**
@@ -256,8 +197,6 @@ class SC_Advanced_Cache {
 	 * @return boolean
 	 */
 	public function toggle_caching( $status ) {
-
-		global $wp_filesystem;
 
 		if ( defined( 'WP_CACHE' ) && WP_CACHE === $status ) {
 			return;
@@ -271,7 +210,7 @@ class SC_Advanced_Cache {
 				$file = '/..' . $file;
 			}
 
-			if ( $wp_filesystem->exists( untrailingslashit( ABSPATH ) . $file ) ) {
+			if ( file_exists( untrailingslashit( ABSPATH ) . $file ) ) {
 				$config_path = untrailingslashit( ABSPATH ) . $file;
 				break;
 			}
@@ -282,7 +221,7 @@ class SC_Advanced_Cache {
 			return false;
 		}
 
-		$config_file_string = $wp_filesystem->get_contents( $config_path );
+		$config_file_string = file_get_contents( $config_path );
 
 		// Config file is empty. Maybe couldn't read it?
 		if ( empty( $config_file_string ) ) {
@@ -317,7 +256,7 @@ class SC_Advanced_Cache {
 			}
 		}
 
-		if ( ! $wp_filesystem->put_contents( $config_path, implode( "\n\r", $config_file ), FS_CHMOD_FILE ) ) {
+		if ( ! file_put_contents( $config_path, implode( "\n\r", $config_file ) ) ) {
 			return false;
 		}
 

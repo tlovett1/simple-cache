@@ -18,15 +18,27 @@ class SC_Settings {
 	 * @since 1.0
 	 */
 	public function setup() {
+		add_action( 'admin_enqueue_scripts', array( $this, 'action_admin_enqueue_scripts_styles' ) );
 
-		add_action( 'admin_menu', array( $this, 'action_admin_menu' ) );
 		add_action( 'load-settings_page_simple-cache', array( $this, 'update' ) );
 		add_action( 'load-settings_page_simple-cache', array( $this, 'purge_cache' ) );
-		add_action( 'admin_notices', array( $this, 'setup_notice' ) );
-		add_action( 'admin_notices', array( $this, 'cant_write_notice' ) );
-		add_action( 'admin_enqueue_scripts', array( $this, 'action_admin_enqueue_scripts_styles' ) );
-		add_action( 'admin_bar_menu', array( $this, 'admin_bar_menu' ) );
 
+		if ( SC_IS_NETWORK ) {
+			add_action( 'network_admin_menu', array( $this, 'network_admin_menu' ) );
+		} else {
+			add_action( 'admin_menu', array( $this, 'action_admin_menu' ) );
+			add_action( 'admin_bar_menu', array( $this, 'admin_bar_menu' ) );
+		}
+
+	}
+
+	/**
+	 * Output network setting menu option
+	 *
+	 * @since  1.7
+	 */
+	public function network_admin_menu() {
+		add_submenu_page( 'settings.php', esc_html__( 'Simple Cache', 'simple-cache' ), esc_html__( 'Simple Cache', 'simple-cache' ), 'manage_options', 'simple-cache', array( $this, 'screen_options' ) );
 	}
 
 	/**
@@ -52,62 +64,6 @@ class SC_Settings {
 	}
 
 	/**
-	 * Output turn on notice
-	 *
-	 * @since 1.0
-	 */
-	public function setup_notice() {
-
-		if ( ! current_user_can( 'manage_options' ) ) {
-			return;
-		}
-
-		$cant_write = get_option( 'sc_cant_write', false );
-
-		if ( $cant_write ) {
-			return;
-		}
-
-		$config = SC_Config::factory()->get();
-
-		if ( ! empty( $config['enable_page_caching'] ) || ! empty( $config['advanced_mode'] ) ) {
-			return;
-		}
-
-		?>
-		<div class="notice notice-warning">
-			<p>
-				<?php esc_html_e( "Simple Cache won't work until you turn it on.", 'simple-cache' ); ?>
-				<a href="options-general.php?page=simple-cache&amp;wp_http_referer=<?php echo esc_url( wp_unslash( $_SERVER['REQUEST_URI'] ) ); ?>&amp;action=sc_update&amp;sc_settings_nonce=<?php echo wp_create_nonce( 'sc_update_settings' ); ?>&amp;sc_simple_cache[enable_page_caching]=1" class="button button-primary" style="margin-left: 5px;"><?php esc_html_e( 'Turn On Caching', 'simple-cache' ); ?></a>
-			</p>
-		</div>
-		<?php
-	}
-
-	/**
-	 * Output can't write notice
-	 *
-	 * @since 1.0
-	 */
-	public function cant_write_notice() {
-
-		$cant_write = get_option( 'sc_cant_write', false );
-
-		if ( ! $cant_write ) {
-			return;
-		}
-
-		?>
-		<div class="notice notice-error">
-			<p>
-				<?php esc_html_e( "Simple Cache can't create or modify needed files on your system. Specifically, Simple Cache needs to write to wp-config.php and /wp-content using PHP's fopen() function. Contact your host.", 'simple-cache' ); ?>
-				<a href="options-general.php?page=simple-cache&amp;wp_http_referer=<?php echo esc_url( wp_unslash( $_SERVER['REQUEST_URI'] ) ); ?>&amp;action=sc_update&amp;sc_settings_nonce=<?php echo wp_create_nonce( 'sc_update_settings' ); ?>" class="button button-primary" style="margin-left: 5px;"><?php esc_html_e( 'Try Again', 'simple-cache' ); ?></a>
-			</p>
-		</div>
-		<?php
-	}
-
-	/**
 	 * Enqueue settings screen js/css
 	 *
 	 * @since 1.0
@@ -116,9 +72,9 @@ class SC_Settings {
 
 		global $pagenow;
 
-		if ( 'options-general.php' == $pagenow && ! empty( $_GET['page'] ) && 'simple-cache' == $_GET['page'] ) {
+		if ( ( 'options-general.php' === $pagenow || 'settings.php' === $pagenow ) && ! empty( $_GET['page'] ) && 'simple-cache' === $_GET['page'] ) {
 
-			if ( defined( WP_DEBUG ) && WP_DEBUG ) {
+			if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
 				$js_path = '/assets/js/src/settings.js';
 			} else {
 				$js_path = '/assets/js/settings.min.js';
@@ -136,7 +92,6 @@ class SC_Settings {
 	 * @since 1.0
 	 */
 	public function action_admin_menu() {
-
 		add_submenu_page( 'options-general.php', esc_html__( 'Simple Cache', 'simple-cache' ), esc_html__( 'Simple Cache', 'simple-cache' ), 'manage_options', 'simple-cache', array( $this, 'screen_options' ) );
 	}
 
@@ -152,10 +107,14 @@ class SC_Settings {
 				wp_die( esc_html__( 'Cheatin, eh?', 'simple-cache' ) );
 			}
 
-			sc_cache_flush();
+			if ( SC_IS_NETWORK ) {
+				sc_cache_flush( true );
+			} else {
+				sc_cache_flush();
+			}
 
 			if ( ! empty( $_REQUEST['wp_http_referer'] ) ) {
-				wp_redirect( $_REQUEST['wp_http_referer'] );
+				wp_safe_redirect( $_REQUEST['wp_http_referer'] );
 				exit;
 			}
 		}
@@ -174,13 +133,26 @@ class SC_Settings {
 				wp_die( esc_html__( 'Cheatin, eh?', 'simple-cache' ) );
 			}
 
-			if ( ! SC_Config::factory()->verify_file_access() ) {
-				update_option( 'sc_cant_write', true );
-				wp_redirect( $_REQUEST['wp_http_referer'] );
-				exit;
-			}
+			$verify_file_access = sc_verify_file_access();
 
-			delete_option( 'sc_cant_write' );
+			if ( is_array( $verify_file_access ) ) {
+				if ( SC_IS_NETWORK ) {
+					update_site_option( 'sc_cant_write', array_map( 'sanitize_text_field', $verify_file_access ) );
+				} else {
+					update_option( 'sc_cant_write', array_map( 'sanitize_text_field', $verify_file_access ) );
+				}
+
+				if ( in_array( 'cache', $verify_file_access, true ) ) {
+					wp_safe_redirect( $_REQUEST['wp_http_referer'] );
+					exit;
+				}
+			} else {
+				if ( SC_IS_NETWORK ) {
+					delete_site_option( 'sc_cant_write' );
+				} else {
+					delete_option( 'sc_cant_write' );
+				}
+			}
 
 			$defaults       = SC_Config::factory()->defaults;
 			$current_config = SC_Config::factory()->get();
@@ -194,21 +166,23 @@ class SC_Settings {
 			}
 
 			// Back up configration in options.
-			update_option( 'sc_simple_cache', $clean_config );
-
-			WP_Filesystem();
+			if ( SC_IS_NETWORK ) {
+				update_site_option( 'sc_simple_cache', $clean_config );
+			} else {
+				update_option( 'sc_simple_cache', $clean_config );
+			}
 
 			SC_Config::factory()->write( $clean_config );
 
-			if ( apply_filters( 'sc_write_dropins', true ) ) {
+			if ( ! apply_filters( 'sc_disable_auto_edits', false ) ) {
 				SC_Advanced_Cache::factory()->write();
 				SC_Object_Cache::factory()->write();
-			}
 
-			if ( $clean_config['enable_page_caching'] ) {
-				SC_Advanced_Cache::factory()->toggle_caching( true );
-			} else {
-				SC_Advanced_Cache::factory()->toggle_caching( false );
+				if ( $clean_config['enable_page_caching'] ) {
+					SC_Advanced_Cache::factory()->toggle_caching( true );
+				} else {
+					SC_Advanced_Cache::factory()->toggle_caching( false );
+				}
 			}
 
 			// Reschedule cron events.
@@ -216,30 +190,10 @@ class SC_Settings {
 			SC_Cron::factory()->schedule_events();
 
 			if ( ! empty( $_REQUEST['wp_http_referer'] ) ) {
-				wp_redirect( $_REQUEST['wp_http_referer'] );
+				wp_safe_redirect( $_REQUEST['wp_http_referer'] );
 				exit;
 			}
 		}
-	}
-
-	/**
-	 * Sanitize options
-	 *
-	 * @param  array $option Array of options to sanitize.
-	 * @since  1.0
-	 * @return array
-	 */
-	public function sanitize_options( $option ) {
-
-		$new_option = array();
-
-		if ( ! empty( $option['enable_page_caching'] ) ) {
-			$new_option['enable_page_caching'] = true;
-		} else {
-			$new_option['enable_page_caching'] = false;
-		}
-
-		return $new_option;
 	}
 
 	/**
@@ -271,7 +225,7 @@ class SC_Settings {
 				<table class="form-table sc-simple-mode-table <?php if ( empty( $config['advanced_mode'] ) ) : ?>show<?php endif; ?>">
 					<tbody>
 						<tr>
-							<th scope="row"><label for="sc_enable_page_caching_simple"><span class="setting-highlight">*</span><?php _e( 'Enable Caching', 'simple-cache' ); ?></label></th>
+							<th scope="row"><label for="sc_enable_page_caching_simple"><span class="setting-highlight">*</span><?php esc_html_e( 'Enable Caching', 'simple-cache' ); ?></label></th>
 							<td>
 								<select <?php if ( ! empty( $config['advanced_mode'] ) ) : ?>disabled<?php endif; ?> name="sc_simple_cache[enable_page_caching]" id="sc_enable_page_caching_simple">
 									<option value="0"><?php esc_html_e( 'No', 'simple-cache' ); ?></option>
@@ -296,7 +250,7 @@ class SC_Settings {
 
 						<?php if ( function_exists( 'gzencode' ) ) : ?>
 							<tr>
-								<th scope="row"><label for="sc_enable_gzip_compression_simple"><?php _e( 'Enable Compression', 'simple-cache' ); ?></label></th>
+								<th scope="row"><label for="sc_enable_gzip_compression_simple"><?php esc_html_e( 'Enable Compression', 'simple-cache' ); ?></label></th>
 								<td>
 									<select <?php if ( ! empty( $config['advanced_mode'] ) ) : ?>disabled<?php endif; ?> name="sc_simple_cache[enable_gzip_compression]" id="sc_enable_gzip_compression_simple">
 										<option value="0"><?php esc_html_e( 'No', 'simple-cache' ); ?></option>
@@ -319,7 +273,7 @@ class SC_Settings {
 						</tr>
 
 						<tr>
-							<th scope="row"><label for="sc_enable_page_caching_advanced"><?php _e( 'Enable Page Caching', 'simple-cache' ); ?></label></th>
+							<th scope="row"><label for="sc_enable_page_caching_advanced"><?php esc_html_e( 'Enable Page Caching', 'simple-cache' ); ?></label></th>
 							<td>
 								<select <?php if ( empty( $config['advanced_mode'] ) ) : ?>disabled<?php endif; ?> name="sc_simple_cache[enable_page_caching]" id="sc_enable_page_caching_advanced">
 									<option value="0"><?php esc_html_e( 'No', 'simple-cache' ); ?></option>
@@ -331,7 +285,7 @@ class SC_Settings {
 						</tr>
 
 						<tr>
-							<th scope="row"><label for="sc_cache_exception_urls"><?php _e( 'Exception URL(s)', 'simple-cache' ); ?></label></th>
+							<th scope="row"><label for="sc_cache_exception_urls"><?php esc_html_e( 'Exception URL(s)', 'simple-cache' ); ?></label></th>
 							<td>
 								<textarea name="sc_simple_cache[cache_exception_urls]" class="widefat" id="sc_cache_exception_urls"><?php echo esc_html( $config['cache_exception_urls'] ); ?></textarea>
 
@@ -362,35 +316,34 @@ class SC_Settings {
 						</tr>
 						<tr>
 							<th scope="row" colspan="2">
-								<h2 class="cache-title"><?php esc_html_e( 'Object Cache (Redis or Memcache)', 'simple-cache' ); ?></h2>
+								<h2 class="cache-title"><?php esc_html_e( 'Object Cache (Redis or Memcached)', 'simple-cache' ); ?></h2>
 							</th>
 						</tr>
 
-						<?php if ( class_exists( 'Memcache' ) || class_exists( 'Redis' ) ) : ?>
+						<?php if ( class_exists( 'Memcache' ) || class_exists( 'Memcached' ) || class_exists( 'Redis' ) ) : ?>
 							<tr>
-								<th scope="row"><label for="sc_enable_in_memory_object_caching"><?php _e( 'Enable In-Memory Object Caching', 'simple-cache' ); ?></label></th>
+								<th scope="row"><label for="sc_enable_in_memory_object_caching"><?php esc_html_e( 'Enable In-Memory Object Caching', 'simple-cache' ); ?></label></th>
 								<td>
 									<select name="sc_simple_cache[enable_in_memory_object_caching]" id="sc_enable_in_memory_object_caching">
 										<option value="0"><?php esc_html_e( 'No', 'simple-cache' ); ?></option>
 										<option <?php selected( $config['enable_in_memory_object_caching'], true ); ?> value="1"><?php esc_html_e( 'Yes', 'simple-cache' ); ?></option>
 									</select>
 
-									<p class="description"><?php _e( "When enabled, things like database query results will be stored in memory. Right now Memcache and Redis are suppported. Note that if the proper <a href='https://pecl.php.net/package/memcache'>Memcache</a> (NOT Memcached) or <a href='https://pecl.php.net/package/redis'>Redis</a> PHP extensions aren't loaded, they won't show as options below.", 'simple-cache' ); ?></p>
+									<p class="description"><?php _e( "When enabled, things like database query results will be stored in memory. Memcached and Redis are suppported. Note that if the proper <a href='http://pecl.php.net/package/memcached'>Memcached</a>, <a href='http://pecl.php.net/package/memcache'>Memcache</a>, or <a href='https://pecl.php.net/package/redis'>Redis</a> PHP extensions aren't loaded, they won't show as options below.", 'simple-cache' ); ?></p>
 								</td>
 							</tr>
 							<tr>
-								<th class="in-memory-cache
-								<?php
-								if ( ! empty( $config['enable_in_memory_object_caching'] ) ) :
-								?>
-								show<?php endif; ?>" scope="row"><label for="sc_in_memory_cache"><?php _e( 'In Memory Cache', 'simple-cache' ); ?></label></th>
+								<th class="in-memory-cache <?php if ( ! empty( $config['enable_in_memory_object_caching'] ) ) : ?>show<?php endif; ?>" scope="row"><label for="sc_in_memory_cache"><?php esc_html_e( 'In Memory Cache', 'simple-cache' ); ?></label></th>
 								<td class="in-memory-cache <?php if ( ! empty( $config['enable_in_memory_object_caching'] ) ) : ?>show<?php endif; ?>">
 									<select name="sc_simple_cache[in_memory_cache]" id="sc_in_memory_cache">
-										<?php if ( class_exists( 'Memcache' ) ) : ?>
-											<option <?php selected( $config['in_memory_cache'], 'memcached' ); ?> value="memcached">Memcache</option>
-										<?php endif; ?>
 										<?php if ( class_exists( 'Redis' ) ) : ?>
 											<option <?php selected( $config['in_memory_cache'], 'redis' ); ?> value="redis">Redis</option>
+										<?php endif; ?>
+										<?php if ( class_exists( 'Memcached' ) ) : ?>
+											<option <?php selected( $config['in_memory_cache'], 'memcachedd' ); ?> value="memcachedd">Memcached</option>
+										<?php endif; ?>
+										<?php if ( class_exists( 'Memcache' ) ) : ?>
+											<option <?php selected( $config['in_memory_cache'], 'memcached' ); ?> value="memcached">Memcache (Legacy)</option>
 										<?php endif; ?>
 									</select>
 								</td>
@@ -398,7 +351,7 @@ class SC_Settings {
 						<?php else : ?>
 							<tr>
 								<td colspan="2">
-									<?php _e( 'Neither <a href="https://pecl.php.net/package/memcache">Memcache</a> (NOT Memcached) nor <a href="https://pecl.php.net/package/redis">Redis</a> PHP extensions are set up on your server.', 'simple-cache' ); ?>
+									<?php _e( 'Neither <a href="https://pecl.php.net/package/memcached">Memcached</a>, <a href="https://pecl.php.net/package/memcache">Memcache</a>, nor <a href="https://pecl.php.net/package/redis">Redis</a> PHP extensions are set up on your server.', 'simple-cache' ); ?>
 								</td>
 							</tr>
 						<?php endif; ?>
@@ -411,7 +364,7 @@ class SC_Settings {
 
 						<?php if ( function_exists( 'gzencode' ) ) : ?>
 							<tr>
-								<th scope="row"><label for="sc_enable_gzip_compression_advanced"><?php _e( 'Enable gzip Compression', 'simple-cache' ); ?></label></th>
+								<th scope="row"><label for="sc_enable_gzip_compression_advanced"><?php esc_html_e( 'Enable gzip Compression', 'simple-cache' ); ?></label></th>
 								<td>
 									<select <?php if ( empty( $config['advanced_mode'] ) ) : ?>disabled<?php endif; ?> name="sc_simple_cache[enable_gzip_compression]" id="sc_enable_gzip_compression_advanced">
 										<option value="0"><?php esc_html_e( 'No', 'simple-cache' ); ?></option>

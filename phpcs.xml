@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<ruleset name="Project Rules">
+	<rule ref="10up-Default">
+		<exclude name="WordPress.PHP.NoSilencedErrors.Discouraged" />
+		<exclude name="WordPress.WP.AlternativeFunctions.file_system_read_readfile" />
+		<exclude name="WordPress.WP.AlternativeFunctions.file_system_read_file_put_contents" />
+		<exclude name="WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents" />
+		<exclude name="WordPress.WP.GlobalVariablesOverride.OverrideProhibited" />
+	</rule>
+</ruleset>
