@@ -6,6 +6,6 @@
  */
 
 require_once dirname( __FILE__ ) . '/../vendor/autoload.php';
-require_once dirname( __FILE__ ) . '/../inc/dropins/file-based-page-cache-functions.php';
+require_once dirname( __FILE__ ) . '/../inc/pre-wp-functions.php';
 
 \WP_Mock::bootstrap();

@@ -66,7 +66,7 @@ class SC_Object_Cache {
 
 		if ( 'redis' === $config['in_memory_cache'] ) {
 			$cache_file = 'redis-object-cache.php';
-		} elseif ( 'memcachedd' === $config['in_memory_cache'] )  {
+		} elseif ( 'memcachedd' === $config['in_memory_cache'] ) {
 			$cache_file = 'memcached-object-cache.php';
 		}
 

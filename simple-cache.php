@@ -95,7 +95,7 @@ add_action( 'deactivate_' . plugin_basename( __FILE__ ), 'sc_deactivate' );
 /**
  * Create config file
  *
- * @param  bool   $network Whether the plugin is network wide
+ * @param  bool $network Whether the plugin is network wide
  * @since 1.0
  */
 function sc_activate( $network ) {
