@@ -2,7 +2,6 @@ language: php
 
 php:
     - "7.2"
-    - "7.0"
 
 env:
     - WP_VERSION=latest WP_MULTISITE=0
