@@ -96,7 +96,7 @@ class SC_Notices {
 		<div class="error sc-notice">
 			<p><?php esc_html_e( 'Simple Cache has encountered the following error(s):', 'simple-cache' ); ?></p>
 			<ol>
-				<?php if ( in_array( 'cache', $cant_write, true ) && ! $config['in_memory_cache'] ) : ?>
+				<?php if ( in_array( 'cache', $cant_write, true ) && ! $config['enable_in_memory_object_caching'] ) : ?>
 					<li>
 						<?php esc_html_e( 'Simple Cache is not able to write data to the cache directory.', 'simple-cache' ); ?>
 					</li>
