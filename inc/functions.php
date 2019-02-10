@@ -104,7 +104,13 @@ function sc_verify_file_access() {
 				$errors[] = 'cache';
 			}
 		} else {
-			$errors[] = 'cache';
+			if ( file_exists( dirname( dirname( sc_get_cache_dir() ) ) ) ) {
+				if ( ! @is_writable( dirname( dirname( sc_get_cache_dir() ) ) ) ) {
+					$errors[] = 'cache';
+				}
+			} else {
+				$errors[] = 'cache';
+			}
 		}
 	}
 
