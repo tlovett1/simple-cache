@@ -25,14 +25,14 @@ if ( is_multisite() && isset( $active_plugins[ plugin_basename( __FILE__ ) ] ) )
 	define( 'SC_IS_NETWORK', false );
 }
 
-require_once dirname( __FILE__ ) . '/inc/pre-wp-functions.php';
-require_once dirname( __FILE__ ) . '/inc/functions.php';
-require_once dirname( __FILE__ ) . '/inc/class-sc-notices.php';
-require_once dirname( __FILE__ ) . '/inc/class-sc-settings.php';
-require_once dirname( __FILE__ ) . '/inc/class-sc-config.php';
-require_once dirname( __FILE__ ) . '/inc/class-sc-advanced-cache.php';
-require_once dirname( __FILE__ ) . '/inc/class-sc-object-cache.php';
-require_once dirname( __FILE__ ) . '/inc/class-sc-cron.php';
+require_once SC_PATH . '/inc/pre-wp-functions.php';
+require_once SC_PATH . '/inc/functions.php';
+require_once SC_PATH . '/inc/class-sc-notices.php';
+require_once SC_PATH . '/inc/class-sc-settings.php';
+require_once SC_PATH . '/inc/class-sc-config.php';
+require_once SC_PATH . '/inc/class-sc-advanced-cache.php';
+require_once SC_PATH . '/inc/class-sc-object-cache.php';
+require_once SC_PATH . '/inc/class-sc-cron.php';
 
 SC_Settings::factory();
 SC_Advanced_Cache::factory();
