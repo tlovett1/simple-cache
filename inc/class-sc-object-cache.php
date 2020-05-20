@@ -82,13 +82,13 @@ class SC_Object_Cache {
 
 		// phpcs:disable
 		return '<?php ' .
-		"\n\r" . "defined( 'ABSPATH' ) || exit;" .
-		"\n\r" . "define( 'SC_OBJECT_CACHE', true );" .
-		"\n\r" . "defined( 'WP_CACHE_KEY_SALT' ) || define( 'WP_CACHE_KEY_SALT', '{$cache_key_salt}' );" .
-		"\n\r" . "include_once( WP_CONTENT_DIR . '/plugins/" . basename( SC_PATH ) . "/inc/pre-wp-functions.php' );" .
-		"\n\r" . "\$GLOBALS['sc_config'] = sc_load_config();" .
-		"\n\r" . "if ( empty( \$GLOBALS['sc_config'] ) || empty( \$GLOBALS['sc_config']['enable_in_memory_object_caching'] ) ) { return; }" .
-		"\n\r" . "if ( @file_exists( WP_CONTENT_DIR . '/plugins/" . basename( SC_PATH ) . "/inc/dropins/" . $cache_file . "' ) ) { require_once( WP_CONTENT_DIR . '/plugins/" . basename( SC_PATH ) . "/inc/dropins/" . $cache_file . "' ); }" . "\n\r";
+		"\r\n" . "defined( 'ABSPATH' ) || exit;" .
+		"\r\n" . "define( 'SC_OBJECT_CACHE', true );" .
+		"\r\n" . "defined( 'WP_CACHE_KEY_SALT' ) || define( 'WP_CACHE_KEY_SALT', '{$cache_key_salt}' );" .
+		"\r\n" . "include_once( WP_CONTENT_DIR . '/plugins/" . basename( SC_PATH ) . "/inc/pre-wp-functions.php' );" .
+		"\r\n" . "\$GLOBALS['sc_config'] = sc_load_config();" .
+		"\r\n" . "if ( empty( \$GLOBALS['sc_config'] ) || empty( \$GLOBALS['sc_config']['enable_in_memory_object_caching'] ) ) { return; }" .
+		"\r\n" . "if ( @file_exists( WP_CONTENT_DIR . '/plugins/" . basename( SC_PATH ) . "/inc/dropins/" . $cache_file . "' ) ) { require_once( WP_CONTENT_DIR . '/plugins/" . basename( SC_PATH ) . "/inc/dropins/" . $cache_file . "' ); }" . "\r\n";
 		// phpcs:enable
 	}
 

@@ -141,7 +141,7 @@ class SC_Config {
 		}
 
 		// phpcs:disable
-		return '<?php ' . "\n\r" . "defined( 'ABSPATH' ) || exit;" . "\n\r" . 'return ' . var_export( wp_parse_args( $config, $this->get_defaults() ), true ) . '; ' . "\n\r";
+		return '<?php ' . "\r\n" . "defined( 'ABSPATH' ) || exit;" . "\r\n" . 'return ' . var_export( wp_parse_args( $config, $this->get_defaults() ), true ) . '; ' . "\r\n";
 		// phpcs:enable
 	}
 
