@@ -22,7 +22,7 @@ function sc_cache_flush( $network_wide = false ) {
 
 			$url_parts = wp_parse_url( home_url() );
 
-			$path = sc_get_cache_dir() . '/' . untrailingslashit( $url_parts['host'] );
+			$path = sc_get_cache_dir() . '/' . untrailingslashit( $url_parts['host'] ) . '/';
 
 			if ( ! empty( $url_parts['path'] ) && '/' !== $url_parts['path'] ) {
 				$path .= trim( $url_parts['path'], '/' );
@@ -35,7 +35,7 @@ function sc_cache_flush( $network_wide = false ) {
 	} else {
 		$url_parts = wp_parse_url( home_url() );
 
-		$path = sc_get_cache_dir() . '/' . untrailingslashit( $url_parts['host'] );
+		$path = sc_get_cache_dir() . '/' . untrailingslashit( $url_parts['host'] ) . '/';
 
 		if ( ! empty( $url_parts['path'] ) && '/' !== $url_parts['path'] ) {
 			$path .= trim( $url_parts['path'], '/' );
