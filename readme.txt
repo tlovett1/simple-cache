@@ -2,7 +2,7 @@
 Contributors: tlovett1
 Tags: cache, page cache, object caching, object cache, memcache, redis, memcached
 Requires at least: 3.9
-Tested up to: 5.1
+Tested up to: 5.5
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -35,6 +35,12 @@ Pull requests are welcome on [Github](https://github.com/tlovett1/simple-cache).
 For full documentation, questions, feature requests, and support concerning the Simple Cache plugin, please refer to [Github](http://github.com/tlovett1/simple-cache).
 
 == Changelog ==
+
+= 1.7.2 =
+* Add try/catch to redis connect
+* Add sc_get_cache_path function
+* Fix cache flush path
+* Improve error messages
 
 = 1.7.1 =
 * Fix cache directory write check
