@@ -119,9 +119,9 @@ function sc_get_url_path() {
  *
  * @return string
  */
- function sc_get_cache_path() {
-	 return untrailingslashit( WP_CONTENT_DIR ) . '/cache/simple-cache';
- }
+function sc_get_cache_path() {
+	return rtrim( WP_CONTENT_DIR, '/' ) . '/cache/simple-cache';
+}
 
 /**
  * Optionally serve cache and exit
