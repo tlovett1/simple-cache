@@ -19,7 +19,7 @@ function sc_file_cache( $buffer, $flags ) {
 
 	$cache_dir = sc_get_cache_dir();
 
-	if ( strlen( $buffer ) < 255 ) {
+	if ( mb_strlen( $buffer ) < 255 ) {
 		return $buffer;
 	}
 
