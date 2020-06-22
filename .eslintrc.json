@@ -1,0 +1,11 @@
+{
+  "extends": "@10up/eslint-config/wordpress",
+  "rules": {
+    "prefer-template": 0
+  },
+  "globals": {
+	  "module": true,
+    "process": true,
+    "jquery": true
+  }
+}

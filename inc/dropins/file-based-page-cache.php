@@ -7,6 +7,10 @@
 
 defined( 'ABSPATH' ) || exit;
 
+if ( ! function_exists('sc_serve_file_cache') ) {
+	return;
+}
+
 // Don't cache robots.txt or htacesss.
 if ( strpos( $_SERVER['REQUEST_URI'], 'robots.txt' ) !== false || strpos( $_SERVER['REQUEST_URI'], '.htaccess' ) !== false ) {
 	return;

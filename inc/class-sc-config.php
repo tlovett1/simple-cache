@@ -51,7 +51,7 @@ class SC_Config {
 			),
 			'page_cache_length'               => array(
 				'default'   => 24,
-				'sanitizer' => 'floatval',
+				'sanitizer' => 'absint',
 			),
 			'page_cache_length_unit'          => array(
 				'default'   => 'hours',
@@ -141,7 +141,7 @@ class SC_Config {
 		}
 
 		// phpcs:disable
-		return '<?php ' . "\n\r" . "defined( 'ABSPATH' ) || exit;" . "\n\r" . 'return ' . var_export( wp_parse_args( $config, $this->get_defaults() ), true ) . '; ' . "\n\r";
+		return '<?php ' . "\r\n" . "defined( 'ABSPATH' ) || exit;" . "\r\n" . 'return ' . var_export( wp_parse_args( $config, $this->get_defaults() ), true ) . '; ' . "\r\n";
 		// phpcs:enable
 	}
 

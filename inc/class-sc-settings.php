@@ -73,16 +73,8 @@ class SC_Settings {
 		global $pagenow;
 
 		if ( ( 'options-general.php' === $pagenow || 'settings.php' === $pagenow ) && ! empty( $_GET['page'] ) && 'simple-cache' === $_GET['page'] ) {
-
-			if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-				$js_path = '/assets/js/src/settings.js';
-			} else {
-				$js_path = '/assets/js/settings.min.js';
-			}
-			$css_path = '/assets/css/settings.css';
-
-			wp_enqueue_script( 'sc-settings', plugins_url( $js_path, dirname( __FILE__ ) ), array( 'jquery' ), SC_VERSION, true );
-			wp_enqueue_style( 'sc-settings', plugins_url( $css_path, dirname( __FILE__ ) ), array(), SC_VERSION );
+			wp_enqueue_script( 'sc-settings', plugins_url( '/dist/js/settings.js', dirname( __FILE__ ) ), array( 'jquery' ), SC_VERSION, true );
+			wp_enqueue_style( 'sc-settings', plugins_url( '/dist/css/settings-styles.css', dirname( __FILE__ ) ), array(), SC_VERSION );
 		}
 	}
 

@@ -40,7 +40,9 @@ For full documentation, questions, feature requests, and support concerning the 
 * Add try/catch to redis connect
 * Add sc_get_cache_path function
 * Fix cache flush path
+* Fix purge intervals
 * Improve error messages
+* Improved string encoding for better compatibility with other languages
 
 = 1.7.1 =
 * Fix cache directory write check
