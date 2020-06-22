@@ -51,7 +51,7 @@ class SC_Config {
 			),
 			'page_cache_length'               => array(
 				'default'   => 24,
-				'sanitizer' => 'floatval',
+				'sanitizer' => 'absint',
 			),
 			'page_cache_length_unit'          => array(
 				'default'   => 'hours',
