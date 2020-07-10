@@ -37,6 +37,9 @@ For full documentation, questions, feature requests, and support concerning the 
 == Changelog ==
 
 = 1.7.2 =
+* Use WP_PLUGIN_DIR constant
+
+= 1.7.2 =
 * Add try/catch to redis connect
 * Add sc_get_cache_path function
 * Fix cache flush path
