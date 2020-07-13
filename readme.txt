@@ -36,7 +36,10 @@ For full documentation, questions, feature requests, and support concerning the 
 
 == Changelog ==
 
-= 1.7.2 =
+= 1.7.4 =
+* Fix WP_PLUGIN_DIR constant
+
+= 1.7.3 =
 * Use WP_PLUGIN_DIR constant
 
 = 1.7.2 =

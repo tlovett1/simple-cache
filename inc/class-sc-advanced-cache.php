@@ -182,10 +182,11 @@ class SC_Advanced_Cache {
 		"\r\n" . "defined( 'ABSPATH' ) || exit;" .
 		"\r\n" . "define( 'SC_ADVANCED_CACHE', true );" .
 		"\r\n" . 'if ( is_admin() ) { return; }' .
-		"\r\n" . "include_once( WP_PLUGIN_DIR . '/simple-cache/inc/pre-wp-functions.php' );" .
+		"\r\n" . "\$plugin_path = defined( 'WP_PLUGIN_DIR' ) ? WP_PLUGIN_DIR : WP_CONTENT_DIR . '/plugins/';" .
+		"\r\n" . "include_once( \$plugin_path . '/simple-cache/inc/pre-wp-functions.php' );" .
 		"\r\n" . "\$GLOBALS['sc_config'] = sc_load_config();" .
 		"\r\n" . "if ( empty( \$GLOBALS['sc_config'] ) || empty( \$GLOBALS['sc_config']['enable_page_caching'] ) ) { return; }" .
-		"\r\n" . "if ( @file_exists( WP_PLUGIN_DIR . '/simple-cache/inc/dropins/" . $cache_file . "' ) ) { include_once( WP_PLUGIN_DIR . '/simple-cache/inc/dropins/" . $cache_file . "' ); }" . "\r\n";
+		"\r\n" . "if ( @file_exists( \$plugin_path . '/simple-cache/inc/dropins/" . $cache_file . "' ) ) { include_once( \$plugin_path . '/simple-cache/inc/dropins/" . $cache_file . "' ); }" . "\r\n";
 		// phpcs:enable
 	}
 

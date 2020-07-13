@@ -85,10 +85,11 @@ class SC_Object_Cache {
 		"\r\n" . "defined( 'ABSPATH' ) || exit;" .
 		"\r\n" . "define( 'SC_OBJECT_CACHE', true );" .
 		"\r\n" . "defined( 'WP_CACHE_KEY_SALT' ) || define( 'WP_CACHE_KEY_SALT', '{$cache_key_salt}' );" .
-		"\r\n" . "include_once( WP_PLUGIN_DIR . '/simple-cache/inc/pre-wp-functions.php' );" .
+		"\r\n" . "\$plugin_path = defined( 'WP_PLUGIN_DIR' ) ? WP_PLUGIN_DIR : WP_CONTENT_DIR . '/plugins/';" .
+		"\r\n" . "include_once( \$plugin_path . '/simple-cache/inc/pre-wp-functions.php' );" .
 		"\r\n" . "\$GLOBALS['sc_config'] = sc_load_config();" .
 		"\r\n" . "if ( empty( \$GLOBALS['sc_config'] ) || empty( \$GLOBALS['sc_config']['enable_in_memory_object_caching'] ) ) { return; }" .
-		"\r\n" . "if ( @file_exists( WP_PLUGIN_DIR . '/simple-cache/inc/dropins/" . $cache_file . "' ) ) { require_once( WP_PLUGIN_DIR . '/simple-cache/inc/dropins/" . $cache_file . "' ); }" . "\r\n";
+		"\r\n" . "if ( @file_exists( \$plugin_path . '/simple-cache/inc/dropins/" . $cache_file . "' ) ) { require_once( \$plugin_path . '/simple-cache/inc/dropins/" . $cache_file . "' ); }" . "\r\n";
 		// phpcs:enable
 	}
 
