@@ -69,6 +69,10 @@ class SC_Config {
 				'default'   => false,
 				'sanitizer' => array( $this, 'boolval' ),
 			),
+			'restore_headers'                 => array(
+				'default'   => false,
+				'sanitizer' => array( $this, 'boolval' ),
+			),
 		);
 	}
 
