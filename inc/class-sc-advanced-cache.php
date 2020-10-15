@@ -96,11 +96,16 @@ class SC_Advanced_Cache {
 	 * @since  1.3
 	 */
 	public function purge_post_on_update( $post_id ) {
-		$post_type = get_post_type( $post_id );
+		$post = get_post( $post_id );
 
-		if ( ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) || 'revision' === $post_type ) {
+		// Do not purge the cache if it's an autosave or it is updating a revision.
+		if ( ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) || 'revision' === $post->post_type ) {
 			return;
+		// Do not purge the cache if the user cannot edit the post.
 		} elseif ( ! current_user_can( 'edit_post', $post_id ) && ( ! defined( 'DOING_CRON' ) || ! DOING_CRON ) ) {
+			return;
+		// Do not purge the cache if the user is editing an unpublished post.
+		} elseif ( 'draft' === $post->post_status ) {
 			return;
 		}
 
