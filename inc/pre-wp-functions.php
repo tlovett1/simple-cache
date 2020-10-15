@@ -28,6 +28,11 @@ function sc_file_cache( $buffer, $flags ) {
 		return $buffer;
 	}
 
+	// Don't cache external authenticated REST API requests.
+	if ( defined( 'REST_REQUEST') && REST_REQUEST && ( ! empty( $_SERVER['HTTP_AUTHORIZATION'] ) ) ) {
+		return $buffer;
+	}
+
 	// Make sure we can read/write files to cache dir parent
 	if ( ! file_exists( dirname( $cache_dir ) ) ) {
 		if ( ! @mkdir( dirname( $cache_dir ) ) ) {
@@ -67,6 +72,13 @@ function sc_file_cache( $buffer, $flags ) {
 
 	$modified_time = time(); // Make sure modified time is consistent.
 
+	$file_extension = '.html';
+
+	// Store JSON files for the REST API.
+	if ( defined( 'REST_REQUEST' ) && REST_REQUEST ) {
+		$file_extension = '.json';
+	}
+
 	// Prevent mixed content when there's an http request but the site URL uses https.
 	$home_url = get_home_url();
 
@@ -83,11 +95,11 @@ function sc_file_cache( $buffer, $flags ) {
 	}
 
 	if ( ! empty( $GLOBALS['sc_config']['enable_gzip_compression'] ) && function_exists( 'gzencode' ) ) {
-		file_put_contents( $path . '/index.gzip.html', gzencode( $buffer, 3 ) );
-		touch( $path . '/index.gzip.html', $modified_time );
+		file_put_contents( $path . '/index.gzip' . $file_extension, gzencode( $buffer, 3 ) );
+		touch( $path . '/index.gzip' . $file_extension, $modified_time );
 	} else {
-		file_put_contents( $path . '/index.html', $buffer );
-		touch( $path . '/index.html', $modified_time );
+		file_put_contents( $path . '/index' . $file_extension, $buffer );
+		touch( $path . '/index' . $file_extension, $modified_time );
 	}
 
 	header( 'Cache-Control: no-cache' ); // Check back every time to see if re-download is necessary.
@@ -131,13 +143,21 @@ function sc_get_cache_path() {
 function sc_serve_file_cache() {
 	$cache_dir = ( defined( 'SC_CACHE_DIR' ) ) ? rtrim( SC_CACHE_DIR, '/' ) : rtrim( WP_CONTENT_DIR, '/' ) . '/cache/simple-cache';
 
-	$file_name = 'index.html';
+	$file_name = 'index.';
 
 	if ( function_exists( 'gzencode' ) && ! empty( $GLOBALS['sc_config']['enable_gzip_compression'] ) ) {
-		$file_name = 'index.gzip.html';
+		$file_name = 'index.gzip.';
 	}
 
-	$path = $cache_dir . '/' . rtrim( sc_get_url_path(), '/' ) . '/' . $file_name;
+	$html_path = $cache_dir . '/' . rtrim( sc_get_url_path(), '/' ) . '/' . $file_name . 'html';
+	$json_path = $cache_dir . '/' . rtrim( sc_get_url_path(), '/' ) . '/' . $file_name . 'json';
+
+	if ( @file_exists( $html_path ) && @is_readable( $html_path ) ) {
+		$path = $html_path;
+	} else if ( @file_exists( $json_path ) && @is_readable( $json_path ) ) {
+		$path = $json_path;
+		header( 'Content-Type: application/json');
+	}
 
 	$modified_time = (int) @filemtime( $path );
 
@@ -152,7 +172,7 @@ function sc_serve_file_cache() {
 		exit;
 	}
 
-	if ( @file_exists( $path ) && @is_readable( $path ) ) {
+	if ( $path ) {
 		if ( function_exists( 'gzencode' ) && ! empty( $GLOBALS['sc_config']['enable_gzip_compression'] ) ) {
 			header( 'Content-Encoding: gzip' );
 		}
