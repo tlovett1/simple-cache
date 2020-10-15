@@ -104,6 +104,8 @@ function sc_file_cache( $buffer, $flags ) {
 
 	header( 'Cache-Control: no-cache' ); // Check back every time to see if re-download is necessary.
 
+	header( 'X-Simple-Cache: MISS' );
+
 	header( 'Last-Modified: ' . gmdate( 'D, d M Y H:i:s', $modified_time ) . ' GMT' );
 
 	if ( function_exists( 'ob_gzhandler' ) && ! empty( $GLOBALS['sc_config']['enable_gzip_compression'] ) ) {
@@ -176,6 +178,8 @@ function sc_serve_file_cache() {
 		if ( function_exists( 'gzencode' ) && ! empty( $GLOBALS['sc_config']['enable_gzip_compression'] ) ) {
 			header( 'Content-Encoding: gzip' );
 		}
+
+		header( 'X-Simple-Cache: HIT' ); 
 
 		@readfile( $path );
 
