@@ -306,6 +306,18 @@ class SC_Settings {
 								</select>
 							</td>
 						</tr>
+
+						<tr>
+							<th scope="row"><label for="sc_enable_rest_api_cache"><?php esc_html_e( 'REST API Cache', 'simple-cache' ); ?></label></th>
+							<td>
+								<select <?php if ( empty( $config['advanced_mode'] ) ) : ?>disabled<?php endif; ?> name="sc_simple_cache[enable_rest_api_cache]" id="sc_enable_rest_api_cache">
+									<option value="0"><?php esc_html_e( 'No', 'simple-cache' ); ?></option>
+									<option <?php selected( $config['enable_rest_api_cache'], true ); ?> value="1"><?php esc_html_e( 'Yes', 'simple-cache' ); ?></option>
+								</select>
+								<p class="description"><?php esc_html_e( 'When enabled, the REST API requests will be cached.', 'simple-cache' ); ?></p>
+							</td>
+						</tr>
+
 						<tr>
 							<th scope="row" colspan="2">
 								<h2 class="cache-title"><?php esc_html_e( 'Object Cache (Redis or Memcached)', 'simple-cache' ); ?></h2>
@@ -367,6 +379,7 @@ class SC_Settings {
 								</td>
 							</tr>
 						<?php endif; ?>
+
 					</tbody>
 				</table>
 

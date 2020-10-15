@@ -28,8 +28,8 @@ function sc_file_cache( $buffer, $flags ) {
 		return $buffer;
 	}
 
-	// Don't cache external authenticated REST API requests.
-	if ( defined( 'REST_REQUEST') && REST_REQUEST && ( ! empty( $_SERVER['HTTP_AUTHORIZATION'] ) ) ) {
+	// Do not cache the REST API if the user has not opted-in or it's an authenticated REST API request.
+	if ( defined( 'REST_REQUEST') && REST_REQUEST && ( empty( $GLOBALS['sc_config']['enable_rest_api_cache'] ) || ! empty( $_SERVER['HTTP_AUTHORIZATION'] ) ) ) {
 		return $buffer;
 	}
 

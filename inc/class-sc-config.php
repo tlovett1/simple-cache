@@ -65,6 +65,10 @@ class SC_Config {
 				'default'   => false,
 				'sanitizer' => array( $this, 'boolval' ),
 			),
+			'enable_rest_api_cache'           => array(
+				'default'   => false,
+				'sanitizer' => array( $this, 'boolval' ),
+			),
 		);
 	}
 
