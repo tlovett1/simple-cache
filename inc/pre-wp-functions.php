@@ -19,8 +19,8 @@ function sc_file_cache( $buffer, $flags ) {
 
 	$cache_dir = sc_get_cache_dir();
 
-	// Don't cache small requests (unless it's a REST API request).
-	if ( ! defined( 'REST_REQUEST' ) && mb_strlen( $buffer ) < 255 ) {
+	// Don't cache small requests unless it's a REST API request.
+	if ( mb_strlen( $buffer ) < 255 && ( ! defined( 'REST_REQUEST' ) || ! mb_strlen( $buffer ) > 0 ) ) {
 		return $buffer;
 	}
 
