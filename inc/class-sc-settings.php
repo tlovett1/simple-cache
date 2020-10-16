@@ -390,7 +390,6 @@ class SC_Settings {
 								</td>
 							</tr>
 						<?php endif; ?>
-
 					</tbody>
 				</table>
 
