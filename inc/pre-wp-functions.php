@@ -180,7 +180,7 @@ function sc_serve_file_cache() {
 		exit;
 	}
 
-	if ( $path ) {
+	if ( isset( $path ) ) {
 
 		// Restore the headers if a `header.json` file is found.
 		if ( @file_exists( $header_path ) && @is_readable( $header_path ) ) {
