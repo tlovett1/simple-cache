@@ -30,7 +30,7 @@ function sc_file_cache( $buffer, $flags ) {
 	}
 
 	// Do not cache the REST API if the user has not opted-in or it's an authenticated REST API request.
-	if ( defined( 'REST_REQUEST' ) && REST_REQUEST && ( empty( $GLOBALS['sc_config']['enable_rest_api_cache'] ) || ! empty( $_SERVER['HTTP_AUTHORIZATION'] ) ) ) {
+	if ( defined( 'REST_REQUEST' ) && REST_REQUEST && ( empty( $GLOBALS['sc_config']['page_cache_enable_rest_api_cache'] ) || ! empty( $_SERVER['HTTP_AUTHORIZATION'] ) ) ) {
 		return $buffer;
 	}
 
@@ -105,7 +105,7 @@ function sc_file_cache( $buffer, $flags ) {
 	}
 
 	// Save the resonse headers.
-	if ( ! empty( $GLOBALS['sc_config']['restore_headers'] ) ) {
+	if ( ! empty( $GLOBALS['sc_config']['page_cache_restore_headers'] ) ) {
 		file_put_contents( $path . '/headers.json', wp_json_encode( headers_list() ) );
 	}
 

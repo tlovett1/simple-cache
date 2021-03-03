@@ -65,11 +65,11 @@ class SC_Config {
 				'default'   => false,
 				'sanitizer' => array( $this, 'boolval' ),
 			),
-			'enable_rest_api_cache'           => array(
+			'page_cache_enable_rest_api_cache'           => array(
 				'default'   => false,
 				'sanitizer' => array( $this, 'boolval' ),
 			),
-			'restore_headers'                 => array(
+			'page_cache_restore_headers'                 => array(
 				'default'   => false,
 				'sanitizer' => array( $this, 'boolval' ),
 			),

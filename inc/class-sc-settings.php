@@ -308,22 +308,22 @@ class SC_Settings {
 						</tr>
 
 						<tr>
-							<th scope="row"><label for="sc_enable_rest_api_cache"><?php esc_html_e( 'Cache REST API', 'simple-cache' ); ?></label></th>
+							<th scope="row"><label for="sc_page_cache_enable_rest_api_cache"><?php esc_html_e( 'Cache REST API', 'simple-cache' ); ?></label></th>
 							<td>
-								<select <?php if ( empty( $config['advanced_mode'] ) ) : ?>disabled<?php endif; ?> name="sc_simple_cache[enable_rest_api_cache]" id="sc_enable_rest_api_cache">
+								<select <?php if ( empty( $config['advanced_mode'] ) ) : ?>disabled<?php endif; ?> name="sc_simple_cache[page_cache_enable_rest_api_cache]" id="sc_page_cache_enable_rest_api_cache">
 									<option value="0"><?php esc_html_e( 'No', 'simple-cache' ); ?></option>
-									<option <?php selected( $config['enable_rest_api_cache'], true ); ?> value="1"><?php esc_html_e( 'Yes', 'simple-cache' ); ?></option>
+									<option <?php selected( $config['page_cache_enable_rest_api_cache'], true ); ?> value="1"><?php esc_html_e( 'Yes', 'simple-cache' ); ?></option>
 								</select>
 								<p class="description"><?php esc_html_e( 'When enabled, the REST API requests will be cached.', 'simple-cache' ); ?></p>
 							</td>
 						</tr>
 
 						<tr>
-							<th scope="row"><label for="sc_restore_headers"><?php esc_html_e( 'Restore Headers', 'simple-cache' ); ?></label></th>
+							<th scope="row"><label for="sc_page_cache_restore_headers"><?php esc_html_e( 'Restore Headers', 'simple-cache' ); ?></label></th>
 							<td>
-								<select <?php if ( empty( $config['advanced_mode'] ) ) : ?>disabled<?php endif; ?> name="sc_simple_cache[restore_headers]" id="sc_restore_headers">
+								<select <?php if ( empty( $config['advanced_mode'] ) ) : ?>disabled<?php endif; ?> name="sc_simple_cache[page_cache_restore_headers]" id="sc_page_cache_restore_headers">
 									<option value="0"><?php esc_html_e( 'No', 'simple-cache' ); ?></option>
-									<option <?php selected( $config['restore_headers'], true ); ?> value="1"><?php esc_html_e( 'Yes', 'simple-cache' ); ?></option>
+									<option <?php selected( $config['page_cache_restore_headers'], true ); ?> value="1"><?php esc_html_e( 'Yes', 'simple-cache' ); ?></option>
 								</select>
 								<p class="description"><?php esc_html_e( 'When enabled, the plugin will save the response headers present when the page is cached and it will send send them again when it serves the cached page. This is recommended when caching the REST API.', 'simple-cache' ); ?></p>
 							</td>
