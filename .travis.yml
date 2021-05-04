@@ -10,6 +10,7 @@ env:
     - WP_VERSION=3.9 WP_MULTISITE=1
 
 before_script:
+    - composer self-update --1
     - composer install
 
 script:
