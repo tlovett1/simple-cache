@@ -24,6 +24,8 @@ const pageCacheLengthSimple = document.getElementById('sc_page_cache_length_simp
 const pageCacheLengthAdvanced = document.getElementById('sc_page_cache_length_advanced');
 const pageCacheLengthUnitSimple = document.getElementById('sc_page_cache_length_unit_simple');
 const pageCacheLengthUnitAdvanced = document.getElementById('sc_page_cache_length_unit_advanced');
+const pageRestApiCache = document.getElementById('sc_page_cache_enable_rest_api_cache');
+const pageRestoreHeaders = document.getElementById('sc_page_cache_restore_headers');
 const gzipCompressionSimple = document.getElementById('sc_enable_gzip_compression_simple');
 const gzipCompressionAdvanced = document.getElementById('sc_enable_gzip_compression_advanced');
 
@@ -41,6 +43,9 @@ $advancedModeToggle.on('change', (event) => {
 		pageCacheLengthUnitSimple.disabled = true;
 		pageCacheLengthUnitAdvanced.disabled = false;
 
+		pageRestApiCache.disabled = false;
+		pageRestoreHeaders.disabled = false;
+
 		if (gzipCompressionSimple) {
 			gzipCompressionSimple.disabled = true;
 			gzipCompressionAdvanced.disabled = false;
@@ -57,6 +62,9 @@ $advancedModeToggle.on('change', (event) => {
 
 		pageCacheLengthUnitSimple.disabled = false;
 		pageCacheLengthUnitAdvanced.disabled = true;
+
+		pageRestApiCache.disabled = true;
+		pageRestoreHeaders.disabled = true;
 
 		if (gzipCompressionSimple) {
 			gzipCompressionSimple.disabled = false;
