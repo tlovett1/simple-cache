@@ -7,7 +7,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-if ( ! function_exists('sc_serve_file_cache') ) {
+if ( ! function_exists( 'sc_serve_file_cache' ) ) {
 	return;
 }
 

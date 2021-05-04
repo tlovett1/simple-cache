@@ -5,13 +5,15 @@ msgstr ""
 "Project-Id-Version: Simple Cache\n"
 "Report-Msgid-Bugs-To: https://github.com/tlovett1/custom-contact-forms/"
 "issues\n"
-"POT-Creation-Date: 2017-05-19 19:47-0500\n"
-"PO-Revision-Date: 2017-05-19 20:57-0500\n"
+"POT-Creation-Date: 2020-10-15 13:19+0200\n"
+"PO-Revision-Date: 2020-10-15 15:25+0200\n"
+"Last-Translator: \n"
 "Language-Team: \n"
+"Language: es_ES\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.11\n"
+"X-Generator: Poedit 2.4.1\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-SourceCharset: UTF-8\n"
@@ -19,225 +21,309 @@ msgstr ""
 "_n_noop:1,2;_c,_nc:4c,1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;_nx_noop:4c,1,2;"
 "esc_html_e;esc_html__;esc_attr__;esc_attr_e\n"
 "X-Textdomain-Support: yes\n"
-"Last-Translator: \n"
-"Language: es_ES\n"
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: node_modules\n"
 "X-Poedit-SearchPathExcluded-1: vendor\n"
 
-#: inc/class-sc-advanced-cache.php:162
-msgid "define(\"WP_CACHE\", true); is not in wp-config.php."
-msgstr "define(\"WP_CACHE\", true); no está en wp-config.php."
-
-#: inc/class-sc-advanced-cache.php:166
-msgid "wp-content/advanced-cache.php was edited or deleted."
-msgstr "wp-content/advanced-cache.php fue editado o borrado."
-
-#: inc/class-sc-advanced-cache.php:169
-msgid "Simple Cache is not able to utilize page caching."
-msgstr "Simple Cache no puede utilizar el almacenamiento en caché de página."
-
-#: inc/class-sc-advanced-cache.php:171 inc/class-sc-object-cache.php:44
-msgid "Fix"
-msgstr "Arreglar"
-
-#: inc/class-sc-cron.php:41
+#: inc/class-sc-cron.php:55
 msgid "Simple Cache Purge Interval"
 msgstr "Intervalo de purga de Simple Cache"
 
-#: inc/class-sc-object-cache.php:42
-msgid ""
-"wp-content/object-cache.php was edited or deleted. Simple Cache is not able "
-"to utilize object caching."
-msgstr ""
-"wp-content/object-cache.php fue editado o borrado. Simple Cache no puede "
-"utilizar el almacenamiento en caché del objeto."
-
-#: inc/class-sc-settings.php:43 inc/class-sc-settings.php:403
-msgid "Purge Cache"
-msgstr "Purgar Caché"
-
-#: inc/class-sc-settings.php:69
+#: inc/class-sc-notices.php:62
 msgid "Simple Cache won't work until you turn it on."
 msgstr "Simple Cache no funcionará hasta que lo enciendas."
 
-#: inc/class-sc-settings.php:70
+#: inc/class-sc-notices.php:63
 msgid "Turn On Caching"
 msgstr "Activar Caché"
 
-#: inc/class-sc-settings.php:94
+#: inc/class-sc-notices.php:97
+msgid "Simple Cache has encountered the following error(s):"
+msgstr "Simple Cache ha encontrado los siguientes errores:"
+
+#: inc/class-sc-notices.php:101
+msgid "Simple Cache is not able to write data to the cache directory."
+msgstr "Simple Cache no puede crear archivos en el directorio de la caché."
+
+#: inc/class-sc-notices.php:107
 msgid ""
-"Simple Cache can't create or modify needed files on your system. "
-"Specifically, Simple Cache needs to write to wp-config.php and /wp-content "
-"using PHP's fopen() function. Contact your host."
+"<code>define( \"WP_CACHE\", true );</code> is not in wp-config.php. Either "
+"click \"Attempt Fix\" or add the code manually."
 msgstr ""
-"Simple Cache no puede crear ni modificar los archivos necesarios en su "
-"sistema. Específicamente, Simple Cache necesita escribir en wp-config.php y /"
-"wp-content usando la función fopen() de PHP. Ponte en contacto con su host."
+"<code>define( \"WP_CACHE\", true );</code> no está presente en wp-config."
+"php. Haga clic en \"Intentar corregir\" o agregue el código manualmente."
 
-#: inc/class-sc-settings.php:95
-msgid "Try Again"
-msgstr "Intenta de nuevo"
+#: inc/class-sc-notices.php:113
+#, php-format
+msgid ""
+"Simple Cache could not create the necessary config file. Either click "
+"\"Attempt Fix\" or add the following code to <code>%s</code>:"
+msgstr ""
+"Simple Cache no pudo crear el archivo de configuración necesario. Haga clic "
+"en \"Intentar corregir\" o agregue el siguiente código <code>%s</code> a:"
 
-#: inc/class-sc-settings.php:132
+#: inc/class-sc-notices.php:121
+msgid ""
+"Simple Cache could not write object-cache.php to your wp-content directory "
+"or the file has been tampered with. Either click \"Attempt Fix\" or add the "
+"following code manually to <code>wp-content/object-cache.php</code>:"
+msgstr ""
+"Simple Cache no pudo escribir object-cache.php en tu directorio wp-content o "
+"el archivo ha sido manipulado. Haga clic en \"Intentar corregir\" o agregue "
+"el siguiente código manualmente <code>wp-content/object-cache.php</code> a:"
+
+#: inc/class-sc-notices.php:129
+msgid ""
+"Simple Cache could not write advanced-cache.php to your wp-content directory "
+"or the file has been tampered with. Either click \"Attempt Fix\" or add the "
+"following code manually to <code>wp-content/advanced-cache.php</code>:"
+msgstr ""
+"Simple Cache no pudo escribir advanced-cache.php en su directorio wp-content "
+"o el archivo ha sido manipulado. Haga clic en \"Intentar corregir\" o "
+"agregue el siguiente código manualmente <code>wp-content/advanced-cache.php</"
+"code> a:"
+
+#: inc/class-sc-notices.php:137
+msgid "Attempt Fix"
+msgstr "Intentar corregir"
+
+#: inc/class-sc-settings.php:41 inc/class-sc-settings.php:87
 msgid "Simple Cache"
 msgstr "Simple Cache"
 
-#: inc/class-sc-settings.php:166
-msgid "Cheatin, eh?"
-msgstr "¿Engañando, eh?"
+#: inc/class-sc-settings.php:61 inc/class-sc-settings.php:399
+msgid "Purge Cache"
+msgstr "Purgar Caché"
 
-#: inc/class-sc-settings.php:246
+#: inc/class-sc-settings.php:99 inc/class-sc-settings.php:125
+msgid "You need a higher level of permission."
+msgstr "Necesitas un nivel de permisos mayor."
+
+#: inc/class-sc-settings.php:202
 msgid "Simple Cache Settings"
 msgstr "Ajustes de Simple Cache"
 
-#: inc/class-sc-settings.php:254
+#: inc/class-sc-settings.php:210
 msgid "Enable Advanced Mode"
 msgstr "Habilitar Modo Avanzado"
 
-#: inc/class-sc-settings.php:256 inc/class-sc-settings.php:267
-#: inc/class-sc-settings.php:286 inc/class-sc-settings.php:309
-#: inc/class-sc-settings.php:326 inc/class-sc-settings.php:351
-#: inc/class-sc-settings.php:390
+#: inc/class-sc-settings.php:212 inc/class-sc-settings.php:223
+#: inc/class-sc-settings.php:248 inc/class-sc-settings.php:271
+#: inc/class-sc-settings.php:288 inc/class-sc-settings.php:314
+#: inc/class-sc-settings.php:325 inc/class-sc-settings.php:343
+#: inc/class-sc-settings.php:385
 msgid "No"
 msgstr "No"
 
-#: inc/class-sc-settings.php:257 inc/class-sc-settings.php:268
-#: inc/class-sc-settings.php:287 inc/class-sc-settings.php:310
-#: inc/class-sc-settings.php:327 inc/class-sc-settings.php:352
-#: inc/class-sc-settings.php:391
+#: inc/class-sc-settings.php:213 inc/class-sc-settings.php:224
+#: inc/class-sc-settings.php:249 inc/class-sc-settings.php:272
+#: inc/class-sc-settings.php:289 inc/class-sc-settings.php:315
+#: inc/class-sc-settings.php:326 inc/class-sc-settings.php:344
+#: inc/class-sc-settings.php:386
 msgid "Yes"
 msgstr "Sí"
 
-#: inc/class-sc-settings.php:264
+#: inc/class-sc-settings.php:220
 msgid "Enable Caching"
 msgstr "Habilitar Caché"
 
-#: inc/class-sc-settings.php:271
+#: inc/class-sc-settings.php:227
 msgid ""
 "Turn this on to get started. This setting turns on caching and is really all "
 "you need."
 msgstr ""
-"Activar esto para empezar. Este ajuste activa el caché y es realmente todo "
-"lo que necesita."
+"Activa para empezar. Este ajuste activa el caché y es realmente todo lo que "
+"necesitas."
 
-#: inc/class-sc-settings.php:275
+#: inc/class-sc-settings.php:231
 msgid "Expire the cache after"
-msgstr "Expirar el caché después"
+msgstr "Expirar la caché después de"
 
-#: inc/class-sc-settings.php:277 inc/class-sc-settings.php:337
+#: inc/class-sc-settings.php:235 inc/class-sc-settings.php:302
 msgid "minutes"
 msgstr "minutos"
 
-#: inc/class-sc-settings.php:283
+#: inc/class-sc-settings.php:236 inc/class-sc-settings.php:303
+msgid "hours"
+msgstr "horas"
+
+#: inc/class-sc-settings.php:237 inc/class-sc-settings.php:304
+msgid "days"
+msgstr "días"
+
+#: inc/class-sc-settings.php:238 inc/class-sc-settings.php:305
+msgid "weeks"
+msgstr "semanas"
+
+#: inc/class-sc-settings.php:245
 msgid "Enable Compression"
 msgstr "Habilitar Compresión"
 
-#: inc/class-sc-settings.php:290
+#: inc/class-sc-settings.php:252
 msgid ""
 "When enabled, pages will be compressed. This is a good thing! This should "
 "always be enabled unless it causes issues."
 msgstr ""
-"Cuando esté activado, las páginas se comprimirán. ¡Esto es bueno! Esto "
-"siempre debe estar habilitado a menos que cause problemas."
+"Cuando está activado, las páginas se sirven comprimidas. ¡Esto es bueno! "
+"Habilítalo a menos que cause problemas."
 
-#: inc/class-sc-settings.php:301
+#: inc/class-sc-settings.php:263
 msgid "Page Cache"
 msgstr "Caché de Página"
 
-#: inc/class-sc-settings.php:306
+#: inc/class-sc-settings.php:268
 msgid "Enable Page Caching"
 msgstr "Habilitar Caché de Página"
 
-#: inc/class-sc-settings.php:313
+#: inc/class-sc-settings.php:275
 msgid "When enabled, entire front end pages will be cached."
 msgstr ""
-"Cuando esté activado, las páginas front-end completas se almacenarán en "
-"caché."
+"Cuando está activado, las páginas completas se almacenarán en la caché."
 
-#: inc/class-sc-settings.php:318
+#: inc/class-sc-settings.php:280
 msgid "Exception URL(s)"
-msgstr "URL(s) de excepción"
+msgstr "URL(s) exentas"
 
-#: inc/class-sc-settings.php:322
+#: inc/class-sc-settings.php:284
 msgid ""
 "Allows you to add URL(s) to be exempt from page caching. One URL per line. "
 "URL(s) can be full URLs (http://google.com) or absolute paths (/my/url/). "
 "You can also use wildcards like so /url/* (matches any url starting with /"
 "url/)."
 msgstr ""
-"Te permite agregar URL(s) para estar exento del caché de páginas. Una URL "
-"por línea. Las URL pueden ser URLs completas (http://google.com) o rutas "
-"absolutas (/mi/url/). También puedes usar comodines como /url/* (coincide "
-"con cualquier url que comience con /url/)."
+"Estas URL(s) no se almacenarán en la caché. Una URL por línea. Las URLs "
+"pueden ser URLs completas (http://google.com) o rutas absolutas (/mi/url/). "
+"También puedes usar comodines como /url/* (coincide con cualquier url que "
+"comience con /url/)."
 
-#: inc/class-sc-settings.php:329
+#: inc/class-sc-settings.php:291
 msgid "Enable Regex"
 msgstr "Habilitar Regex"
 
-#: inc/class-sc-settings.php:335
+#: inc/class-sc-settings.php:297
 msgid "Expire page cache after"
 msgstr "Expirar caché de página después de"
 
-#: inc/class-sc-settings.php:342
-msgid "Object Cache (Redis or Memcache)"
-msgstr "Caché de Objeto (Redis o Memcache)"
+#: inc/class-sc-settings.php:311
+msgid "Cache REST API"
+msgstr "Cachear la REST API"
 
-#: inc/class-sc-settings.php:348
+#: inc/class-sc-settings.php:317
+msgid "When enabled, the REST API requests will be cached."
+msgstr ""
+"Cuando está habilitada, las solicitudes de la REST API se almacenarán en la "
+"caché."
+
+#: inc/class-sc-settings.php:322
+msgid "Restore Headers"
+msgstr "Restaurar headers"
+
+#: inc/class-sc-settings.php:328
+msgid ""
+"When enabled, the plugin will save the response headers present when the "
+"page is cached and it will send send them again when it serves the cached "
+"page. This is recommended when caching the REST API."
+msgstr ""
+"Cuando está habilitado, Simple Cache guardará los headers presentes en la "
+"respuesta cuando la página se almacena en la caché y los enviará de nuevo "
+"cuando se sirva la página cacheada. Se recomienda activarlo cuando se cachea "
+"la REST API."
+
+#: inc/class-sc-settings.php:334
+msgid "Object Cache (Redis or Memcached)"
+msgstr "Caché de Objetos (Redis o Memcached)"
+
+#: inc/class-sc-settings.php:340
 msgid "Enable In-Memory Object Caching"
-msgstr "Habilitar caché de objeto en memoria"
+msgstr "Habilitar Caché de Objetos en Memoria"
 
-#: inc/class-sc-settings.php:355
+#: inc/class-sc-settings.php:347
 msgid ""
 "When enabled, things like database query results will be stored in memory. "
-"Right now Memcache and Redis are suppported. Note that if the proper <a "
-"href='https://pecl.php.net/package/memcache'>Memcache</a> (NOT Memcached) or "
-"<a href='https://pecl.php.net/package/redis'>Redis</a> PHP extensions aren't "
-"loaded, they won't show as options below."
+"Memcached and Redis are suppported. Note that if the proper <a href='http://"
+"pecl.php.net/package/memcached'>Memcached</a>, <a href='http://pecl.php.net/"
+"package/memcache'>Memcache</a>, or <a href='https://pecl.php.net/package/"
+"redis'>Redis</a> PHP extensions aren't loaded, they won't show as options "
+"below."
 msgstr ""
-"Cuando está activado, las cosas como los resultados de la consulta de la "
-"base de datos se almacenarán en la memoria. En este momento Memcache y Redis "
+"Cuando está activado, cosas como los resultados de las consultas a la base "
+"de datos se almacenarán en la memoria. Hasta ahora sólo Memcache y Redis "
 "están soportadas. Ten en cuenta que si las extensiones PHP de <a "
 "href='https://pecl.php.net/package/memcache'>Memcache</a> (NO Memcached) o "
 "<a href='https://pecl.php.net/package/redis'>Redis</a>no están cargadas, no "
-"aparecerán como opciones abajo."
+"aparecerán como opciones."
 
-#: inc/class-sc-settings.php:359
+#: inc/class-sc-settings.php:351
 msgid "In Memory Cache"
 msgstr "En caché de memoria"
 
-#: inc/class-sc-settings.php:374
+#: inc/class-sc-settings.php:369
 msgid ""
-"Neither <a href=\"https://pecl.php.net/package/memcache\">Memcache</a> (NOT "
-"Memcached) nor <a href=\"https://pecl.php.net/package/redis\">Redis</a> PHP "
-"extensions are set up on your server."
+"Neither <a href=\"https://pecl.php.net/package/memcached\">Memcached</a>, <a "
+"href=\"https://pecl.php.net/package/memcache\">Memcache</a>, nor <a href="
+"\"https://pecl.php.net/package/redis\">Redis</a> PHP extensions are set up "
+"on your server."
 msgstr ""
 "Ni la extensión PHP de <a href=\"https://pecl.php.net/package/memcache"
 "\">Memcache</a> (NO Memcached) ni tampoco <a href=\"https://pecl.php.net/"
 "package/redis\">Redis</a> están configuradas en tu servidor."
 
-#: inc/class-sc-settings.php:381
+#: inc/class-sc-settings.php:376
 msgid "Compression"
 msgstr "Compresión"
 
-#: inc/class-sc-settings.php:387
+#: inc/class-sc-settings.php:382
 msgid "Enable gzip Compression"
 msgstr "Habilitar Compresión gzip"
 
-#: inc/class-sc-settings.php:394
+#: inc/class-sc-settings.php:389
 msgid ""
 "When enabled pages will be gzip compressed at the PHP level. Note many hosts "
 "set up gzip compression in Apache or nginx."
 msgstr ""
-"Cuando las páginas habilitadas se compriman con gzip en el nivel de PHP. "
-"Tenga en cuenta que muchos hosts configuran compresión gzip en Apache o "
-"nginx."
+"Cuando está habilitado, PHP comprimirá las páginas con gzip. Tenga en cuenta "
+"que muchos hosts configuran compresión gzip en Apache o nginx."
 
-#: inc/class-sc-settings.php:402
+#: inc/class-sc-settings.php:398
 msgid "Save Changes"
 msgstr "Guardar Cambios"
 
-#: simple-cache.php:55
+#: simple-cache.php:69
+msgid "Settings"
+msgstr "Ajustes"
+
+#~ msgid "define(\"WP_CACHE\", true); is not in wp-config.php."
+#~ msgstr "define(\"WP_CACHE\", true); no está en wp-config.php."
+
+#~ msgid "wp-content/advanced-cache.php was edited or deleted."
+#~ msgstr "wp-content/advanced-cache.php fue editado o borrado."
+
+#~ msgid "Fix"
+#~ msgstr "Arreglar"
+
+#~ msgid ""
+#~ "wp-content/object-cache.php was edited or deleted. Simple Cache is not "
+#~ "able to utilize object caching."
+#~ msgstr ""
+#~ "wp-content/object-cache.php fue editado o borrado. Simple Cache no puede "
+#~ "utilizar el almacenamiento en caché del objeto."
+
+#~ msgid ""
+#~ "Simple Cache can't create or modify needed files on your system. "
+#~ "Specifically, Simple Cache needs to write to wp-config.php and /wp-"
+#~ "content using PHP's fopen() function. Contact your host."
+#~ msgstr ""
+#~ "Simple Cache no puede crear ni modificar los archivos necesarios en su "
+#~ "sistema. Específicamente, Simple Cache necesita escribir en wp-config.php "
+#~ "y /wp-content usando la función fopen() de PHP. Ponte en contacto con su "
+#~ "host."
+
+#~ msgid "Try Again"
+#~ msgstr "Intenta de nuevo"
+
+#~ msgid "Cheatin, eh?"
+#~ msgstr "¿Engañando, eh?"
+
 #, php-format
-msgid "<a href=\"%s\">Settings</a>"
-msgstr "<a href=\"%s\">Ajustes</a>"
+#~ msgid "<a href=\"%s\">Settings</a>"
+#~ msgstr "<a href=\"%s\">Ajustes</a>"
