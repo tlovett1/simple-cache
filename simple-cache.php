@@ -1,20 +1,20 @@
 <?php
 /**
  * Plugin Name: Simple Cache
- * Plugin URI: http://taylorlovett.com
+ * Plugin URI: https://taylorlovett.com
  * Description: A simple caching plugin that just works.
  * Author: Taylor Lovett
- * Version: 1.7.4
+ * Version: 2.0.0
  * Text Domain: simple-cache
  * Domain Path: /languages
- * Author URI: http://taylorlovett.com
+ * Author URI: https://taylorlovett.com
  *
  * @package  simple-cache
  */
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'SC_VERSION', '1.7.4' );
+define( 'SC_VERSION', '2.0.0' );
 define( 'SC_PATH', dirname( __FILE__ ) );
 
 $active_plugins = get_site_option( 'active_sitewide_plugins' );

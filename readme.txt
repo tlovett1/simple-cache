@@ -2,7 +2,7 @@
 Contributors: tlovett1
 Tags: cache, page cache, object caching, object cache, memcache, redis, memcached
 Requires at least: 3.9
-Tested up to: 5.5
+Tested up to: 5.8
 Stable tag: trunk
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -35,6 +35,23 @@ Pull requests are welcome on [Github](https://github.com/tlovett1/simple-cache).
 For full documentation, questions, feature requests, and support concerning the Simple Cache plugin, please refer to [Github](http://github.com/tlovett1/simple-cache).
 
 == Changelog ==
+
+Version 2.0.0 of Simple Cache comes with some useful new features and bug fixes. This release was
+created by [Luis Herranz](https://github.com/luisherranz) and the [Frontity](https://frontity.org/) framework.
+
+= 2.0.0 =
+
+Breaking Changes:
+* The REST API is not cached anymore by default
+
+New Features:
+* Cache REST API setting added in advanced mode.
+* Restore headers setting added to advanced mode. This will tell Simple Cache to cache headers and return the
+same headers when a cache hit occurs.
+* New X-Simple-Cache header. HIT/MISS depending on if a cache match is found.
+
+Bug Fixes:
+* Don't flush the cache when the user edits a draft post
 
 = 1.7.4 =
 * Fix WP_PLUGIN_DIR constant
