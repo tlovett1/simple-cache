@@ -179,7 +179,7 @@ class SC_Config {
 
 		// Delete network config if not network activated
 		if ( 'config-network.php' !== $file_name ) {
-			@unlink( $config_dir . '/config-network.php', true );
+			@unlink( $config_dir . '/config-network.php' );
 		}
 
 		return true;
@@ -217,7 +217,7 @@ class SC_Config {
 			delete_option( 'sc_simple_cache' );
 		}
 
-		@unlink( $config_dir . '/config-network.php', true );
+		@unlink( $config_dir . '/config-network.php' );
 
 		if ( ! @unlink( $config_dir . '/' . $this->get_config_file_name() ) ) {
 			return false;
