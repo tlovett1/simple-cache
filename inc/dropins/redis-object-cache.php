@@ -506,7 +506,7 @@ class WP_Object_Cache {
 				$result           = $this->_call_redis( 'hDel', $redis_safe_group, $key );
 			} else {
 				$id     = $this->_key( $key, $group );
-				$result = $this->_call_redis( 'delete', $id );
+				$result = $this->_call_redis( 'del', $id );
 			}
 			if ( 1 !== $result ) {
 				return false;
@@ -532,7 +532,7 @@ class WP_Object_Cache {
 		$multisite_safe_group = $this->multisite && ! isset( $this->global_groups[ $group ] ) ? $this->blog_prefix . $group : $group;
 		$redis_safe_group     = $this->_key( '', $group );
 		if ( $this->_should_persist( $group ) ) {
-			$result = $this->_call_redis( 'delete', $redis_safe_group );
+			$result = $this->_call_redis( 'del', $redis_safe_group );
 			if ( 1 !== $result ) {
 				return false;
 			}
